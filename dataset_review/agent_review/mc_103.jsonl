@@ -1,0 +1,139 @@
+{"uid": 0, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Укладка плитки и стеновых панелей", "comment": ""}
+{"uid": 1, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 2, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 3, "mcId": 103, "present": 1, "doubt": false, "where": "хвост", "quote": "укладка плитки, плиточник", "comment": "Плитка только в SEO-списке в конце."}
+{"uid": 4, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 5, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 6, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 7, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 8, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 9, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 10, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 11, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 12, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Плиточные работы", "comment": ""}
+{"uid": 13, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 14, "mcId": 103, "present": 0, "doubt": true, "where": "нет", "quote": "Монтаж напольных покрытий", "comment": "Напольные покрытия без упоминания плитки."}
+{"uid": 15, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "настил покрытия (ламинат, плитка)", "comment": "Плитка в перечне напольных покрытий."}
+{"uid": 16, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 17, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "плитку", "comment": "Плитка в перечне выполняемых работ."}
+{"uid": 18, "mcId": 103, "present": 1, "doubt": true, "where": "текст", "quote": "электрики, сантехники, плиточники, штукатуры", "comment": "Плиточники названы только в составе команды, отдельной услуги нет."}
+{"uid": 19, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "профессиональная укладка напольной плитки и керамогранита", "comment": ""}
+{"uid": 20, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 21, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 22, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладка напольных покрытий (ламинат, плитка, паркет)", "comment": "Плитка в перечне напольных покрытий."}
+{"uid": 23, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 24, "mcId": 103, "present": 0, "doubt": true, "where": "нет", "quote": "Ремонт — это не только про стены и плитку.", "comment": "Риторическая фраза, плитка не названа как услуга."}
+{"uid": 25, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 26, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "выполнить плитку, покраску, обои", "comment": ""}
+{"uid": 27, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 28, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладка плитки и керамогранита", "comment": ""}
+{"uid": 29, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "плиточные работы и напольные покрытия", "comment": ""}
+{"uid": 30, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладка напольных покрытий (ламинат, плитка, паркет)", "comment": "Плитка в перечне напольных покрытий."}
+{"uid": 31, "mcId": 103, "present": 0, "doubt": true, "where": "нет", "quote": "Ремонт квартиры с мраморными поверхностями", "comment": "Мраморные поверхности в строке характеристик, плиточные работы не названы."}
+{"uid": 32, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 33, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 34, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Плиточные работы: укладка керамогранита и кафеля в ванных комнатах, душевых, на фартуках.", "comment": "Монтаж инсталляций из того же пункта не учитывается."}
+{"uid": 35, "mcId": 103, "present": 0, "doubt": true, "where": "нет", "quote": "дo пoслeднeй плитки", "comment": "Идиома «до последней плитки» про объём ответственности, а не услуга."}
+{"uid": 36, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 37, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 38, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 39, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 40, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладка плитки и керамогранита", "comment": ""}
+{"uid": 41, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 42, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 43, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 44, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 45, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 46, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 47, "mcId": 103, "present": 1, "doubt": true, "where": "текст", "quote": "Облицовка крыльца плиткой", "comment": "Плиточная облицовка, но наружная (крыльцо), а не интерьер."}
+{"uid": 48, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 49, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 50, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 51, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 52, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 53, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Выполнить плиточные, малярные и отделочные работы.", "comment": ""}
+{"uid": 54, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 55, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "обои, ламинат, плитка", "comment": "Плитка в перечне чистовых работ."}
+{"uid": 56, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 57, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 58, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 59, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 60, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 61, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 62, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 63, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 64, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 65, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 66, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 67, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 68, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "плитка и напольные покрытия", "comment": ""}
+{"uid": 69, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 70, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 71, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 72, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 73, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 74, "mcId": 103, "present": 1, "doubt": true, "where": "текст", "quote": "Стены, стяжка, проводка, плитка — каждый слой работ у вас в телефоне.", "comment": "Плитка упомянута как этап в фотоотчёте, а не как отдельная услуга."}
+{"uid": 75, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 76, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 77, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 78, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 79, "mcId": 103, "present": 1, "doubt": true, "where": "текст", "quote": "гидроизоляцию, плитку, финишную отделку", "comment": "Плитка названа среди этапов, которые проверяет технадзор, в перечне работ её нет."}
+{"uid": 80, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 81, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 82, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 83, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 84, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 85, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "✅ Укладка плитки", "comment": ""}
+{"uid": 86, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 87, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 88, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 89, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 90, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 91, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 92, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 93, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 94, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "ремонт и замена плитки", "comment": ""}
+{"uid": 95, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 96, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 97, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Плитка — стены и пол, с ровными швами и правильной раскладкой.", "comment": ""}
+{"uid": 98, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Укладка кварц-винила, плитки или другого напольного покрытия на кухне", "comment": "Также монтаж кухонного фартука."}
+{"uid": 99, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 100, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладка керамогранита", "comment": ""}
+{"uid": 101, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 102, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 103, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 104, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 105, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "Выполняю все виды работ", "comment": "Общая фраза без упоминания плитки."}
+{"uid": 106, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 107, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 108, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 109, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 110, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 111, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "профессиональная укладка напольной плитки и керамогранита", "comment": ""}
+{"uid": 112, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 113, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Стены – влагостойкие панели ПВХ или плитка", "comment": ""}
+{"uid": 114, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 115, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 116, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 117, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладку плитки и керамогранита", "comment": ""}
+{"uid": 118, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "плиточные и малярные работы", "comment": ""}
+{"uid": 119, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "Чистовой этап включает плитку, керамогранит", "comment": ""}
+{"uid": 120, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 121, "mcId": 103, "present": 0, "doubt": true, "where": "нет", "quote": "подготовка для укладки плитки, ламината, паркета и других покрытий", "comment": "Только подготовка основания под плитку, укладку не предлагают."}
+{"uid": 122, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 123, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 124, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 125, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "затирка межплиточных швов", "comment": ""}
+{"uid": 126, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладка плитки на кухне", "comment": ""}
+{"uid": 127, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 128, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 129, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 130, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "профессиональная укладка напольной плитки и керамогранита", "comment": ""}
+{"uid": 131, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 132, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 133, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 134, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 135, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 136, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
+{"uid": 137, "mcId": 103, "present": 1, "doubt": false, "where": "текст", "quote": "укладка плитки и керамогранита", "comment": ""}
+{"uid": 138, "mcId": 103, "present": 0, "doubt": false, "where": "нет", "quote": "", "comment": ""}
