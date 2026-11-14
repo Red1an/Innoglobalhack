@@ -1,0 +1,89 @@
+{
+  "version": "train_text_v1",
+  "source": {
+    "path": "data/raw/public-train-annotated.jsonl",
+    "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+    "records": 10000
+  },
+  "dataset": {
+    "path": "data/processed/train_text_v1/train.parquet",
+    "sha256": "74990784db9e4f47bb41b9d5d4fa083f44292c49f642a326c643c1701053985c",
+    "records": 10000
+  },
+  "lineage": {
+    "item_id": "исходный item_id",
+    "source_line": "номер строки JSONL с единицы"
+  },
+  "transformed_fields": [
+    "title",
+    "description"
+  ],
+  "changed_records": 8821,
+  "changed_fields": {
+    "title": 5,
+    "description": 8821
+  },
+  "transformations": [
+    {
+      "id": "unicode_nfc",
+      "description": "Приведение Unicode к NFC",
+      "changed_records": 2,
+      "changed_fields": {
+        "title": 0,
+        "description": 2
+      }
+    },
+    {
+      "id": "emoji",
+      "description": "Удаление эмодзи с сохранением цифр, пунктуации и фразы «под ключ»",
+      "changed_records": 8360,
+      "changed_fields": {
+        "title": 0,
+        "description": 8360
+      }
+    },
+    {
+      "id": "controls",
+      "description": "Нормализация переносов и невидимых символов",
+      "changed_records": 365,
+      "changed_fields": {
+        "title": 0,
+        "description": 365
+      }
+    },
+    {
+      "id": "whitespace",
+      "description": "Нормализация пробелов с сохранением строк и абзацев",
+      "changed_records": 8720,
+      "changed_fields": {
+        "title": 0,
+        "description": 8720
+      }
+    },
+    {
+      "id": "mixed_scripts",
+      "description": "Исправление смешанных букв и разобранных написаний",
+      "changed_records": 535,
+      "changed_fields": {
+        "title": 5,
+        "description": 533
+      }
+    }
+  ],
+  "preserved_mixed_names_and_codes": {
+    "234F524f2G54Н4": 1,
+    "84G5Y74YGТ4НIUЕВНGВ": 1,
+    "PROквадраты": 1,
+    "SmartРемонт": 1,
+    "АкимовPRO": 2,
+    "Аргумент32473DSFDGDG": 1,
+    "капиталкаMNN": 3
+  },
+  "build_files_sha256": {
+    "dataset_review/build_train_text_v1.py": "49357b8d49c0228203f6cca428d9744e40736f2ddf47173684d68d1abcacc8a4",
+    "dataset_review/train_text_cleaning.py": "8b045fcc20ea1813eb15e5090971463572b66efffa03d53ca66b00ab778baa34",
+    "dataset_review/emoji_ranges.txt": "e9188a1881b158d57e9381c3c9253abb5b2941dc63d820a822efc112db723557"
+  },
+  "unicode_version": "15.0.0",
+  "pyarrow_version": "26.0.1"
+}
