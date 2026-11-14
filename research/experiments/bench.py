@@ -408,8 +408,9 @@ def encoder(args, train, dev, test, metadata):
             step += 1
             if step % 50 == 0:
                 elapsed = time.perf_counter() - start_fit
+                memory = f', GPU memory {torch.mps.driver_allocated_memory() / 2**30:.1f} GB' if device == 'mps' else ''
                 print(f'  step {step}/{steps} ({100 * step / steps:.0f}%), '
-                      f'about {elapsed / step * (steps - step) / 60:.0f} min left', flush=True)
+                      f'about {elapsed / step * (steps - step) / 60:.0f} min left{memory}', flush=True)
             rows = [train[i] for i in order[offset:offset + args.batch_size]]
             inputs = tokenizer([row['description'] for row in rows], padding=True, return_tensors='pt').to(device)
             target = torch.tensor(matrix(rows)[:, 1:], dtype=torch.float32, device=device)
@@ -418,6 +419,10 @@ def encoder(args, train, dev, test, metadata):
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)
             optimizer.step()
+            if device == 'mps':
+                # Batches of different lengths fragment the MPS cache until it hits the memory limit.
+                del inputs, target, loss
+                torch.mps.empty_cache()
         print(f'epoch {epoch + 1}/{args.epochs}', flush=True)
     model.eval()
 
@@ -440,6 +445,76 @@ def encoder(args, train, dev, test, metadata):
         scores = predict(row)
         yield {'labels': [label for label, score in zip(range(102, 107), scores) if score >= threshold],
                'scores': scores.tolist(), 'valid': True, 'seconds': time.perf_counter() - start}
+
+
+GIGA_ID = 'ai-sage/Giga-Embeddings-instruct-3B-0826'
+# The model runs repository code (trust_remote_code), so the revision with the reviewed code is pinned.
+GIGA_REVISION = 'b71168088212f0a13688514e4fc288a86106c4e4'
+GIGA_INSTRUCTION = 'Instruct: Определи, какие виды ремонтных работ исполнитель предлагает в объявлении\nQuery: '
+
+
+def embeddings(args, train, dev, test, metadata):
+    """Frozen Giga-Embeddings vectors with a logistic regression head per category."""
+    import torch
+    from transformers import AutoTokenizer, AutoModel
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.multiclass import OneVsRestClassifier
+    from sklearn.metrics import f1_score
+    if any(row['mcId'] != 101 for row in train + dev + test):
+        raise ValueError('Initial embedding head supports source 101 only.')
+    device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
+    # bfloat16 needs Ampere or newer. Older GPUs such as T4 use float32 to avoid float16 overflow.
+    dtype = torch.bfloat16 if device == 'cuda' and torch.cuda.get_device_capability()[0] >= 8 else torch.float32
+    print(f'Loading {GIGA_ID} on {device} in {dtype}...', flush=True)
+    tokenizer = AutoTokenizer.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True)
+    model = AutoModel.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True,
+                                      dtype=dtype, attn_implementation='sdpa').to(device).eval()
+    texts = lambda rows: [GIGA_INSTRUCTION + row['description'] for row in rows]
+    lengths = [len(tokenizer(text)['input_ids']) for text in texts(train + dev + test)]
+    if max(lengths) > args.max_length:
+        raise ValueError(f'Input needs {max(lengths)} tokens, increase --max-length')
+
+    def encode(batch):
+        inputs = tokenizer(batch, padding=True, return_tensors='pt').to(device)
+        with torch.inference_mode():
+            hidden = model(**inputs).last_hidden_state
+        mask = inputs['attention_mask'].unsqueeze(-1).to(hidden.dtype)
+        vectors = torch.nn.functional.normalize((hidden * mask).sum(1) / mask.sum(1), dim=-1).float().cpu().numpy()
+        if not np.isfinite(vectors).all():
+            raise ValueError('Embedding contains NaN or infinity')
+        return vectors
+
+    def encode_all(rows, name):
+        order = np.argsort([len(row['description']) for row in rows])
+        result = np.zeros((len(rows), model.config.hidden_size), dtype=np.float32)
+        start = time.perf_counter()
+        for offset in range(0, len(rows), args.batch_size):
+            index = order[offset:offset + args.batch_size]
+            result[index] = encode(texts([rows[i] for i in index]))
+            done = offset + len(index)
+            if done // args.batch_size % 50 == 0 or done == len(rows):
+                elapsed = time.perf_counter() - start
+                print(f'  {name}: {done}/{len(rows)} embedded, about {elapsed / done * (len(rows) - done) / 60:.0f} min left', flush=True)
+        return result
+
+    start_fit = time.perf_counter()
+    train_x, dev_x = encode_all(train, 'train'), encode_all(dev, 'dev')
+    head = OneVsRestClassifier(LogisticRegression(C=4, max_iter=2000, random_state=42))
+    head.fit(train_x, matrix(train)[:, 1:])
+    dev_scores = head.predict_proba(dev_x)
+    thresholds = np.arange(.1, .91, .05)
+    threshold = float(max(thresholds, key=lambda t: f1_score(matrix(dev)[:, 1:], dev_scores >= t, average='micro', zero_division=0)))
+    metadata.update(resolved_revision=GIGA_REVISION, dtype=str(dtype), device=device, threshold=threshold,
+                    instruction=GIGA_INSTRUCTION, fit_seconds=time.perf_counter() - start_fit)
+    print(f'Head trained, dev threshold {threshold:.2f}. Predicting test one by one.', flush=True)
+    for row in test:
+        start = time.perf_counter()
+        scores = head.predict_proba(encode(texts([row])))[0]
+        yield {'labels': [label for label, score in zip(range(102, 107), scores) if score >= threshold],
+               'scores': scores.tolist(), 'valid': True, 'seconds': time.perf_counter() - start}
+    del model
+    if device == 'cuda':
+        torch.cuda.empty_cache()
 
 
 def run(args):
@@ -490,6 +565,10 @@ def run(args):
             if records:
                 raise ValueError('Partial encoder run requires a new output directory')
             predictions = encoder(args, splits['train'], splits['dev'], test, metadata)
+        elif args.model == 'giga-embeddings':
+            if records:
+                raise ValueError('Partial embedding run requires a new output directory')
+            predictions = embeddings(args, splits['train'], splits['dev'], test, metadata)
         elif args.model in OLLAMA_MODELS:
             predictions = ollama(args, test[len(records):], metadata)
         else:
@@ -537,7 +616,7 @@ def main():
         prep.add_argument('--' + name, required=True)
     prep.add_argument('--assume-source', type=int, choices=list(LABELS))
     experiment = commands.add_parser('run')
-    experiment.add_argument('--model', choices=['char-lr', 'rumodernbert', *MODELS, *OLLAMA_MODELS], required=True)
+    experiment.add_argument('--model', choices=['char-lr', 'rumodernbert', 'giga-embeddings', *MODELS, *OLLAMA_MODELS], required=True)
     experiment.add_argument('--data', required=True)
     experiment.add_argument('--out', required=True)
     experiment.add_argument('--revision', default='main')

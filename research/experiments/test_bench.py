@@ -150,5 +150,44 @@ class OllamaTests(unittest.TestCase):
                 list(bench.ollama(self.args(), [{'mcId': 101, 'description': 'Электрика'}], {}))
 
 
+class EmbeddingTests(unittest.TestCase):
+    def test_head_trains_and_predicts(self):
+        import types
+        from unittest.mock import patch
+        import torch
+
+        class Tokenizer:
+            def __call__(self, texts, padding=False, return_tensors=None):
+                if isinstance(texts, str):
+                    return {'input_ids': list(range(len(texts.split())))}
+                width = max(len(t.split()) for t in texts)
+                ids = torch.tensor([[hash(w) % 997 for w in t.split()] + [0] * (width - len(t.split())) for t in texts])
+                mask = torch.tensor([[1] * len(t.split()) + [0] * (width - len(t.split())) for t in texts])
+                return types.SimpleNamespace(to=lambda device: {'input_ids': ids, 'attention_mask': mask})
+
+        class Model(torch.nn.Module):
+            config = types.SimpleNamespace(hidden_size=8)
+
+            def __init__(self):
+                super().__init__()
+                torch.manual_seed(0)
+                self.table = torch.nn.Embedding(997, 8)
+
+            def forward(self, input_ids, attention_mask):
+                return types.SimpleNamespace(last_hidden_state=self.table(input_ids))
+
+        rows = lambda n: [{'mcId': 101, 'description': f'Объявление {i} ' + ('электрика проводка' if i % 2 else 'плитка кафель'),
+                           'labels': [105] if i % 2 else [103]} for i in range(n)]
+        args = argparse.Namespace(max_length=4096, batch_size=4)
+        with patch('transformers.AutoTokenizer.from_pretrained', return_value=Tokenizer()), \
+                patch('transformers.AutoModel.from_pretrained', return_value=Model()), \
+                patch('torch.cuda.is_available', return_value=False), \
+                patch('torch.backends.mps.is_available', return_value=False):
+            metadata = {}
+            records = list(bench.embeddings(args, rows(40), rows(10), rows(4), metadata))
+        self.assertEqual([r['labels'] for r in records], [[103], [105], [103], [105]])
+        self.assertEqual(metadata['resolved_revision'], bench.GIGA_REVISION)
+
+
 if __name__ == '__main__':
     unittest.main()
