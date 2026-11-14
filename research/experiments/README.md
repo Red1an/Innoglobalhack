@@ -5,6 +5,30 @@ https://colab.research.google.com/github/Red1an/Innoglobalhack/blob/dev/research
 
 Локально установите Python 3.10+ и CUDA-совместимый PyTorch по инструкции https://pytorch.org/get-started/locally/ и выберите это окружение как ядро Jupyter. Для локального Jupyter нужен пакет notebook или jupyterlab. В Colab выберите NVIDIA GPU. Ноутбук создаст отдельное окружение зависимостей, использующее torch ядра. CUDA и bitsandbytes должны поддерживать установленную GPU.
 
+## Запуск LLM через Ollama на любой ОС
+
+В ячейке настроек BACKEND выбирает способ запуска LLM. ollama работает на macOS, Linux и Windows, на CPU, Apple Silicon или NVIDIA, CUDA и bitsandbytes не нужны. transformers нужен NVIDIA GPU и используется по умолчанию в Colab. Установите и запустите приложение Ollama, зависимости стенда берутся из requirements-ollama.txt. Если в ядре нет pip, ноутбук ставит зависимости через uv.
+
+В этом режиме доступны все четыре модели: char-lr, rumodernbert, t-lite-q8 и avibe-q8. rumodernbert обучается через torch на CUDA, Apple MPS или CPU, на CPU обучение займёт часы. t-lite-q8 это T-lite 2.1 в GGUF Q8_0 (8,7 ГБ), avibe-q8 это avibe в GGUF Q8_0 (8,4 ГБ). Официального GGUF у avibe нет, используется конвертация NightForger/avibe-GGUF, поэтому её результат может немного отличаться от исходной модели. Каждой LLM нужно около 9–10 ГБ памяти, модели загружаются по очереди.
+
+Перед прогоном стенд проверяет, есть ли модель в Ollama. Если GGUF уже скачан, укажите в словаре GGUF путь к файлу или к его папке, например папке модели в LM Studio, и стенд импортирует его в Ollama. Иначе модель скачается с Hugging Face. Ответ ограничен JSON-схемой, температура 0, seed 42, контекст равен --max-length. Если объявление не помещается в контекст, прогон останавливается, а не обрезает текст. Локальный путь к файлу не входит в конфигурацию прогона, веса опознаются по digest модели в Ollama.
+
+## Запуск из терминала
+
+run_all.py делает то же, что ноутбук: готовит набор, по очереди гоняет модели с прогрессом, выгружает каждый прогон в ClearML и пишет results.csv. Каталоги данных и прогонов совпадают с ноутбуком. Зависимости ставятся один раз:
+
+uv venv .venv-bench --python 3.10 && UV_HTTP_TIMEOUT=600 uv pip install --python .venv-bench/bin/python -r requirements-ollama.txt "pyarrow>=19,<24" clearml==2.2.0
+
+Прогон исходного train организаторов с test_gold на всех четырёх моделях:
+
+.venv-bench/bin/python run_all.py --dataset raw-gold --participant member2
+
+Для нового train добавьте в PRESETS файла run_all.py пару (новый train, data/test/test_gold.parquet) под своим именем и запустите с ним и своим --participant. --models выбирает модели, --no-upload отключает ClearML. Повторный запуск продолжает незавершённый прогон LLM.
+
+Одну модель можно прогнать и напрямую:
+
+python bench.py run --model t-lite-q8 --data <каталог prepare> --out runs/t-lite-q8 --gguf <путь к GGUF>
+
 ## Два участника
 
 В ячейке настроек первый задаёт DATASET = "old", PARTICIPANT = "member1", второй DATASET = "gold", PARTICIPANT = "member2". RUN_GROUP обозначает конфигурацию, например baseline. В обоих случаях общий PROJECT = "avito-microcategories".

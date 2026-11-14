@@ -5,3 +5,4 @@ hf-cache/
 *.zip
 clearml.conf
 .env
+datasets/
