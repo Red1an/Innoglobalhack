@@ -1,0 +1,6 @@
+# Any OS with the Ollama app: macOS, Linux or Windows. Ollama runs the LLMs.
+# torch and transformers train rumodernbert on CUDA, Apple MPS or CPU.
+numpy==2.1.1
+scikit-learn==1.6.1
+torch==2.8.0
+transformers==4.57.6

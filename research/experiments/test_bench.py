@@ -75,5 +75,80 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(result['exact_match'], .5)
 
 
+class OllamaTests(unittest.TestCase):
+    def test_pull_progress(self):
+        import io
+        from contextlib import redirect_stdout
+        from unittest.mock import patch
+        lines = [b'{"status": "pulling manifest"}\n', b'{"status": "pulling x", "total": 100, "completed": 0}\n',
+                 b'{"status": "pulling x", "total": 100, "completed": 100}\n', b'{"status": "success"}\n']
+
+        class Response(io.BytesIO):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+        output = io.StringIO()
+        with patch('urllib.request.urlopen', return_value=Response(b''.join(lines))), redirect_stdout(output):
+            bench.ollama_pull('model', every=0)
+        self.assertIn('(100%)', output.getvalue())
+
+    def test_pull_error(self):
+        import io
+        from unittest.mock import patch
+
+        class Response(io.BytesIO):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+        with patch('urllib.request.urlopen', return_value=Response(b'{"error": "not found"}\n')):
+            with self.assertRaises(RuntimeError):
+                bench.ollama_pull('model')
+
+    def test_missing_gguf_fails_before_download(self):
+        from unittest.mock import patch
+        with patch.object(bench, 'ollama_request', return_value={'models': []}):
+            with self.assertRaises(FileNotFoundError):
+                bench.ollama_model(bench.OLLAMA_MODELS['t-lite-q8'], '/nonexistent/folder')
+
+    def fake(self, prompt_tokens):
+        tag = bench.OLLAMA_MODELS['t-lite-q8']['name']
+
+        def request(path, payload=None, timeout=600):
+            if path == '/api/version':
+                return {'version': '0.0.0'}
+            if path == '/api/tags':
+                return {'models': [{'name': tag, 'digest': 'abc', 'details': {'quantization_level': 'Q8_0'}}]}
+            if path == '/api/generate':
+                self.assertEqual(payload['keep_alive'], 0)
+                return {}
+            self.assertEqual(payload['options']['temperature'], 0)
+            return {'message': {'content': '{"labels": [105]}'}, 'prompt_eval_count': prompt_tokens, 'eval_count': 7}
+        return request
+
+    def args(self):
+        return argparse.Namespace(model='t-lite-q8', max_length=4096, max_new_tokens=96, gguf=None)
+
+    def test_prediction_and_metadata(self):
+        from unittest.mock import patch
+        metadata = {}
+        with patch.object(bench, 'ollama_request', self.fake(500)):
+            records = list(bench.ollama(self.args(), [{'mcId': 101, 'description': 'Электрика'}], metadata))
+        self.assertEqual(records[0]['labels'], [105])
+        self.assertTrue(records[0]['valid'])
+        self.assertEqual(metadata['quantization'], 'Q8_0')
+
+    def test_truncated_context_fails(self):
+        from unittest.mock import patch
+        with patch.object(bench, 'ollama_request', self.fake(4050)):
+            with self.assertRaises(ValueError):
+                list(bench.ollama(self.args(), [{'mcId': 101, 'description': 'Электрика'}], {}))
+
+
 if __name__ == '__main__':
     unittest.main()
