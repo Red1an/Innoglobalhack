@@ -8,8 +8,8 @@ PLASTER = re.compile(r"штукатур|оштукатур|маяк", re.IGNOREC
 NEGATION = re.compile(r"(никак\w*|\bне\b|\bбез\b|вместо|кроме|забудьте)[^.!?\n/]{0,25}$", re.IGNORECASE)
 
 
-def explicit_plaster(title, description):
-    text = f"{title}\n{description}"
+def explicit_plaster(description):
+    text = description
     return any(not NEGATION.search(text[max(0, m.start() - 40):m.start()]) for m in PLASTER.finditer(text))
 
 
@@ -18,7 +18,7 @@ def main():
     v2 = v1.copy()
     changes = []
     for i, row in v2.iterrows():
-        if row.y_102 == 1 and not explicit_plaster(row.title, row.description):
+        if row.y_102 == 1 and not explicit_plaster(row.description):
             v2.at[i, "y_102"] = 0
             changes.append({"row_id": row.row_id, "mcId": 102, "old": 1, "new": 0, "reason": "выравнивание без явной штукатурки не считается 102"})
 

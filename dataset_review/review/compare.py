@@ -19,7 +19,7 @@ agent = pd.concat([pd.read_json(REVIEW / f"mc_{m}.jsonl", lines=True) for m in I
 records = []
 for row in test.itertuples():
     uid = row_to_uid[row.row_id]
-    plaster = explicit_plaster(row.title, row.description)
+    plaster = explicit_plaster(row.description)
     for m in IDS:
         a = agent.loc[(uid, m)]
         verdict, comment = int(a.present), a.comment
@@ -28,7 +28,7 @@ for row in test.itertuples():
         records.append({
             "row_id": row.row_id, "row_ids": ", ".join(map(str, row.row_ids)), "uid": uid, "mcId": m, "category": NAMES[m],
             "current_label": int(getattr(row, f"y_{m}")), "agent_label": verdict, "doubt": bool(a.doubt) and verdict == int(a.present),
-            "where": a["where"], "quote": a.quote, "agent_comment": comment, "title": row.title,
+            "where": a["where"], "quote": a.quote, "agent_comment": comment,
             "description": row.description.replace("\n", " / "), "decision": None,
         })
 full = pd.DataFrame(records)
@@ -50,7 +50,7 @@ out = REVIEW / f"test_agent_disagreements_{VERSION}.xlsx"
 with pd.ExcelWriter(out, engine="openpyxl") as writer:
     diff.to_excel(writer, index=False, sheet_name="review")
     sheet = writer.sheets["review"]
-    for column, width in {"E": 28, "F": 26, "K": 60, "L": 40, "M": 30, "N": 100}.items():
+    for column, width in {"E": 28, "F": 26, "K": 60, "L": 40, "M": 100}.items():
         sheet.column_dimensions[column].width = width
     sheet.freeze_panes = "A2"
 

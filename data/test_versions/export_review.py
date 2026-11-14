@@ -27,7 +27,7 @@ for r in changed.itertuples():
 rows = []
 for t in test.itertuples():
     uid = row_to_uid[t.row_id]
-    record = {"row_id": t.row_id, "копии в исходном test": ", ".join(map(str, t.row_ids)), "title": t.title, "description": t.description}
+    record = {"row_id": t.row_id, "копии в исходном test": ", ".join(map(str, t.row_ids)), "description": t.description}
     for m in IDS:
         record[f"{m} {NAMES[m]}"] = int(getattr(t, f"y_{m}"))
     record["на что обратить внимание"] = "\n".join(notes.get(t.row_id, []))
@@ -41,7 +41,7 @@ path = OUT / f"test_{VERSION}_review.xlsx"
 with pd.ExcelWriter(path, engine="openpyxl") as writer:
     frame.to_excel(writer, index=False, sheet_name="review")
     sheet = writer.sheets["review"]
-    widths = [8, 12, 30, 90, 11, 11, 11, 11, 11, 45, 35, 35, 35, 35, 35]
+    widths = [8, 12, 90, 11, 11, 11, 11, 11, 45, 35, 35, 35, 35, 35]
     for index, width in enumerate(widths):
         sheet.column_dimensions[chr(ord("A") + index)].width = width
     wrap = Alignment(wrap_text=True, vertical="top")
@@ -49,7 +49,7 @@ with pd.ExcelWriter(path, engine="openpyxl") as writer:
     for row in sheet.iter_rows(min_row=1):
         for cell in row:
             cell.alignment = wrap
-        if row[9].value and row[0].row > 1:
-            row[9].fill = flag
-    sheet.freeze_panes = "E2"
+        if row[8].value and row[0].row > 1:
+            row[8].fill = flag
+    sheet.freeze_panes = "D2"
 print(path, frame.shape, "строк с пометками", int((frame["на что обратить внимание"] != "").sum()))

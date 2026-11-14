@@ -9,13 +9,13 @@ test = pd.read_parquet(ROOT / "data" / "processed" / "test_clean.parquet")
 dup = pd.read_excel(ROOT / "dataset_review" / "review" / "test_duplicate_conflicts.xlsx")
 team = {(int(r.row_id), int(r.mcId)): int(r.decision) for r in dup.itertuples()}
 
-v0 = test[["row_id", "title", "description"] + [f"y_{m}" for m in IDS]].copy()
+v0 = test[["row_id", "description"] + [f"y_{m}" for m in IDS]].copy()
 v0.to_parquet(OUT / "test_v0.parquet", index=False)
 
 rows, changes = [], []
-for (_, _), group in v0.groupby(["title", "description"], sort=False):
+for _, group in v0.groupby("description", sort=False):
     first = group.iloc[0]
-    record = {"row_id": int(first.row_id), "row_ids": [int(x) for x in group.row_id], "title": first.title, "description": first.description}
+    record = {"row_id": int(first.row_id), "row_ids": [int(x) for x in group.row_id], "description": first.description}
     for m in IDS:
         values = set(group[f"y_{m}"])
         decided = {team[(int(r), m)] for r in group.row_id if (int(r), m) in team}
