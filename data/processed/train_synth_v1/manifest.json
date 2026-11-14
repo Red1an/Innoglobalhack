@@ -1,0 +1,23 @@
+{
+  "version": "train_synth_v1",
+  "base": "102 из train_labels_102_v1, 103–106 из train_relabel_v1",
+  "records": 4930,
+  "real": 4282,
+  "synthetic": 648,
+  "all_five_before": 1267,
+  "all_five_after": 800,
+  "seed": 42,
+  "synthesis": {
+    "tasks": 667,
+    "accepted": 648,
+    "rejected": {
+      "контакты": 2,
+      "дубль синтеза": 17
+    }
+  },
+  "columns": {
+    "origin": "real или synthetic",
+    "synth_task_id": "задача синтеза",
+    "source_line": "для синтетики минус item_id исходного объявления"
+  }
+}
