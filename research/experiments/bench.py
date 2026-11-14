@@ -531,11 +531,18 @@ def embeddings(args, train, dev, test, metadata):
     dtype = torch.bfloat16 if device == 'cuda' and torch.cuda.get_device_capability()[0] >= 8 else torch.float32
     print(f'Loading {GIGA_ID} on {device} in {dtype}...', flush=True)
     tokenizer = AutoTokenizer.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True)
-    # Loading straight onto the GPU keeps the 12 GB float32 copy out of Colab's 12.7 GB of system RAM.
-    placement = {'device_map': 'cuda', 'low_cpu_mem_usage': True} if device == 'cuda' else {}
-    model = AutoModel.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True,
-                                      dtype=dtype, attn_implementation='sdpa', **placement)
-    model = (model if device == 'cuda' else model.to(device)).eval()
+    if device == 'cuda':
+        # The checkpoint is stored in bfloat16. Loading it as is straight onto the GPU and casting there
+        # keeps system RAM low: a float32 copy is 12 GB, Colab has 12.7 GB of RAM.
+        model = AutoModel.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True,
+                                          dtype=torch.bfloat16, attn_implementation='sdpa',
+                                          device_map='cuda', low_cpu_mem_usage=True).to(dtype)
+    else:
+        model = AutoModel.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True,
+                                          dtype=dtype, attn_implementation='sdpa').to(device)
+    model.eval()
+    if device == 'cuda':
+        print(f'Model on GPU, {torch.cuda.memory_allocated() / 2**30:.1f} GB of GPU memory', flush=True)
     texts = lambda rows: [GIGA_INSTRUCTION + row['description'] for row in rows]
     lengths = [len(tokenizer(text)['input_ids']) for text in texts(train + dev + test)]
     if max(lengths) > args.max_length:
