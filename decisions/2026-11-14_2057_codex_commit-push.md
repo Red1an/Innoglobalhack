@@ -12,3 +12,8 @@
 Что: После добавления новых файлов обычный staged diff --check отметил CRLF в CSV как trailing whitespace; повторная проверка с core.whitespace=cr-at-eol прошла без замечаний.
 Почему: CSV сохраняются с окончаниями строк CRLF. Содержимое и контрольные суммы артефактов сохранены без изменений.
 Где: data/processed/*/*.csv, dataset_review/train_relabel_v1_reviewed.csv.
+
+## 2026-11-14 20:58 МСК | находка | процесс | глобальное
+Что: Первый push отклонён из-за трёх новых коммитов origin/dev. Выполнены fetch и merge без конфликтов с сохранением обеих историй.
+Результат: Повторный запуск unittest после merge: 16 тестов, 15 прошли, один завершился ошибкой импорта torch (test_head_trains_and_predicts, добавлен в удалённой ветке). В текущем .venv torch не установлен; проверка embeddings остаётся невыполненной.
+Где: research/experiments/test_bench.py, merge origin/dev (c063adb).
