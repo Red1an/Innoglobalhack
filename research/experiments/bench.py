@@ -467,8 +467,11 @@ def embeddings(args, train, dev, test, metadata):
     dtype = torch.bfloat16 if device == 'cuda' and torch.cuda.get_device_capability()[0] >= 8 else torch.float32
     print(f'Loading {GIGA_ID} on {device} in {dtype}...', flush=True)
     tokenizer = AutoTokenizer.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True)
+    # Loading straight onto the GPU keeps the 12 GB float32 copy out of Colab's 12.7 GB of system RAM.
+    placement = {'device_map': 'cuda', 'low_cpu_mem_usage': True} if device == 'cuda' else {}
     model = AutoModel.from_pretrained(GIGA_ID, revision=GIGA_REVISION, trust_remote_code=True,
-                                      dtype=dtype, attn_implementation='sdpa').to(device).eval()
+                                      dtype=dtype, attn_implementation='sdpa', **placement)
+    model = (model if device == 'cuda' else model.to(device)).eval()
     texts = lambda rows: [GIGA_INSTRUCTION + row['description'] for row in rows]
     lengths = [len(tokenizer(text)['input_ids']) for text in texts(train + dev + test)]
     if max(lengths) > args.max_length:
@@ -532,11 +535,14 @@ def run(args):
     signature = digest({'config': config, 'dataset': manifest, 'protocol_hash': protocol_hash})
     out.mkdir(parents=True, exist_ok=True)
     config_path = out / 'run.json'
-    if config_path.exists():
-        metadata = json.loads(config_path.read_text(encoding='utf-8'))
-        if metadata['signature'] != signature:
+    prediction_path = out / 'predictions.jsonl'
+    metadata = json.loads(config_path.read_text(encoding='utf-8')) if config_path.exists() else None
+    if metadata and metadata['signature'] != signature:
+        if read_predictions(prediction_path):
             raise ValueError('Output directory belongs to a different configuration')
-    else:
+        # A run that crashed before its first prediction holds nothing to protect, start it again.
+        metadata = None
+    if metadata is None:
         versions = {}
         for name in ['numpy', 'scikit-learn', 'pyarrow', 'torch', 'transformers', 'bitsandbytes']:
             try:
@@ -548,7 +554,6 @@ def run(args):
                     'versions': versions, 'python': platform.python_version(), 'prompt': PROMPT}
         write(config_path, metadata)
         (out / 'protocol.py').write_bytes(Path(__file__).read_bytes())
-    prediction_path = out / 'predictions.jsonl'
     records = read_predictions(prediction_path)
     test = splits['test']
     if len(records) > len(test):
