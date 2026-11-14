@@ -387,6 +387,11 @@ def encoder(args, train, dev, test, metadata):
                     problem_type='multi_label_classification', attn_implementation='sdpa')
     device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
     model.to(device)
+    if device == 'mps':
+        # Apple GPUs share 16 GB with the system. Recomputing activations keeps the same weights and loss
+        # while long descriptions fit into memory.
+        model.gradient_checkpointing_enable()
+        metadata.update(gradient_checkpointing=True)
     lengths = [len(tokenizer(row['description'])['input_ids']) for row in train + dev + test]
     if max(lengths) > args.max_length:
         raise ValueError(f'Input needs {max(lengths)} tokens, increase --max-length')
