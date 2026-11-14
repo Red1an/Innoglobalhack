@@ -8,14 +8,15 @@ OUT = ROOT / "data" / "test"
 AGENT = ROOT / "review" / "agents"
 IDS = [102, 103, 104, 105, 106]
 NAMES = {102: "Штукатурные работы", 103: "Плиточные работы", 104: "Сантехника", 105: "Электрика", 106: "Поклейка обоев и малярные работы"}
-VERSION = sys.argv[1] if len(sys.argv) > 1 else "v3"
+VERSION = sys.argv[1] if len(sys.argv) > 1 else "v4"
 
 test = pd.read_parquet(OUT / f"test_{VERSION}.parquet")
 uid_map = pd.read_json(AGENT / "input" / "uid_map.jsonl", lines=True)
 row_to_uid = {r: u.uid for u in uid_map.itertuples() for r in u.row_ids}
 agent = pd.concat([pd.read_json(AGENT / f"mc_{m}.jsonl", lines=True) for m in IDS]).set_index(["uid", "mcId"])
-manual = pd.read_csv(OUT / f"test_{VERSION}_manual.csv")
-changed = pd.concat([pd.read_csv(OUT / f"test_v{n}_changes.csv").assign(version=f"v{n}") for n in (2, 3)])
+manual_path = OUT / f"test_{VERSION}_manual.csv"
+manual = pd.read_csv(manual_path) if manual_path.exists() else pd.DataFrame(columns=["row_id", "mcId", "note"])
+changed = pd.concat([pd.read_csv(OUT / f"test_v{n}_changes.csv").assign(version=f"v{n}") for n in range(2, int(VERSION[1:]) + 1)])
 
 notes = {}
 for r in manual.itertuples():
