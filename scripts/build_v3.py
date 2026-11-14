@@ -1,8 +1,8 @@
 import pandas as pd
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "data" / "test_versions"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "data" / "test"
 
 AGENT_FOUND = "агент нашёл услугу в тексте"
 BRIGADE = "правило 1: специалист назван в составе бригады"

@@ -1,12 +1,12 @@
 import pandas as pd
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "data" / "test_versions"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "data" / "test"
 IDS = [102, 103, 104, 105, 106]
 
 test = pd.read_parquet(ROOT / "data" / "processed" / "test_clean.parquet")
-dup = pd.read_excel(ROOT / "dataset_review" / "review" / "test_duplicate_conflicts.xlsx")
+dup = pd.read_excel(ROOT / "review" / "test_duplicate_conflicts.xlsx")
 team = {(int(r.row_id), int(r.mcId)): int(r.decision) for r in dup.itertuples()}
 
 v0 = test[["row_id", "description"] + [f"y_{m}" for m in IDS]].copy()

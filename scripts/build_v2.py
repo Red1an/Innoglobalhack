@@ -2,8 +2,8 @@ import re
 import pandas as pd
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "data" / "test_versions"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "data" / "test"
 PLASTER = re.compile(r"штукатур|оштукатур|маяк", re.IGNORECASE)
 NEGATION = re.compile(r"(никак\w*|\bне\b|\bбез\b|вместо|кроме|забудьте)[^.!?\n/]{0,25}$", re.IGNORECASE)
 
