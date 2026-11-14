@@ -65,6 +65,32 @@ class ProtocolTests(unittest.TestCase):
             self.assertEqual(bench.read_predictions(path), [{'labels': []}])
             self.assertEqual(path.read_bytes(), b'{"labels": []}\n')
 
+    def test_prepare_keeps_synthetic_out_of_dev_and_holds_out_dev_sources(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            real = [{'description': f'Объявление {i}', 'labels': [104], 'origin': 'real', 'item_id': i}
+                    for i in range(1, 31)]
+            is_dev = lambda row: int(bench.digest(bench.key(row['description']))[:8], 16) % 5 == 0
+            dev_source = next(row for row in real if is_dev(row))
+            fit_source = next(row for row in real if not is_dev(row))
+            synthetic = [
+                {'description': f'Синтетика {i}', 'labels': [104], 'origin': 'synthetic',
+                 'source_item_id': fit_source['item_id']}
+                for i in range(30)
+            ]
+            fit = next(row for row in synthetic if is_dev(row))
+            held_out = {**fit, 'description': 'Переработка объявления из dev',
+                        'source_item_id': dev_source['item_id']}
+            train_path, test_path, out = root / 'train.jsonl', root / 'test.jsonl', root / 'prepared'
+            bench.jsonl(train_path, [fit, held_out, *real])
+            bench.jsonl(test_path, [{'description': 'Тестовое объявление', 'labels': [105]}])
+            bench.prepare(argparse.Namespace(train=train_path, test=test_path, out=out, assume_source=101))
+            train, dev = [{row['description'] for row in bench.read(out / f'{split}.jsonl')}
+                          for split in ('train', 'dev')]
+            self.assertIn(fit['description'], train)
+            self.assertEqual(dev, {row['description'] for row in real if is_dev(row)})
+            self.assertNotIn(held_out['description'], train | dev)
+
     def test_clean_preserves_negation_and_lines(self):
         self.assertEqual(bench.clean('  Плитку\u00a0не кладём.\r\n Только сантехника. '),
                          'Плитку не кладём.\nТолько сантехника.')

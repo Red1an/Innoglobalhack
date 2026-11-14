@@ -185,21 +185,31 @@ def prepare(args):
                     'match': 'exact' if exact else 'normalized',
                 })
                 continue
-        groups[(text_key, row['mcId'])].append(row)
+        groups[(text_key, row['mcId'])].append((row, source_row))
     train, dev = [], []
+    synthetic, dev_item_ids = [], set()
     overlaps = len(overlap_rows)
     conflicts = duplicates = 0
-    for (text_key, _), rows in sorted(groups.items()):
-        duplicates += len(rows) - 1
+    for (text_key, _), records in sorted(groups.items()):
+        duplicates += len(records) - 1
         if text_key in reserved:
-            overlaps += len(rows)
+            overlaps += len(records)
             continue
-        if len({tuple(row['labels']) for row in rows}) > 1:
-            conflicts += len(rows)
+        if len({tuple(row['labels']) for row, _ in records}) > 1:
+            conflicts += len(records)
+            continue
+        row, source_row = records[0]
+        if source_row.get('origin') == 'synthetic' and source_row.get('source_item_id') is not None:
+            synthetic.append((row, source_row['source_item_id']))
             continue
         # Hash allocation keeps the same description in the same split across versions.
-        split = dev if int(digest(text_key)[:8], 16) % 5 == 0 else train
-        split.append(rows[0])
+        if int(digest(text_key)[:8], 16) % 5 == 0:
+            dev.append(row)
+            dev_item_ids.update(raw['item_id'] for _, raw in records if raw.get('item_id') is not None)
+        else:
+            train.append(row)
+    synthetic_fit = [row for row, source_id in synthetic if source_id not in dev_item_ids]
+    train.extend(synthetic_fit)
     if not train or not dev or not test:
         raise ValueError('Each split must be nonempty')
     test_groups = defaultdict(set)
@@ -212,6 +222,9 @@ def prepare(args):
                 'conflicting_train_rows_excluded': conflicts,
                 'conflicting_test_groups_retained': sum(len(v) > 1 for v in test_groups.values()),
                 'hashes': {name: digest(rows) for name, rows in splits.items()}}
+    if synthetic:
+        manifest['synthetic_train_rows'] = len(synthetic_fit)
+        manifest['synthetic_rows_excluded_for_dev_sources'] = len(synthetic) - len(synthetic_fit)
     out.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=f'.{out.name}-', dir=out.parent) as temporary:
         staging = Path(temporary)

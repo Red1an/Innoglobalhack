@@ -2,7 +2,7 @@
 
 import re
 import unicodedata
-from functools import lru_cache
+from functools import lru_cache, partial
 from pathlib import Path
 
 
@@ -41,6 +41,15 @@ PICTOGRAM = rf"(?:[{emoji_ranges()}]|[©®™]\ufe0f)[\ufe0e\ufe0f]?[\U0001F3FB-
 EMOJI = re.compile(rf"(?:(?:{FLAG}|{PICTOGRAM})(?:\u200d{PICTOGRAM})*)+")
 DISCRETIONARY_SPACES = str.maketrans({"\u200b": " ", "\uf0b7": "•"})
 EMOJI_COMPONENTS = re.compile(r"[\ufe0e\ufe0f\u20e3]")
+LETTER = re.compile(r"[^\W\d_]")
+WORD_JOIN = re.compile(r"(?<=[а-яё])(?=[А-ЯЁ][а-яё])")
+WORDS_OUTSIDE_HASHTAGS = re.compile(r"#\w+|[^#\s]+")
+NUMBERED_LINE = re.compile(r"^([1-9])(?=[а-яёА-ЯЁ])", re.M)
+NUMBER_UNIT = re.compile(r"(?<!\w)(\d+)(?=(?:год(?:а|ов)?|лет|человек(?:а)?)\b)", re.I)
+NUMBERED_HEADING = re.compile(
+    r"^(\d+[.)]\s+[^.!?\n]{3,65}[а-яё])(?=(?:Осматриваем|Составляем|До начала|Оплата|От черновых)\b)"
+)
+SEPARATOR = re.compile(r"_{4,}|[-–—=]{4,}")
 
 
 @lru_cache(maxsize=65536)
@@ -71,9 +80,18 @@ def strip_emoji(match):
     return ""
 
 
-def normalize_emoji(text):
+def normalize_emoji(text, *, separate_keycaps=True):
     text = UNDER_KEY.sub(lambda match: match[1] + (" КЛЮЧ" if match[1].isupper() else " ключ"), text)
-    text = KEYCAP.sub(r"\1", text)
+    if separate_keycaps:
+        def replace_keycap(match):
+            left, right = match.span()
+            before = " " if left and LETTER.fullmatch(text[left - 1]) else ""
+            after = " " if LETTER.match(text, right) else ""
+            return before + match[1] + after
+
+        text = KEYCAP.sub(replace_keycap, text)
+    else:
+        text = KEYCAP.sub(r"\1", text)
     text = SPECIAL_PUNCTUATION.sub(lambda match: PUNCTUATION[match[1]], text)
     return EMOJI_COMPONENTS.sub("", EMOJI.sub(strip_emoji, text))
 
@@ -104,12 +122,43 @@ def normalize_scripts(text):
     return TOKEN.sub(lambda match: normalize_token(match[0]), text)
 
 
+def separate_joined_list(text):
+    lines = []
+    for line in text.split("\n"):
+        # Several joins in the same line distinguish pasted lists from names such as СтройЛидер.
+        joins = sum(len(WORD_JOIN.findall(word)) for word in WORDS_OUTSIDE_HASHTAGS.findall(line)
+                    if not word.startswith("#"))
+        if joins >= 3:
+            line = WORDS_OUTSIDE_HASHTAGS.sub(
+                lambda match: match[0] if match[0].startswith("#") else WORD_JOIN.sub(" ", match[0]), line
+            )
+        lines.append(NUMBERED_HEADING.sub(r"\1\n", line))
+    return "\n".join(lines)
+
+
+def separate_joined_numbers(text):
+    if len(set(NUMBERED_LINE.findall(text))) >= 3:
+        text = NUMBERED_LINE.sub(r"\1 ", text)
+    return NUMBER_UNIT.sub(r"\1 ", text)
+
+
+def remove_decorative_separators(text):
+    return SEPARATOR.sub("\n", text)
+
+
 STEPS = (
     ("unicode_nfc", normalize_unicode, "Приведение Unicode к NFC"),
     ("emoji", normalize_emoji, "Удаление эмодзи с сохранением цифр, пунктуации и фразы «под ключ»"),
     ("controls", remove_controls, "Нормализация переносов и невидимых символов"),
+    ("joined_list", separate_joined_list, "Восстановление пробелов в склеенных перечнях"),
+    ("joined_numbers", separate_joined_numbers, "Восстановление пробелов у номеров списка, возраста и размера бригады"),
+    ("decorative_separators", remove_decorative_separators, "Замена декоративных разделителей переносом строки"),
     ("whitespace", normalize_whitespace, "Нормализация пробелов с сохранением строк и абзацев"),
     ("mixed_scripts", normalize_scripts, "Исправление смешанных букв и разобранных написаний"),
+)
+STEPS_V1 = tuple(
+    (name, partial(transform, separate_keycaps=False) if name == "emoji" else transform, description)
+    for name, transform, description in STEPS if name not in {"joined_list", "joined_numbers", "decorative_separators"}
 )
 
 

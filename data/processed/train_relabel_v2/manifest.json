@@ -1,0 +1,103 @@
+{
+  "version": "train_relabel_v2",
+  "source": {
+    "path": "data/processed/train_relabel_v1/train.parquet",
+    "sha256": "141ab8f8510779cef4cd0bb8e96914e8ed6841ec6ff99babc34af1ecbfd1e717",
+    "records": 4749
+  },
+  "raw_source": {
+    "path": "data/raw/public-train-annotated.jsonl",
+    "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+    "records": 10000
+  },
+  "source_removed_duplicates": {
+    "path": "data/processed/train_dedup_v1/removed_duplicates.csv",
+    "sha256": "08f50bede5422351e66c51c30bde310ba5e56f6e5c5c0436d12a421a2766c5d9",
+    "records": 5251
+  },
+  "dataset": {
+    "path": "data/processed/train_relabel_v2/train.parquet",
+    "sha256": "ed5f70e95fb0db3fdd1c00d0518df0f03b1f35215b0fa96497b57bc748863bb0",
+    "records": 4749
+  },
+  "label_changes": {
+    "path": "data/processed/train_relabel_v2/label_changes.csv",
+    "sha256": "dbf4dcef9adfef4f1f8e3d012363f1f5831fd38055122709bfebd9c754d836fd",
+    "records": 86
+  },
+  "text_changes": {
+    "path": "data/processed/train_relabel_v2/text_changes.csv",
+    "sha256": "35c14c5b8ad3cf95726229208e04ba8d9985bcbfd8f51357316761733a54e20e",
+    "records": 339
+  },
+  "affected_duplicates": {
+    "path": "data/processed/train_relabel_v2/affected_duplicates.csv",
+    "sha256": "cecaefdd89178019818c56ad3942e0686a979879257b79491e753268cb401667",
+    "records": 398
+  },
+  "lineage": {
+    "item_id": "исходный item_id",
+    "source_line": "номер строки исходного JSONL с единицы"
+  },
+  "transformed_text_rows": 339,
+  "relabeled_rows": 60,
+  "transformations": [
+    {
+      "id": "clean_from_raw",
+      "description": "Разделение цифр от keycap-эмодзи и склеенных пунктов перечней, исправление пробелов в числовых выражениях и нормализация декоративных разделителей.",
+      "by_rule": {
+        "decorative_separators": 291,
+        "joined_list": 36,
+        "joined_numbers": 10,
+        "keycap_spacing": 6
+      }
+    },
+    {
+      "id": "relabel_102_106",
+      "description": "Новые правила подтверждения услуг по основному тексту поверх меток train_relabel_v1. Поисковые блоки сохранены в данных, учтены результаты индивидуальной проверки v1.",
+      "by_category": {
+        "102": {
+          "before": 1954,
+          "removed": 22,
+          "added": 0,
+          "after": 1932
+        },
+        "103": {
+          "before": 2409,
+          "removed": 3,
+          "added": 10,
+          "after": 2416
+        },
+        "104": {
+          "before": 2337,
+          "removed": 2,
+          "added": 17,
+          "after": 2352
+        },
+        "105": {
+          "before": 2329,
+          "removed": 2,
+          "added": 15,
+          "after": 2342
+        },
+        "106": {
+          "before": 2681,
+          "removed": 15,
+          "added": 0,
+          "after": 2666
+        }
+      }
+    }
+  ],
+  "build_files_sha256": {
+    "dataset_review/build_train_relabel_v2.py": "24c194332453f444144f2e73dc2a8c7113ea38010827b234707064953721581b",
+    "dataset_review/train_relabel_v1_reviewed.csv": "f272f15fa3e0ba7769a436e447d73edf706acedd9ce284b3c4c11384f24931ee",
+    "dataset_review/build_train_text_v1.py": "067940db320201ac4a9bca5b88797dbab4730c55f9c2d2500bb1a94b500856a7",
+    "dataset_review/build_train_dedup_v1.py": "b6d5eb812c463445f19801d561d36b5d6a8de58e29559149b52abf8c02f9b95c",
+    "dataset_review/build_train_relabel_v1.py": "677bb6541097496c55c9fc2ae14c13fdb61a443e9eef73bbef9d495d1100d610",
+    "dataset_review/train_text_cleaning.py": "4c2d1625c4db98555a83d02f393201b0c6514074340b21b6a90fac90541156c4",
+    "dataset_review/emoji_ranges.txt": "e9188a1881b158d57e9381c3c9253abb5b2941dc63d820a822efc112db723557",
+    "dataset_review/train_relabel_rules.py": "ed128e1a09ad78162a90d404593abd346d55c28f69e96a323746ad958255c322"
+  },
+  "pyarrow_version": "26.0.1"
+}

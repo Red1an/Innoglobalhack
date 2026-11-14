@@ -10,7 +10,7 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from train_text_cleaning import PRESERVED_NAMES_AND_CODES, STEPS, mixed_tokens
+from train_text_cleaning import PRESERVED_NAMES_AND_CODES, STEPS_V1 as STEPS, mixed_tokens
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/raw/public-train-annotated.jsonl"

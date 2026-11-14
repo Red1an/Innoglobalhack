@@ -1,18 +1,18 @@
 {
   "version": "train_synth_v1",
   "base": "102 из train_labels_102_v1, 103–106 из train_relabel_v1",
-  "records": 4930,
+  "records": 5379,
   "real": 4282,
-  "synthetic": 648,
+  "synthetic": 1097,
   "all_five_before": 1267,
   "all_five_after": 800,
   "seed": 42,
   "synthesis": {
-    "tasks": 667,
-    "accepted": 648,
+    "tasks": 1140,
+    "accepted": 1097,
     "rejected": {
       "контакты": 2,
-      "дубль синтеза": 17
+      "дубль синтеза": 41
     }
   },
   "columns": {

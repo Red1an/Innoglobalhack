@@ -1,0 +1,89 @@
+{
+  "version": "train_relabel_v2_synth_v1",
+  "sources": {
+    "real": {
+      "path": "data/processed/train_relabel_v2/train.parquet",
+      "sha256": "ed5f70e95fb0db3fdd1c00d0518df0f03b1f35215b0fa96497b57bc748863bb0",
+      "records": 4749
+    },
+    "synthetic": {
+      "path": "data/processed/train_synth_v1/train.parquet",
+      "sha256": "64a0d6c4299d36f02c3683f9dc6319978ad04e7d9253258b120d5ff539628f8b",
+      "records": 5379
+    },
+    "synth_review": {
+      "path": "data/processed/train_synth_v1/synth_review.jsonl",
+      "sha256": "1cd7669520e5563e3a1d5dbc48852e29040c090741bfee45f66ce9887f6deb6b",
+      "records": 1140
+    },
+    "raw_real": {
+      "path": "data/raw/public-train-annotated.jsonl",
+      "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+      "records": 10000
+    },
+    "test_gold": {
+      "path": "data/test/test_gold.parquet",
+      "sha256": "5ca036c1e8dc4d7c24b6d1c42689feeecb36958ff1dd411ab1b64ef4f83e9189",
+      "records": 80
+    },
+    "public_test": {
+      "path": "data/raw/public-test-dataset.parquet",
+      "sha256": "65b5a45a98b577d853a928932bbbdf8bd9bdeb469ded3016faace4d11f3eabaa",
+      "records": 208
+    }
+  },
+  "dataset": {
+    "path": "data/processed/train_relabel_v2_synth_v1/train_relabel_v2_synth_v1.parquet",
+    "sha256": "36837b6f47443a6987244d4dd6595f9ae029db0ce9b6118cefca01f668eb26d9",
+    "records": 5311
+  },
+  "excluded_real": {
+    "path": "data/processed/train_relabel_v2_synth_v1/excluded_real.csv",
+    "sha256": "623e010c00ec6ddca6cf64460ac8d9c8a53f8b3e681328604f99bc86cdfb435c",
+    "records": 535
+  },
+  "records_by_origin": {
+    "real": 4214,
+    "synthetic": 1097
+  },
+  "labels_by_origin": {
+    "real": {
+      "102": 1407,
+      "103": 1891,
+      "104": 1825,
+      "105": 1814,
+      "106": 2139
+    },
+    "synthetic": {
+      "102": 277,
+      "103": 308,
+      "104": 465,
+      "105": 358,
+      "106": 86
+    },
+    "total": {
+      "102": 1684,
+      "103": 2199,
+      "104": 2290,
+      "105": 2172,
+      "106": 2225
+    }
+  },
+  "transformations": {
+    "test_overlap_rows_removed": 12,
+    "all_five": {
+      "before_cap": 1323,
+      "after_cap": 800,
+      "limit": 800,
+      "seed": 42
+    },
+    "synthetic_filter": "origin=synthetic, совпадение с результатами слепой проверки"
+  },
+  "lineage": {
+    "source_item_id": "item_id реального исходного объявления",
+    "source_line": "номер строки этого объявления в исходном JSONL, начиная с единицы",
+    "synth_task_id": "идентификатор задания синтеза"
+  },
+  "build_sha256": "e4bd014c5adf7f61f52b1713858a72ef3ffa9b47f811a2bf5f28a852be531960",
+  "pyarrow_version": "26.0.1"
+}

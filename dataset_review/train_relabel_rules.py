@@ -10,18 +10,23 @@ SEO = re.compile(
     r'нас (?:также )?ищут(?:\s+(?:по таким запросам|со словами))?|нас можно\s+'
     r'(?:(?:так\s*же\s+)?найти)(?:\s+по этим запросам)?|нас находят по запросам|'
     r'наши запросы|ключевые запросы(?: для поиска)?|для удобства поиска|'
-    r'seo[ -]?запросы|теги)[* \t]*(?::|\n)', FLAGS,
+    r'seo[ -]?запросы|поисковые слова|слова для поиска|вы искали меня по запросу|теги)[* \t]*(?::|\n)', FLAGS,
 )
 SEO_LIST = re.compile(
     r'^(?:ремонт|отделк\w+|черновая отделка|внутренние отделочные работы|'
     r'мастер|шпаклёвка|шпаклевка|шпатлевка|поклейка)[^\n.!?]{5,90}[,; /]',
     FLAGS,
 )
+SEARCH_VARIANTS = re.compile(r'\b(?:ремонт|отделк\w*|прихож\w*|коридор\w*|гостин\w+)\b', FLAGS)
+SEARCH_LIST_PROSE = re.compile(
+    r'[:!?]|(?<!\d)\.\s+\S|\b(?:выполня\w*|предлага\w*|делаем|работаем|'
+    r'входит|сделаем|звоните|пишите|гарантируем)\b', FLAGS,
+)
 PLASTER = r'\b(?:[а-яё]*штукатур\w*|маяк\w*|венецианк\w*|рот[ -]?банд\w*|короед\w*|микроцемент\w*|терразит\w*|лепнин\w*|мокр\w+ фасад\w*)'
 LEVEL = r'\b(?:выравн\w*|выровн\w*|ровня\w*)[^\n.;]{0,30}?(?:стен|потол|поверх)\w*|\bш(?:пакл|патл)\w*'
 TILE = r'(?:плитк\w*|кафел\w*|керамогранит\w*|мозаик\w*)'
 PLUMB = (
-    r'(?:сантехник\w*|санитарн\w+\s+(?:техник\w*|оборудован\w*)|водопровод\w*|'
+    r'(?:сантехник\w*|сантехническ\w+\s+коммуникац\w*|санитарн\w+\s+(?:техник\w*|оборудован\w*)|водопровод\w*|'
     r'водоснабжен\w*|канализац\w*|(?:водяных?\s+)?труб\w*|'
     r'смесител\w*|унитаз\w*|раковин\w*|сифон\w*|инсталляц\w*|'
     r'ванн(?:ы|у)\b|душев\w+\s+(?:кабин\w*|систем\w*)|радиатор\w*|полотенцесушител\w*)'
@@ -31,15 +36,18 @@ ELECTRIC = (
     r'(?:электро)?проводк\w*|кабел\w*|розет\w*|подрозетник\w*|выключател\w*|'
     r'электропровод\w*|узо\b|дифавтомат\w*|светильник\w*|люстр\w*|освещени\w*)'
 )
-PAINT = r'(?:покраск\w*|окраск\w*|(?:по|о)?крашив\w*|крас(?:им|ит|ить|ят)|покрас(?:им|ить|ит|ят))'
+PAINT = r'(?:покраск\w*|окраск\w*|(?:по|о|пере|вы)?крашива\w*|крас(?:им|ит|ить|ят)|покрас(?:им|ить|ит|ят))'
 WALLPAPER = r'(?:обои\b|обоев\w*|обоя\w*|стеклохолст\w*)'
 FIT = r'(?:монтаж\w*|установ\w+|замен\w+|подключ\w+|провед\w*|развод\w+|проклад\w+|перен\w+|диагностик\w*)'
 PREP = re.compile(
     rf'\b(?:под|для|к)\s+(?:будущ\w+\s+|самостоятельн\w+\s+)?'
     rf'(?:{PAINT}|{WALLPAPER}|краск\w*|(?:по|о)клей\w*\s+обоев|{TILE}|укладк\w*\s+{TILE})'
     rf'(?:[ \t]*(?:(?:или|и)\s+|/\s*(?:под\s+)?|,\s*под\s+)'
-    rf'(?:{PAINT}|{WALLPAPER}|краск\w*|(?:по|о)клей\w*\s+обоев|{TILE}))*', FLAGS,
+    rf'(?:{PAINT}|{WALLPAPER}|краск\w*|(?:по|о)клей\w*\s+обоев|{TILE}))*'
+    r'(?:[ \t]*,[ \t]*(?:под\s+)?(?:покраску|окраску|обои|поклейку обоев|плитку)\b)*', FLAGS,
 )
+PREP_TYPO = r'\bпо\s+(?:покраску|окраску)\b'
+PREP_TARGETS = re.compile(rf'{PREP.pattern}|{PREP_TYPO}', FLAGS)
 EXTERIOR_TILE = r'(?:тротуарн\w*|потолочн\w*)\s+плитк\w*'
 SERVICE = {
     102: (
@@ -57,9 +65,11 @@ SERVICE = {
     104: (
         rf'\b{FIT}[^\n.;:—]{{0,48}}?\b{PLUMB}|'
         r'\bремонт\w*\s+(?:смесител\w*|унитаз\w*|душев\w+\s+кабин\w*)',
-        r'\bсантехническ\w+\s+(?:работ\w*|монтаж\w*)|\bразвод\w+\s+(?:холодн\w+\s+и\s+горяч\w+\s+)?(?:водоснабжен\w*|воды)|'
+        r'\bсантехническ\w+\s+(?:(?:и\s+электрическ\w+\s+)?работ\w*|монтаж\w*)|'
+        r'\b(?:развод\w+|распайк\w*)\s+(?:холодн\w+\s+и\s+горяч\w+\s+)?(?:водоснабжен\w*|воды)|'
         r'\b(?:устран\w+\s+протеч\w*|прочист\w+\s+засор\w*|реставр\w+\s+ванн\w*)|'
         r'\bэлектромонтаж\w*\s+и\s+сантехник[аиу]\b|'
+        r'\bзамен\w+\s+(?:всех\s+)?коммуникац\w*\s*[:—–-]\s*электрик[аиу],\s*сантехник[аиу]\b|'
         r'^\s*(?:[—–•*-]\s*)?сантехник[аиу]\s*(?:[.;]|$)|'
         r'\b(?:устройств\w*|монтаж\w*|установ\w+)\s+водян\w*\s+т[её]пл\w*\s+пол\w*',
     ),
@@ -72,18 +82,25 @@ SERVICE = {
     ),
     106: (
         rf'\b{PAINT}\b|\bм[ао]лярн\w+\s+работ\w*',
-        rf'\b(?:покле\w+|окле\w+|клеим|накле\w+|замен\w+|перекле\w+)[^\n.;:—]{{0,28}}?\b{WALLPAPER}',
+        rf'\b(?:покле\w+|окле\w+|клеим|накле\w+|замен\w+|перекле\w+)[^\n.;:—]{{0,28}}?\b{WALLPAPER}|'
+        r'\bоклейк\w*\s+обоями\b',
         r'\b(?:моющ\w+\s+)?краска\s+на\s+(?:стен\w*|потолк\w*)',
     ),
 }
 WEAK = {
     102: PLASTER,
-    103: rf'\b(?:{TILE}|плиточ\w*|затир\w*|запил\w*|платки\b)',
-    104: rf'\b(?:{PLUMB}|сантех\w*|ванн\w*|отоплен\w*|т[её]пл\w+\s+пол\w*|бойлер\w*|водонагрев\w*|протеч\w*|засор\w*|пос[уy]домоеч\w*|стиральн\w*|канализац\w*)',
+    103: rf'\b(?:{TILE}|плиточ\w*|фартук\w*|затир\w*|запил\w*|платки\b)',
+    104: rf'\b(?:{PLUMB}|сантех\w*|ванн\w*|распайк\w*\s+воды|отоплен\w*|т[её]пл\w+\s+пол\w*|бойлер\w*|водонагрев\w*|протеч\w*|засор\w*|пос[уy]домоеч\w*|стиральн\w*|канализац\w*)',
     105: rf'\b(?:{ELECTRIC}|электр\w*|электро\s*монтаж\w*|подсвет\w*|свет\w*|штроб\w*|слаботоч\w*|т[её]пл\w+\s+пол\w*)',
-    106: rf'\b(?:{PAINT}|{WALLPAPER}|м[ао]ляр\w*|краск\w*|(?:по|о)клей\w*)',
+    106: rf'\b(?:{PAINT}|{WALLPAPER}|м[ао]ляр\w*|краск\w*|(?:по|о)клей\w*|побел\w*|колеров\w*)',
 }
-REQUEST = re.compile(r'^\s*(?:(?:требуется|ищу|ищем|нужен|нужна|нужны)\s+(?:ремонт|мастер\w*|бригад\w*|отделочни\w*)|я\s*алиса)', FLAGS)
+REQUEST = re.compile(r'^\s*(?:требуется|ищу|ищем|нужен|нужна|нужны)\s+(?:ремонт|мастер\w*|бригад\w*|отделочни\w*)\b', FLAGS)
+ASSISTANT_TRANSCRIPT = re.compile(r'^\s*я\s*алиса', FLAGS)
+PROVIDER = re.compile(
+    r'\b(?:выполня(?:ем|ю)|предлага(?:ем|ю)|работа(?:ем|ю)|занима(?:емся|юсь)|'
+    r'дела(?:ем|ю)|сделаем|выполним|ремонтируем|бер[её]м|возьм[её]мся|'
+    r'наша (?:бригада|команда)|группа компаний|вы попали куда нужно|тогда вам к нам)\b', FLAGS,
+)
 HASHTAG = re.compile(r'(?<!\w)#[а-яё][а-яё_0-9]+', FLAGS)
 TAG_PATTERNS = {
     102: re.compile(r'штукатурка(?:стен|потолков|откосов)?', FLAGS),
@@ -100,6 +117,7 @@ OFFER = re.compile(
     r'\b(?:выполня\w+|выполним|предлага\w+|занима\w+|делаем|сделаем|работаем|'
     r'бер[её]м|входит|включает|услуги|что (?:делаем|выполняем|входит)|перечень работ|'
     r'наши работы|финишная отделка|этапы работ|комплекс работ|'
+    r'готов\w*\s+(?:вам\s+)?предложить|что включено|что можем сделать|'
     r'укладываем|клад[её]м|монтируем|подключаем|устанавливаем|штукатурим|красим)\b', FLAGS,
 )
 NEG = re.compile(
@@ -129,6 +147,34 @@ MATERIALS = re.compile(
 PREPARATION_RESULT = re.compile(
     r'\b(?:под|для)\s+(?:\w+[, ]+){0,6}или\s+' + TILE, FLAGS,
 )
+COMPACT_OFFER = re.compile(
+    r'^\s*(?:ремонт|отделка)\s+(?:квартир|домов|помещений|офисов|комнат)\b', FLAGS,
+)
+WORK_LIST_HEADER = re.compile(
+    r'\b(?:что\s+(?:делаем|выполняем|входит|включено|можем сделать)|'
+    r'комплекс\s+(?:отделочных\s+)?работ|виды работ|'
+    r'(?:черновые|чистовые|черновая|чистовая)(?:\s+и\s+(?:чистовые|чистовая))?\s+(?:работы|отделка))'
+    r'[^.!?\n]{0,35}[:—–]', FLAGS,
+)
+WORK_LIST_END = re.compile(r'[:!?]|\.\s+\S|\b(?:не|кроме|материалы|стоимость|гарантия|заказчик)\b', FLAGS)
+LIST_ITEM = {
+    103: r'(?:плитка|керамогранит)(?:\s+(?:и\s+(?:плитка|керамогранит|санузлы)|на\s+(?:стены|пол)))?',
+    104: r'сантехника',
+    105: r'электрика',
+    106: r'обои',
+}
+BARE_WORK = {
+    category: re.compile(rf'(?:^|[,;:—(]|\sи)\s*(?:[-—–•*]\s*|\d+[.)]?\s+)?'
+                         rf'(?P<work>{item})(?=\s*(?:[,;.—–)]|$|\sи\b))', FLAGS)
+    for category, item in LIST_ITEM.items()
+}
+TRADE = {103: r'плиточник', 104: r'сантехник', 105: r'электрик'}
+TEAM = re.compile(r'\b(?:сво[яеи]\s+(?:команда|бригада)|(?:силами|в составе)\s+(?:одной|своей)\s+(?:команды|бригады))\b', FLAGS)
+TUB_COATING = re.compile(r'\bреставраци\w*\s+(?:ранее\s+окрашенных\s+)?ванн\w*\b', FLAGS)
+ONLY_WITH_PACKAGE = re.compile(
+    r'\b(?:отдельно|отдельн\w+\s+(?:работ\w*|заказ\w*))\b[^.!?\n]{0,70}'
+    r'\bтолько\s+(?:в\s+(?:комплексе|составе)|при\s+комплексн\w+\s+ремонт\w*)\b', FLAGS,
+)
 PLUMBING_WORK = re.compile(
     r'\b(?:сантех\w*|труб\w*|канализац\w*|смесител\w*|подключ\w*|водоснабжен\w*|'
     r'радиатор\w*|отоплен\w*|реставр\w*|полотенцесушител\w*|водонагрев\w*|'
@@ -139,7 +185,7 @@ PAINT_OFFER = re.compile(r'(?im)^\s*(?:[—–•*-]\s*)?(?:покраска|о�
 ELECTRIC_DESIGN = re.compile(r'\b(?:проектирован\w*|проект\w*)\s+(?:электрик\w*|электроснабжен\w*|электросет\w*)', FLAGS)
 PREP_TASK = re.compile(
     rf'\b(?:подготов\w*|ш(?:пакл|патл)\w*|выравн\w*|штукатур\w*|грунтов\w*|шлифов\w*)'
-    rf'[^\n.;]{{0,65}}?(?:{PREP.pattern})', FLAGS,
+    rf'[^\n.;]{{0,65}}?(?:{PREP_TARGETS.pattern})', FLAGS,
 )
 OUTSIDE_ONLY_103 = re.compile(r'\b(?:уклад\w*|укладыва\w*|монтаж\w*)\s+' + EXTERIOR_TILE, FLAGS)
 TILE_PREP_ONLY = re.compile(
@@ -159,17 +205,30 @@ def mask(pattern, text):
 
 
 def description_body(text):
+    """Исключаем поисковые блоки для определения меток, сохраняя остальные абзацы."""
     marker = SEO.search(text)
-    end = marker.start() if marker else len(text)
-    for paragraph in reversed(list(re.finditer(r'[^\n]+', text[:end]))):
+    body = text[:marker.start()] if marker else text
+    for paragraph in re.finditer(r'[^\n]+', body):
         value = paragraph.group().strip()
-        if len(value) < 180 or not SEO_LIST.match(value):
+        if len(value) < 180 or not SEO_LIST.match(value) or SEARCH_LIST_PROSE.search(value):
             continue
-        separators = sum(value.count(symbol) for symbol in (',', ' / ', ';'))
-        if separators >= 7 and not re.search(r'[.!?]\s+[А-ЯЁ]|\b(?:выполняем|предлагаем|делаем)\b', value):
-            end = paragraph.start()
-            break
-    return text[:end]
+        phrases = re.split(r'[,;]| / ', value)
+        if len(phrases) >= 8 and sum(bool(SEARCH_VARIANTS.search(part)) for part in phrases[:10]) >= 3:
+            start, stop = paragraph.span()
+            body = body[:start] + ' ' * (stop - start) + body[stop:]
+    return body
+
+
+def is_customer_request(text):
+    if ASSISTANT_TRANSCRIPT.match(text):
+        return True
+    request = REQUEST.match(text)
+    if not request:
+        return False
+    if not request.group().lstrip().casefold().startswith('нуж'):
+        return True
+    question = re.match(r'[^.!?\n]{0,135}\?', text[request.end():])
+    return not (question and PROVIDER.search(text[request.end() + question.end():]))
 
 
 def supported(category, original, active, start, stop):
@@ -177,17 +236,21 @@ def supported(category, original, active, start, stop):
     left = CLAUSE.split(original[max(0, start - 95):start])[-1]
     right = CLAUSE.split(original[stop:stop + 65])[0]
     fragment = active[start:stop]
-    # Отрицание отдельного заказа срабатывает только около соответствующей фразы.
+    package = ONLY_WITH_PACKAGE.search(left + fragment + right)
     if re.search(r'\bне\s+(?:бер[её]м\w*|выполня\w*)\s+(?:отдельн\w+\s+)?заказ', left, FLAGS):
-        return False
+        if not package:
+            return False
     if re.search(r'\bне\s+(?:дела\w*|выполня\w*|бер[её]м\w*)\s*:?\s*(?:частичн\w*|отдельн\w*|за\s+отдельн\w*)[^)]*\(', left, FLAGS):
         return False
     if re.search(r'^(?:(?![.:]).){0,55}\bне\s+(?:выполня\w*|делаем|укладыва\w*|занима\w*|бер[её]м\w*|принима\w*|входит|входят)\b', right, FLAGS):
-        return False
+        if not package or not re.search(r'\bотдельно\b', right, FLAGS):
+            return False
     local = re.split(r'[,/]|\s[—–]\s', left)[-1]
     if NEG.search(local) or ABSTRACT.search(local):
         return False
     if OTHER.search(local) and not OFFER.search(local):
+        return False
+    if re.search(r'\b(?:демонтаж\w*|сняти\w*|удалени\w*)[^()]{0,55}\([^)]*$', left, FLAGS):
         return False
     if re.search(r'\b(?:правильность|проверяю|проверяем|не\s+хотите\s+искать)\b', left, FLAGS):
         return False
@@ -209,6 +272,8 @@ def supported(category, original, active, start, stop):
     if category == 105 and PROJECT.search(local):
         return False
     if category == 106:
+        if re.match(r'\s+(?:(?:чугунн\w*|стар\w*|акрилов\w*)\s+)?ванн(?:ы|у)\b', right, FLAGS):
+            return False
         if re.search(r'\bне просто(?:\s+\w+){0,3}\s*$', local, FLAGS):
             return False
         if MATERIAL_PAINT.match(fragment):
@@ -227,6 +292,40 @@ def evidence(category, text, active):
     return ''
 
 
+def listed_services(body, active):
+    """Читаем отдельные пункты перечня и специалистов собственной команды."""
+    services = {}
+    remaining = 0
+    after_team = False
+    for match in re.finditer(r'\S[^\n]*', active):
+        line = match.group()
+        header = WORK_LIST_HEADER.search(line)
+        start = match.start()
+        if header:
+            remaining = 12
+            start += header.end()
+            line = line[header.end():]
+        elif WORK_LIST_END.search(line):
+            remaining = 0
+        if remaining:
+            for category, pattern in BARE_WORK.items():
+                for item in pattern.finditer(line):
+                    left, right = (value + start for value in item.span('work'))
+                    if supported(category, body, active, left, right):
+                        services.setdefault(category, body[left:right])
+                        break
+        if after_team or TEAM.search(line):
+            team_list = re.split(r'[:—–]', line)[-1] if not after_team and ':' in line else line
+            if not re.search(r'\b(?:ищем|требуются|партн[её]р\w*|сторонн\w*|отдельн\w*)\b', team_list, FLAGS):
+                for category, trade in TRADE.items():
+                    named = re.search(rf'\b{trade}(?:и|ы)?\b', team_list, FLAGS)
+                    if named:
+                        services.setdefault(category, named.group())
+        after_team = bool(TEAM.search(line) and len(line.split()) <= 6)
+        remaining = max(0, remaining - 1)
+    return services
+
+
 def corroborated_tag(category, description, body):
     if TAG_CONTRADICTION.search(body) or not SIGNALS[category].search(body):
         return ''
@@ -236,54 +335,72 @@ def corroborated_tag(category, description, body):
     return ''
 
 
+def excluded_signal(category, description, body):
+    return next((match.group() for match in SIGNALS[category].finditer(description)
+                 if not body[match.start():match.end()].strip()), '')
+
+
 def relabel(description, labels):
     """Возвращает предложения 0/1 с точными цитатами из исходного текста."""
     body = description_body(description)
-    active = mask(PREP, mask(MATERIALS, body))
-    if REQUEST.match(body):
+    if is_customer_request(body):
         return {}
-    has_offer = bool(OFFER.search(body))
+    service_body = mask(HASHTAG, mask(MATERIALS, body))
+    active = mask(PREP_TARGETS, service_body)
+    compact = len(body) <= 600 and bool(COMPACT_OFFER.match(body))
+    has_offer = bool(OFFER.search(body) or PROVIDER.search(body) or compact)
+    listed = listed_services(body, active) if has_offer else {}
     decisions = {}
     for category in RULES:
         current = category in labels
         text = mask(EXTERIOR, active) if category == 103 else active
-        proof = evidence(category, body, text)
-        tag = corroborated_tag(category, description, body) if has_offer and not proof else ''
+        proof = evidence(category, body, text) or listed.get(category)
+        tag = corroborated_tag(category, body, service_body) if has_offer and not proof else ''
         if proof or tag:
             if not current and has_offer:
                 reason = GENERAL_REASONS[category] if proof else 'Конкретный тег подтверждает услугу по основному тексту'
                 decisions[category] = (1, proof or tag, reason)
             continue
 
-        full_signal = SIGNALS[category].search(mask(MATERIALS, description))
         if not current:
             continue
 
-        if category == 102 and not full_signal:
-            near = LEVELING.search(description)
+        signal = SIGNALS[category].search(service_body)
+        outside_body = excluded_signal(category, description, body) if not signal else ''
+        if outside_body:
+            decisions[category] = (0, outside_body, 'Категория упомянута только в поисковом блоке')
+            continue
+
+        if category == 102 and not signal:
+            near = LEVELING.search(body)
             if near:
                 decisions[category] = (0, near.group(), 'Выравнивание без указания штукатурки или только шпаклёвка')
         elif category == 103:
             preparation = TILE_PREP_ONLY.search(body)
             outside = OUTSIDE_ONLY_103.search(body)
             # Сигнал вне этих выражений может быть предложением кафеля или укладки.
-            unmatched = mask(OUTSIDE_ONLY_103, mask(TILE_PREP_ONLY, mask(PREPARATION_RESULT, description)))
+            unmatched = mask(OUTSIDE_ONLY_103, mask(TILE_PREP_ONLY, mask(PREPARATION_RESULT, service_body)))
             if (preparation or outside) and not SIGNALS[103].search(unmatched):
                 decisions[category] = (0, (preparation or outside).group(), 'Только подготовка, демонтаж или наружная плитка')
         elif category == 104:
             room_finish = ROOM_FINISH.search(body)
-            if room_finish and not PLUMBING_WORK.search(description):
+            if room_finish and not PLUMBING_WORK.search(service_body):
                 decisions[category] = (0, room_finish.group(), 'Описана отделка ванной, сантехнические работы не указаны')
         elif category == 105:
             paint_offer = PAINT_OFFER.search(body)
             design = ELECTRIC_DESIGN.search(body)
-            if design and not SIGNALS[105].search(mask(ELECTRIC_DESIGN, description)):
+            if design and not SIGNALS[105].search(mask(ELECTRIC_DESIGN, service_body)):
                 decisions[category] = (0, design.group(), 'Электрика только в проекте, монтаж не предложен')
-            elif paint_offer and not full_signal:
+            elif paint_offer and not signal:
                 decisions[category] = (0, paint_offer.group().strip(), 'В описании малярные услуги, электромонтаж не указан')
         elif category == 106:
             preparation = PREP_TASK.search(body)
-            unmasked = mask(PREP, description)
-            if preparation and not SIGNALS[106].search(unmasked):
+            tub_coating = TUB_COATING.search(body)
+            if preparation and not SIGNALS[106].search(active):
                 decisions[category] = (0, preparation.group(), 'Покраска или поклейка названа как цель подготовки')
+            elif tub_coating and not SIGNALS[106].search(mask(TUB_COATING, active)):
+                decisions[category] = (0, tub_coating.group(), 'Реставрация покрытия ванны без малярной отделки помещения')
+            elif not signal and body.strip():
+                quote = next(line.strip() for line in body.splitlines() if line.strip())[:120]
+                decisions[category] = (0, quote, 'В основном описании нет малярных работ или поклейки обоев')
     return decisions
