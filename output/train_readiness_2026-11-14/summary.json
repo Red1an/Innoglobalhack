@@ -1,0 +1,651 @@
+{
+  "created_msk": "2026-11-14T18:43:20.549940+03:00",
+  "hashes": {
+    "data/raw/public-train-annotated.jsonl": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+    "data/processed/train_text_v1/train.parquet": "74990784db9e4f47bb41b9d5d4fa083f44292c49f642a326c643c1701053985c",
+    "data/test/test_gold.parquet": "aa2ead6a49182215e41416adf5ee84792bab6a36b4657744e86bcc5e08c65b76"
+  },
+  "integrity_verified_rows": 10000,
+  "old_train_description_identical_to_raw": 10000,
+  "old_train_description_different_from_v1": 8821,
+  "duplicates": {
+    "raw_exact": {
+      "groups": 4866,
+      "excess_rows": 5134,
+      "rows_in_duplicate_groups": 5547,
+      "conflicting_groups": 0,
+      "largest_groups": [
+        76,
+        69,
+        63,
+        62,
+        61,
+        61,
+        60,
+        59,
+        58,
+        58
+      ]
+    },
+    "v1_exact": {
+      "groups": 4830,
+      "excess_rows": 5170,
+      "rows_in_duplicate_groups": 5591,
+      "conflicting_groups": 0,
+      "largest_groups": [
+        76,
+        69,
+        63,
+        62,
+        61,
+        61,
+        60,
+        59,
+        58,
+        58
+      ]
+    },
+    "v1_key": {
+      "groups": 4823,
+      "excess_rows": 5177,
+      "rows_in_duplicate_groups": 5597,
+      "conflicting_groups": 0,
+      "largest_groups": [
+        94,
+        76,
+        69,
+        63,
+        62,
+        61,
+        61,
+        60,
+        59,
+        58
+      ]
+    },
+    "v1_no_stock_key": {
+      "groups": 4759,
+      "excess_rows": 5241,
+      "rows_in_duplicate_groups": 5664,
+      "conflicting_groups": 0,
+      "largest_groups": [
+        94,
+        76,
+        69,
+        63,
+        62,
+        61,
+        61,
+        60,
+        59,
+        58
+      ]
+    }
+  },
+  "distributions": {
+    "train": {
+      "rows": 10000,
+      "label_cardinality": {
+        "0": 2909,
+        "1": 957,
+        "2": 1084,
+        "3": 1316,
+        "4": 561,
+        "5": 3173
+      },
+      "categories": {
+        "102": 5484,
+        "103": 5073,
+        "104": 4582,
+        "105": 4562,
+        "106": 5481
+      },
+      "chars_quantiles": {
+        "min": 1.0,
+        "median": 2194.0,
+        "p90": 4369.0,
+        "p95": 4853.0,
+        "p99": 5378.0,
+        "max": 5529.0
+      }
+    },
+    "train_unique": {
+      "rows": 4759,
+      "label_cardinality": {
+        "0": 1322,
+        "1": 493,
+        "2": 668,
+        "3": 499,
+        "4": 405,
+        "5": 1372
+      },
+      "categories": {
+        "102": 2425,
+        "103": 2296,
+        "104": 2254,
+        "105": 2238,
+        "106": 2593
+      },
+      "chars_quantiles": {
+        "min": 1.0,
+        "median": 1434.0,
+        "p90": 3474.3999999999987,
+        "p95": 4845.0,
+        "p99": 4968.020000000006,
+        "max": 5529.0
+      }
+    },
+    "gold": {
+      "rows": 139,
+      "label_cardinality": {
+        "0": 79,
+        "1": 12,
+        "2": 16,
+        "3": 12,
+        "4": 6,
+        "5": 14
+      },
+      "categories": {
+        "102": 28,
+        "103": 32,
+        "104": 40,
+        "105": 42,
+        "106": 32
+      },
+      "chars_quantiles": {
+        "min": 4.0,
+        "median": 774.0,
+        "p90": 3203.6,
+        "p95": 3878.3,
+        "p99": 4315.52,
+        "max": 4480.0
+      }
+    }
+  },
+  "candidates": {
+    "stock_suffix": {
+      "pairs": 69,
+      "rows": 69,
+      "unique_descriptions": 69,
+      "positive_pairs": 0
+    },
+    "label_without_keyword": {
+      "pairs": 1313,
+      "rows": 1298,
+      "unique_descriptions": 594,
+      "positive_pairs": 1313
+    },
+    "102_without_plaster_or_beacon": {
+      "pairs": 1206,
+      "rows": 1206,
+      "unique_descriptions": 554,
+      "positive_pairs": 1206
+    },
+    "visual_blank_characters": {
+      "pairs": 1212,
+      "rows": 1212,
+      "unique_descriptions": 50,
+      "positive_pairs": 0
+    },
+    "explicit_seo": {
+      "pairs": 1192,
+      "rows": 1192,
+      "unique_descriptions": 900,
+      "positive_pairs": 0
+    },
+    "keyword_without_label": {
+      "pairs": 2067,
+      "rows": 1128,
+      "unique_descriptions": 530,
+      "positive_pairs": 0
+    },
+    "technical_code_candidate": {
+      "pairs": 596,
+      "rows": 596,
+      "unique_descriptions": 542,
+      "positive_pairs": 0
+    },
+    "putty_without_finish_cues": {
+      "pairs": 100,
+      "rows": 100,
+      "unique_descriptions": 65,
+      "positive_pairs": 0
+    },
+    "short_under_40": {
+      "pairs": 236,
+      "rows": 236,
+      "unique_descriptions": 204,
+      "positive_pairs": 0
+    },
+    "title_only": {
+      "pairs": 72,
+      "rows": 63,
+      "unique_descriptions": 52,
+      "positive_pairs": 17
+    },
+    "106_preparation_candidate": {
+      "pairs": 15,
+      "rows": 15,
+      "unique_descriptions": 4,
+      "positive_pairs": 15
+    }
+  },
+  "overlap": {
+    "groups": 13,
+    "train_rows": 172,
+    "different_label_groups": 3,
+    "details": [
+      {
+        "train_source_lines": [
+          37,
+          1681,
+          2427,
+          7281,
+          9327
+        ],
+        "gold_row_id": 173,
+        "train_labels": [
+          105,
+          106
+        ],
+        "gold_labels": [
+          105,
+          106
+        ]
+      },
+      {
+        "train_source_lines": [
+          228,
+          470,
+          635,
+          694,
+          1222,
+          1645,
+          2188,
+          2586,
+          2760,
+          2839,
+          2860,
+          3768,
+          4608,
+          4668,
+          5342,
+          5560,
+          5757,
+          5944,
+          6562,
+          7389,
+          9598,
+          9770,
+          9875
+        ],
+        "gold_row_id": 76,
+        "train_labels": [
+          106
+        ],
+        "gold_labels": [
+          106
+        ]
+      },
+      {
+        "train_source_lines": [
+          249,
+          603,
+          790,
+          927,
+          1031,
+          1454,
+          1621,
+          1787,
+          2199,
+          2277,
+          2307,
+          2498,
+          2580,
+          3009,
+          3231,
+          3581,
+          3605,
+          3660,
+          3661,
+          3787,
+          4695,
+          4976,
+          5094,
+          5343,
+          5356,
+          5386,
+          5494,
+          5624,
+          5692,
+          5901,
+          6062,
+          6299,
+          6912,
+          7247,
+          7461,
+          7582,
+          7726,
+          8042,
+          8432,
+          8750,
+          9165,
+          9357,
+          9662
+        ],
+        "gold_row_id": 45,
+        "train_labels": [
+          102,
+          104,
+          105
+        ],
+        "gold_labels": [
+          104,
+          105
+        ]
+      },
+      {
+        "train_source_lines": [
+          332,
+          953,
+          1926,
+          2027,
+          2268,
+          2845,
+          3300,
+          5149,
+          5755,
+          7001,
+          7276,
+          7362
+        ],
+        "gold_row_id": 83,
+        "train_labels": [],
+        "gold_labels": []
+      },
+      {
+        "train_source_lines": [
+          384,
+          644,
+          829,
+          2313,
+          3407,
+          3466,
+          3829,
+          4351,
+          4941,
+          5385,
+          5603,
+          8027,
+          8048,
+          8315,
+          9428,
+          9891,
+          9991
+        ],
+        "gold_row_id": 9,
+        "train_labels": [],
+        "gold_labels": []
+      },
+      {
+        "train_source_lines": [
+          549
+        ],
+        "gold_row_id": 153,
+        "train_labels": [],
+        "gold_labels": []
+      },
+      {
+        "train_source_lines": [
+          561,
+          840,
+          1082,
+          1144,
+          1247,
+          1700,
+          2230,
+          2232,
+          2497,
+          2896,
+          3779,
+          3791,
+          4566,
+          4907,
+          4929,
+          5208,
+          5235,
+          5267,
+          6093,
+          6206,
+          6532,
+          6692,
+          7318,
+          8248,
+          8454,
+          8635,
+          8692,
+          9106,
+          9526,
+          9880
+        ],
+        "gold_row_id": 61,
+        "train_labels": [
+          102,
+          104,
+          105
+        ],
+        "gold_labels": [
+          104,
+          105
+        ]
+      },
+      {
+        "train_source_lines": [
+          1219,
+          4276,
+          5633,
+          7374,
+          9925
+        ],
+        "gold_row_id": 87,
+        "train_labels": [],
+        "gold_labels": []
+      },
+      {
+        "train_source_lines": [
+          1381,
+          1730,
+          6667,
+          8056
+        ],
+        "gold_row_id": 1,
+        "train_labels": [],
+        "gold_labels": []
+      },
+      {
+        "train_source_lines": [
+          1510,
+          2304
+        ],
+        "gold_row_id": 186,
+        "train_labels": [],
+        "gold_labels": []
+      },
+      {
+        "train_source_lines": [
+          1802,
+          1810,
+          1816,
+          1823,
+          2031,
+          2042,
+          2280,
+          3376,
+          3500,
+          3946,
+          4343,
+          4719,
+          5558,
+          5563,
+          5647,
+          5884,
+          6022,
+          6489,
+          6877,
+          7347,
+          7788,
+          8124,
+          8620,
+          9573,
+          9800
+        ],
+        "gold_row_id": 67,
+        "train_labels": [
+          102,
+          103,
+          104,
+          105,
+          106
+        ],
+        "gold_labels": [
+          103,
+          104,
+          105,
+          106
+        ]
+      },
+      {
+        "train_source_lines": [
+          5308,
+          5916,
+          6313
+        ],
+        "gold_row_id": 128,
+        "train_labels": [
+          102,
+          103,
+          104,
+          105,
+          106
+        ],
+        "gold_labels": [
+          102,
+          103,
+          104,
+          105,
+          106
+        ]
+      },
+      {
+        "train_source_lines": [
+          8425,
+          8856
+        ],
+        "gold_row_id": 78,
+        "train_labels": [],
+        "gold_labels": []
+      }
+    ]
+  },
+  "truncation_chars_description_only": [
+    {
+      "chars": 512,
+      "truncated_rows": 8862,
+      "affected_rows": 5205,
+      "labelled_pairs_without_complete_hit": 16269
+    },
+    {
+      "chars": 1024,
+      "truncated_rows": 8177,
+      "affected_rows": 2740,
+      "labelled_pairs_without_complete_hit": 7985
+    },
+    {
+      "chars": 2048,
+      "truncated_rows": 5360,
+      "affected_rows": 518,
+      "labelled_pairs_without_complete_hit": 1108
+    },
+    {
+      "chars": 4096,
+      "truncated_rows": 1169,
+      "affected_rows": 1,
+      "labelled_pairs_without_complete_hit": 3
+    }
+  ],
+  "workbooks": {
+    "review/test_duplicate_conflicts.xlsx": {
+      "xl/worksheets/sheet1.xml": {
+        "rows": 138,
+        "filled": {
+          "decision": 138
+        }
+      }
+    },
+    "review/train_keyword_disagreements.xlsx": {
+      "xl/worksheets/sheet1.xml": {
+        "rows": 221,
+        "filled": {
+          "decision": 0,
+          "comment": 0
+        }
+      }
+    },
+    "review/train_negations.xlsx": {
+      "xl/worksheets/sheet1.xml": {
+        "rows": 29,
+        "filled": {
+          "decision": 0,
+          "comment": 0
+        }
+      }
+    },
+    "review/train_tail_only.xlsx": {
+      "xl/worksheets/sheet1.xml": {
+        "rows": 150,
+        "filled": {
+          "decision": 0,
+          "comment": 0
+        }
+      }
+    },
+    "review/test_v4_review.xlsx": {
+      "xl/worksheets/sheet1.xml": {
+        "rows": 139,
+        "filled": {}
+      }
+    }
+  },
+  "test_versions": {
+    "test_gold.parquet": {
+      "rows": 139,
+      "positive_labels": 174,
+      "empty": 79
+    },
+    "test_v0.parquet": {
+      "rows": 208,
+      "positive_labels": 295,
+      "empty": 106
+    },
+    "test_v1.parquet": {
+      "rows": 139,
+      "positive_labels": 157,
+      "empty": 81
+    },
+    "test_v2.parquet": {
+      "rows": 139,
+      "positive_labels": 149,
+      "empty": 83
+    },
+    "test_v3.parquet": {
+      "rows": 139,
+      "positive_labels": 184,
+      "empty": 75
+    },
+    "test_v4.parquet": {
+      "rows": 139,
+      "positive_labels": 174,
+      "empty": 79
+    }
+  }
+}
