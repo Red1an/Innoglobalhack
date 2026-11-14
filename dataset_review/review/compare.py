@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-REVIEW = ROOT / "dataset_review" / "agent_review"
+REVIEW = ROOT / "dataset_review" / "review"
 sys.path.insert(0, str(ROOT / "data" / "test_versions"))
 from build_v2 import explicit_plaster
 
@@ -12,7 +12,7 @@ IDS = [102, 103, 104, 105, 106]
 NAMES = {102: "Штукатурные работы", 103: "Плиточные работы", 104: "Сантехника", 105: "Электрика", 106: "Поклейка обоев и малярные работы"}
 
 test = pd.read_parquet(ROOT / "data" / "test_versions" / f"test_{VERSION}.parquet")
-uid_map = pd.read_json(REVIEW / "input" / "uid_map.jsonl", lines=True)
+uid_map = pd.read_json(REVIEW / "agent_input" / "uid_map.jsonl", lines=True)
 row_to_uid = {r: u.uid for u in uid_map.itertuples() for r in u.row_ids}
 agent = pd.concat([pd.read_json(REVIEW / f"mc_{m}.jsonl", lines=True) for m in IDS]).set_index(["uid", "mcId"])
 

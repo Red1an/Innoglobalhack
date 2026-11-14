@@ -5,13 +5,13 @@ from openpyxl.styles import Alignment, PatternFill
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "test_versions"
-AGENT = ROOT / "dataset_review" / "agent_review"
+AGENT = ROOT / "dataset_review" / "review"
 IDS = [102, 103, 104, 105, 106]
 NAMES = {102: "Штукатурные работы", 103: "Плиточные работы", 104: "Сантехника", 105: "Электрика", 106: "Поклейка обоев и малярные работы"}
 VERSION = sys.argv[1] if len(sys.argv) > 1 else "v3"
 
 test = pd.read_parquet(OUT / f"test_{VERSION}.parquet")
-uid_map = pd.read_json(AGENT / "input" / "uid_map.jsonl", lines=True)
+uid_map = pd.read_json(AGENT / "agent_input" / "uid_map.jsonl", lines=True)
 row_to_uid = {r: u.uid for u in uid_map.itertuples() for r in u.row_ids}
 agent = pd.concat([pd.read_json(AGENT / f"mc_{m}.jsonl", lines=True) for m in IDS]).set_index(["uid", "mcId"])
 manual = pd.read_csv(OUT / f"test_{VERSION}_manual.csv")
