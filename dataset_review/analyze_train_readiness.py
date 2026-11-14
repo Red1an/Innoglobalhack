@@ -18,6 +18,7 @@ import zipfile
 import numpy as np
 import pyarrow.parquet as pq
 
+from build_train_dedup_v1 import without_stock
 from train_text_cleaning import clean_text
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,20 +40,6 @@ def labels(row):
 @lru_cache(maxsize=30000)
 def key(text):
     return ' '.join(clean_text(text).casefold().split())
-
-
-def without_stock(text):
-    # Audit-only counterfactual. Every matching suffix is also exported for review.
-    match = re.search(r'место на складе', text, re.I)
-    if match and re.fullmatch(
-        r'Место на складе:\s*[a-z]-\d+\s+Номер продаваемого оборудования:\s*[a-z]-\d+'
-        r'\s+Марка:\s*[a-z]-\d+\s+Размеры (?:оборудования|товара) на фото:'
-        r'\s*[\d,.*\s]+(?:Код товара:\s*[A-Z]+-\d+)?\s*', text[match.start():], re.I):
-        return text[:match.start()].rstrip()
-    reviewed = 'Место на складе 79 ГОСТ01295 Артикул Ф- 1295 Бригада №53'
-    if text.endswith(reviewed):
-        return text[:-len(reviewed)].rstrip()
-    return text
 
 
 def group_stats(rows, transform):

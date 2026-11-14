@@ -1,0 +1,66 @@
+{
+  "version": "train_dedup_v1",
+  "source": {
+    "path": "data/processed/train_text_v1/train.parquet",
+    "sha256": "74990784db9e4f47bb41b9d5d4fa083f44292c49f642a326c643c1701053985c",
+    "records": 10000
+  },
+  "raw_source": {
+    "path": "data/raw/public-train-annotated.jsonl",
+    "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+    "records": 10000
+  },
+  "dataset": {
+    "path": "data/processed/train_dedup_v1/train.parquet",
+    "sha256": "57d0704e82a31c0ce91ec74196652f328b3f79951a35368fe759e0a0b7247fd3",
+    "records": 4749
+  },
+  "removed_duplicates": {
+    "path": "data/processed/train_dedup_v1/removed_duplicates.csv",
+    "sha256": "08f50bede5422351e66c51c30bde310ba5e56f6e5c5c0436d12a421a2766c5d9",
+    "records": 5251
+  },
+  "lineage": {
+    "item_id": "исходный item_id",
+    "source_line": "номер строки исходного JSONL с единицы",
+    "kept_source_line": "номер исходной строки сохранённой копии в removed_duplicates.csv"
+  },
+  "transformations": [
+    {
+      "id": "visual_spaces",
+      "description": "U+2800, U+3164, U+115F и U+1160 заменены пробелом с нормализацией разделителей",
+      "changed_title_rows": 0,
+      "changed_description_rows": 1212
+    },
+    {
+      "id": "reviewed_stock_suffix",
+      "description": "Удалены только подтверждённые складские окончания в description",
+      "changed_description_rows": 69
+    },
+    {
+      "id": "deduplicate_description",
+      "description": "Полное совпадение очищенного description без учёта регистра, пробелов, оформления Markdown и списка и точек и восклицательных знаков в конце. В каждой группе сохранена самая ранняя исходная строка. Расхождение меток прерывает сборку.",
+      "unique_original_descriptions": 4830,
+      "unique_cleaned_descriptions": 4766,
+      "unique_casefolded_descriptions": 4759,
+      "unique_group_keys": 4749,
+      "removed_rows": 5251,
+      "removed_by_reason_relative_to_kept": {
+        "exact": 5109,
+        "exact_after_cleanup": 64,
+        "case_or_whitespace": 67,
+        "formatting": 11
+      }
+    }
+  ],
+  "seo": {
+    "rows_before": 1192,
+    "rows_after": 900
+  },
+  "build_files_sha256": {
+    "dataset_review/build_train_dedup_v1.py": "b6d5eb812c463445f19801d561d36b5d6a8de58e29559149b52abf8c02f9b95c",
+    "dataset_review/build_train_text_v1.py": "49357b8d49c0228203f6cca428d9744e40736f2ddf47173684d68d1abcacc8a4",
+    "dataset_review/train_text_cleaning.py": "8b045fcc20ea1813eb15e5090971463572b66efffa03d53ca66b00ab778baa34"
+  },
+  "pyarrow_version": "26.0.1"
+}
