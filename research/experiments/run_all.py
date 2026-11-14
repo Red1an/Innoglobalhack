@@ -1,10 +1,10 @@
 """Run the benchmark from a terminal with the same data presets, folders and ClearML export as colab.ipynb."""
 import argparse
-import hashlib
-import json
 from pathlib import Path
 import subprocess
 import sys
+
+from dataset_protocol import dataset_id
 
 CODE = Path(__file__).resolve().parent
 ROOT = CODE.parents[1]
@@ -31,8 +31,7 @@ def main():
     args = parser.parse_args()
 
     train, test = PRESETS[args.dataset]
-    hashes = {name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in (('train', train), ('test', test))}
-    data_id = hashlib.sha256(json.dumps([hashes, ASSUME_SOURCE], sort_keys=True).encode()).hexdigest()[:16]
+    data_id = dataset_id(train, test, ASSUME_SOURCE)
     data = CODE / 'datasets' / f'{args.dataset}-{data_id}'
     if not data.exists():
         subprocess.run([sys.executable, str(CODE / 'bench.py'), 'prepare', '--train', str(train), '--test', str(test),

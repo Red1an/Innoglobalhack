@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 import platform
 import re
+import sys
+import tempfile
 import time
 import unicodedata
 
@@ -124,8 +126,25 @@ def canonical(row, source=None):
     return {'description': description, 'mcId': mc_id, 'labels': sorted(set(labels))}
 
 
+def gold_overlap_key():
+    # Import the same cleanup used to build the versioned train datasets.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'dataset_review'))
+    try:
+        from build_train_dedup_v1 import duplicate_key, replace_visual_spaces, without_stock
+        from train_text_cleaning import clean_text
+    finally:
+        sys.path.pop(0)
+
+    def normalize(description):
+        return duplicate_key(without_stock(replace_visual_spaces(clean_text(description))))
+
+    return normalize
+
+
 def prepare(args):
     import pyarrow.parquet as pq
+    from dataset_protocol import GOLD_OVERLAP_POLICY, uses_gold_overlap
+
     out = Path(args.out)
     if out.exists():
         raise ValueError('Dataset version already exists. Choose a new --out directory.')
@@ -136,13 +155,40 @@ def prepare(args):
         raw_test = read(args.test)
     test = [canonical(row, args.assume_source) for row in raw_test]
     # Exclude matching descriptions even if their mcId differs.
-    reserved = {key(row['description']) for row in test}
+    reserved = defaultdict(set)
+    compare_gold = uses_gold_overlap(args.test)
+    gold_matches = defaultdict(set)
+    matched_gold_ids = set()
+    overlap_rows = []
+    if compare_gold:
+        normalize = gold_overlap_key()
+    for position, (source_row, row) in enumerate(zip(raw_test, test), 1):
+        row_id = source_row.get('row_id', position)
+        reserved[key(row['description'])].add(row_id)
+        if compare_gold:
+            if normalized := normalize(source_row['description']):
+                gold_matches[normalized].add(row_id)
     groups = defaultdict(list)
-    for row in raw_train:
-        row = canonical(row, args.assume_source)
-        groups[(key(row['description']), row['mcId'])].append(row)
+    for position, source_row in enumerate(raw_train, 1):
+        row = canonical(source_row, args.assume_source)
+        text_key = key(row['description'])
+        if compare_gold:
+            exact = reserved.get(text_key, set())
+            matches = exact | gold_matches.get(normalize(source_row['description']), set())
+            if matches:
+                matched_gold_ids.update(matches)
+                overlap_rows.append({
+                    'train_row': position,
+                    'source_line': source_row.get('source_line'),
+                    'item_id': source_row.get('item_id'),
+                    'gold_row_ids': json.dumps(sorted(matches)),
+                    'match': 'exact' if exact else 'normalized',
+                })
+                continue
+        groups[(text_key, row['mcId'])].append(row)
     train, dev = [], []
-    conflicts = overlaps = duplicates = 0
+    overlaps = len(overlap_rows)
+    conflicts = duplicates = 0
     for (text_key, _), rows in sorted(groups.items()):
         duplicates += len(rows) - 1
         if text_key in reserved:
@@ -159,16 +205,34 @@ def prepare(args):
     test_groups = defaultdict(set)
     for row in test:
         test_groups[(key(row['description']), row['mcId'])].add(tuple(row['labels']))
-    out.mkdir(parents=True)
-    for split, rows in [('train', train), ('dev', dev), ('test', test)]:
-        jsonl(out / (split + '.jsonl'), rows)
+    splits = {'train': train, 'dev': dev, 'test': test}
     manifest = {'preprocess': 'nfc-whitespace-v1', 'source_assumption': args.assume_source,
                 'train_raw': len(raw_train), 'train': len(train), 'dev': len(dev), 'test': len(test),
                 'duplicate_rows': duplicates, 'train_test_overlap_rows': overlaps,
                 'conflicting_train_rows_excluded': conflicts,
                 'conflicting_test_groups_retained': sum(len(v) > 1 for v in test_groups.values()),
-                'hashes': {name: digest(rows) for name, rows in [('train', train), ('dev', dev), ('test', test)]}}
-    write(out / 'manifest.json', manifest)
+                'hashes': {name: digest(rows) for name, rows in splits.items()}}
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=f'.{out.name}-', dir=out.parent) as temporary:
+        staging = Path(temporary)
+        for split, rows in splits.items():
+            jsonl(staging / f'{split}.jsonl', rows)
+        if compare_gold:
+            report = staging / 'gold_overlaps.csv'
+            with report.open('w', newline='', encoding='utf-8') as stream:
+                writer = csv.DictWriter(stream, fieldnames=[
+                    'train_row', 'source_line', 'item_id', 'gold_row_ids', 'match',
+                ])
+                writer.writeheader()
+                writer.writerows(overlap_rows)
+            manifest['gold_overlap_policy'] = GOLD_OVERLAP_POLICY
+            manifest['gold_overlaps'] = {
+                'path': report.name,
+                'sha256': hashlib.sha256(report.read_bytes()).hexdigest(),
+                'gold_rows': len(matched_gold_ids),
+            }
+        write(staging / 'manifest.json', manifest)
+        staging.rename(out)
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
 
 

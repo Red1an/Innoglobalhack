@@ -1,0 +1,66 @@
+{
+  "version": "train_labels_102_v1",
+  "source": {
+    "path": "data/processed/train_dedup_v1/train.parquet",
+    "sha256": "57d0704e82a31c0ce91ec74196652f328b3f79951a35368fe759e0a0b7247fd3",
+    "records": 4749
+  },
+  "raw_source": {
+    "path": "data/raw/public-train-annotated.jsonl",
+    "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+    "records": 10000
+  },
+  "source_removed_duplicates": {
+    "path": "data/processed/train_dedup_v1/removed_duplicates.csv",
+    "sha256": "08f50bede5422351e66c51c30bde310ba5e56f6e5c5c0436d12a421a2766c5d9",
+    "records": 5251
+  },
+  "dataset": {
+    "path": "data/processed/train_labels_102_v1/train.parquet",
+    "sha256": "a658f683972f58433a91ec83799f661b185e4da5007efa295d4a896aeb7dd5ae",
+    "records": 4749
+  },
+  "label_changes": {
+    "path": "data/processed/train_labels_102_v1/label_changes.csv",
+    "sha256": "194dfff7c258cbe887b650b0526b349fa85acb23bdfaca38523607463c009a08",
+    "records": 553
+  },
+  "affected_duplicates": {
+    "path": "data/processed/train_labels_102_v1/affected_duplicates.csv",
+    "sha256": "b12433addc221fdd653a7e062b6992258c0a4f4a4338182446d97a317ec2fb9b",
+    "records": 652
+  },
+  "transformations": [
+    {
+      "id": "remove_unsupported_102",
+      "description": "Снять 102, если в полном description указана шпаклёвка или выравнивание стен, потолков или поверхностей, а указания на штукатурку и маяки отсутствуют. Венецианская штукатурка в проверенной строке 4647 подтверждает 102.",
+      "retained_exceptions": [
+        {
+          "source_line": 4647,
+          "item_id": 2494000502254,
+          "evidence": "Венецианки, разные",
+          "reason": "Венецианская штукатурка явно предложена в списке работ."
+        }
+      ],
+      "labels_before": {
+        "102": 2423,
+        "103": 2294,
+        "104": 2252,
+        "105": 2236,
+        "106": 2591
+      },
+      "labels_after": {
+        "102": 1870,
+        "103": 2294,
+        "104": 2252,
+        "105": 2236,
+        "106": 2591
+      }
+    }
+  ],
+  "build_files_sha256": {
+    "dataset_review/build_train_labels_102_v1.py": "84910473f64205987d0b3956914fc17ce482ab78dbd3eef506da92bf9922263c",
+    "dataset_review/build_train_text_v1.py": "49357b8d49c0228203f6cca428d9744e40736f2ddf47173684d68d1abcacc8a4"
+  },
+  "pyarrow_version": "26.0.1"
+}

@@ -1,0 +1,80 @@
+{
+  "version": "train_relabel_v1",
+  "source": {
+    "path": "data/processed/train_dedup_v1/train.parquet",
+    "sha256": "57d0704e82a31c0ce91ec74196652f328b3f79951a35368fe759e0a0b7247fd3",
+    "records": 4749
+  },
+  "raw_source": {
+    "path": "data/raw/public-train-annotated.jsonl",
+    "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+    "records": 10000
+  },
+  "source_removed_duplicates": {
+    "path": "data/processed/train_dedup_v1/removed_duplicates.csv",
+    "sha256": "08f50bede5422351e66c51c30bde310ba5e56f6e5c5c0436d12a421a2766c5d9",
+    "records": 5251
+  },
+  "dataset": {
+    "path": "data/processed/train_relabel_v1/train.parquet",
+    "sha256": "141ab8f8510779cef4cd0bb8e96914e8ed6841ec6ff99babc34af1ecbfd1e717",
+    "records": 4749
+  },
+  "label_changes": {
+    "path": "data/processed/train_relabel_v1/label_changes.csv",
+    "sha256": "d2dce20b554f834245c0e0956b95b6980d4ef35a56345fdcae29c49056516470",
+    "records": 1064
+  },
+  "affected_duplicates": {
+    "path": "data/processed/train_relabel_v1/affected_duplicates.csv",
+    "sha256": "2a6eb9232dc094163bd87f5ae38c44137b36973e90081c2f8de1c8eed31a3ae5",
+    "records": 764
+  },
+  "changed_rows": 734,
+  "transformations": [
+    {
+      "id": "relabel_102_106",
+      "description": "Применены согласованные правила подтверждения услуг по полному описанию. Явные услуги в составе комплекса учитываются. Широкие SEO-перечни и материалы сами по себе не добавляют метку. Тексты не менялись. Индивидуальные решения имеют приоритет. При недостатке доказательств сохраняется текущая метка.",
+      "reviewed_pairs": 52,
+      "reviewed_uncertain": 6,
+      "by_category": {
+        "102": {
+          "before": 2423,
+          "removed": 548,
+          "added": 79,
+          "after": 1954
+        },
+        "103": {
+          "before": 2294,
+          "removed": 1,
+          "added": 116,
+          "after": 2409
+        },
+        "104": {
+          "before": 2252,
+          "removed": 3,
+          "added": 88,
+          "after": 2337
+        },
+        "105": {
+          "before": 2236,
+          "removed": 1,
+          "added": 94,
+          "after": 2329
+        },
+        "106": {
+          "before": 2591,
+          "removed": 22,
+          "added": 112,
+          "after": 2681
+        }
+      }
+    }
+  ],
+  "build_files_sha256": {
+    "dataset_review/build_train_relabel_v1.py": "677bb6541097496c55c9fc2ae14c13fdb61a443e9eef73bbef9d495d1100d610",
+    "dataset_review/train_relabel_v1_reviewed.csv": "f272f15fa3e0ba7769a436e447d73edf706acedd9ce284b3c4c11384f24931ee",
+    "dataset_review/train_relabel_rules.py": "bd183f72efcb2e408e34a504c5ddccab9f62db0274b4b79860b6146aba1a78c4"
+  },
+  "pyarrow_version": "26.0.1"
+}

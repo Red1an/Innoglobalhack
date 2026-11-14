@@ -1,10 +1,13 @@
 import argparse
+import csv
+import hashlib
 import json
 from pathlib import Path
 import tempfile
 import unittest
 
 import bench
+from dataset_protocol import dataset_id
 
 
 class ProtocolTests(unittest.TestCase):
@@ -18,12 +21,42 @@ class ProtocolTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             rows = [{"description": f"Объявление {i}", "labels": [104]} for i in range(60)]
-            pq.write_table(pa.Table.from_pylist(rows), root / "train.parquet")
-            test = [{"description": "Отдельное тестовое", **{f"y_{x}": int(x == 104) for x in range(102, 107)}}]
-            pq.write_table(pa.Table.from_pylist(test), root / "test.parquet")
-            bench.prepare(argparse.Namespace(train=str(root / "train.parquet"),
-                test=str(root / "test.parquet"), out=str(root / "prepared"), assume_source=101))
-            self.assertEqual(bench.read(root / "prepared/test.jsonl")[0]["labels"], [104])
+            rows += [
+                {"description": "Меняем смесители", "labels": [105], "source_line": 61, "item_id": 401},
+                {"description": "Меняем смесители и розетки", "labels": [104, 105]},
+            ]
+            labels = {f"y_{x}": int(x == 104) for x in range(102, 107)}
+            test = [
+                {"description": "🔧 Меняем смесители", "row_id": 6, **labels},
+                {"description": "**Меняем смесители**!", "row_id": 9, **labels},
+            ]
+            train_path, test_path = root / "train.parquet", root / "test_gold.parquet"
+            pq.write_table(pa.Table.from_pylist([rows[60], *rows[:60], rows[61]]), train_path)
+            pq.write_table(pa.Table.from_pylist(test), test_path)
+            original_test = test_path.read_bytes()
+            out = root / "prepared"
+            bench.prepare(argparse.Namespace(train=train_path, test=test_path, out=out, assume_source=101))
+            self.assertEqual(test_path.read_bytes(), original_test)
+            self.assertEqual(bench.read(out / "test.jsonl"), [bench.canonical(row, 101) for row in test])
+            descriptions = {row["description"] for split in ("train", "dev")
+                            for row in bench.read(out / f"{split}.jsonl")}
+            self.assertNotIn("Меняем смесители", descriptions)
+            self.assertIn("Меняем смесители и розетки", descriptions)
+            manifest = json.loads((out / "manifest.json").read_text())
+            self.assertEqual(manifest["train_test_overlap_rows"], 1)
+            self.assertEqual(manifest["gold_overlaps"]["gold_rows"], 2)
+            with (out / "gold_overlaps.csv").open(encoding="utf-8", newline="") as stream:
+                self.assertEqual(list(csv.DictReader(stream)), [{
+                    "train_row": "1", "source_line": "61", "item_id": "401",
+                    "gold_row_ids": "[6, 9]", "match": "normalized",
+                }])
+            legacy_path = root / "test.parquet"
+            legacy_path.write_bytes(original_test)
+            hashes = {name: hashlib.sha256(path.read_bytes()).hexdigest()
+                      for name, path in (("train", train_path), ("test", legacy_path))}
+            legacy_id = hashlib.sha256(json.dumps([hashes, 101], sort_keys=True).encode()).hexdigest()[:16]
+            self.assertEqual(dataset_id(train_path, legacy_path, 101), legacy_id)
+            self.assertNotEqual(dataset_id(train_path, test_path, 101), legacy_id)
 
     def test_interrupted_record_recovery(self):
         with tempfile.TemporaryDirectory() as folder:
