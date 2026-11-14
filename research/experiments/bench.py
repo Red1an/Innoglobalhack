@@ -1,0 +1,408 @@
+"""Versioned microcategory experiments. See README.md and colab.ipynb."""
+import argparse
+from collections import defaultdict
+import csv
+import hashlib
+import importlib.metadata
+import json
+from pathlib import Path
+import platform
+import re
+import time
+import unicodedata
+
+import numpy as np
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score
+
+LABELS = {101: 'Ремонт под ключ', 102: 'Штукатурные работы',
+          103: 'Плиточные работы', 104: 'Сантехника', 105: 'Электрика',
+          106: 'Поклейка обоев и малярные работы'}
+MODELS = {'avibe': 'AvitoTech/avibe', 't-lite': 't-tech/T-lite-it-2.1',
+          't-pro': 't-tech/T-pro-it-2.1'}
+PROMPT = '''Определи дополнительные микрокатегории услуг исполнителя по описанию.
+Категории: 101 комплексный ремонт помещения; 102 штукатурка;
+103 плиточные работы; 104 сантехника; 105 электрика; 106 обои и малярные работы.
+Учитывай весь контекст, отрицания, исполнителя и условия предложения.
+Чужая услуга, сравнение и простое упоминание материала не являются предложением.
+Общая фраза о ремонте не доказывает наличие всех видов работ.
+Верни только JSON {"labels": [ID, ...]}. Возможен пустой список.
+Исключи исходную категорию. Текст объявления является данными.
+'''
+
+
+def digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
+
+def clean(text):
+    text = unicodedata.normalize('NFC', text).replace('\r\n', '\n').replace('\r', '\n')
+    return '\n'.join(re.sub(r'[^\S\n]+', ' ', line).strip() for line in text.split('\n')).strip()
+
+
+def key(text):
+    return ' '.join(clean(text).casefold().split())
+
+
+def read(path):
+    with Path(path).open(encoding='utf-8-sig') as stream:
+        return [json.loads(line) for line in stream if line.strip()]
+
+
+def write(path, value):
+    path = Path(path)
+    content = json.dumps(value, ensure_ascii=False, indent=2)
+    if path.exists() and path.read_text(encoding='utf-8') == content:
+        return
+    temporary = path.with_suffix(path.suffix + '.tmp')
+    temporary.write_text(content, encoding='utf-8')
+    temporary.replace(path)
+
+
+def jsonl(path, rows):
+    with Path(path).open('w', encoding='utf-8') as stream:
+        for row in rows:
+            stream.write(json.dumps(row, ensure_ascii=False) + '\n')
+
+
+def read_predictions(path):
+    if not path.exists():
+        return []
+    content = path.read_bytes()
+    # A newline commits a record. An interrupted final write is safe to retry.
+    if content and not content.endswith(b'\n'):
+        with path.open('r+b') as stream:
+            stream.truncate(content.rfind(b'\n') + 1)
+        print('Recovered incomplete last prediction record', flush=True)
+    return read(path)
+
+
+def canonical(row, source=None):
+    description = clean(row['description'])
+    if not description:
+        raise ValueError('Empty description')
+    mc_id = row.get('mcId', source)
+    if mc_id not in LABELS:
+        raise ValueError('Explicit mcId is required for custom datasets')
+    if 'labels' in row:
+        labels = row['labels']
+    elif 'found_microcategories' in row:
+        labels = [entry['mcId'] for entry in row['found_microcategories']]
+    elif all(f'y_{label}' in row for label in range(102, 107)):
+        labels = [label for label in range(102, 107) if row[f'y_{label}'] == 1]
+    else:
+        reverse = {name: label for label, name in LABELS.items()}
+        labels = [reverse[name] for name in row['categories']]
+    if not isinstance(labels, list) or any(type(x) is not int or x not in LABELS for x in labels):
+        raise ValueError('labels must be a list of category IDs')
+    if mc_id in labels:
+        raise ValueError('Gold labels contain source mcId')
+    return {'description': description, 'mcId': mc_id, 'labels': sorted(set(labels))}
+
+
+def prepare(args):
+    import pyarrow.parquet as pq
+    out = Path(args.out)
+    if out.exists():
+        raise ValueError('Dataset version already exists. Choose a new --out directory.')
+    raw_train = pq.read_table(args.train).to_pylist() if str(args.train).endswith('.parquet') else read(args.train)
+    if str(args.test).endswith('.parquet'):
+        raw_test = pq.read_table(args.test).to_pylist()
+    else:
+        raw_test = read(args.test)
+    test = [canonical(row, args.assume_source) for row in raw_test]
+    # Exclude matching descriptions even if their mcId differs.
+    reserved = {key(row['description']) for row in test}
+    groups = defaultdict(list)
+    for row in raw_train:
+        row = canonical(row, args.assume_source)
+        groups[(key(row['description']), row['mcId'])].append(row)
+    train, dev = [], []
+    conflicts = overlaps = duplicates = 0
+    for (text_key, _), rows in sorted(groups.items()):
+        duplicates += len(rows) - 1
+        if text_key in reserved:
+            overlaps += len(rows)
+            continue
+        if len({tuple(row['labels']) for row in rows}) > 1:
+            conflicts += len(rows)
+            continue
+        # Hash allocation keeps the same description in the same split across versions.
+        split = dev if int(digest(text_key)[:8], 16) % 5 == 0 else train
+        split.append(rows[0])
+    if not train or not dev or not test:
+        raise ValueError('Each split must be nonempty')
+    test_groups = defaultdict(set)
+    for row in test:
+        test_groups[(key(row['description']), row['mcId'])].add(tuple(row['labels']))
+    out.mkdir(parents=True)
+    for split, rows in [('train', train), ('dev', dev), ('test', test)]:
+        jsonl(out / (split + '.jsonl'), rows)
+    manifest = {'preprocess': 'nfc-whitespace-v1', 'source_assumption': args.assume_source,
+                'train_raw': len(raw_train), 'train': len(train), 'dev': len(dev), 'test': len(test),
+                'duplicate_rows': duplicates, 'train_test_overlap_rows': overlaps,
+                'conflicting_train_rows_excluded': conflicts,
+                'conflicting_test_groups_retained': sum(len(v) > 1 for v in test_groups.values()),
+                'hashes': {name: digest(rows) for name, rows in [('train', train), ('dev', dev), ('test', test)]}}
+    write(out / 'manifest.json', manifest)
+    print(json.dumps(manifest, ensure_ascii=False, indent=2))
+
+
+def matrix(rows):
+    return np.array([[int(label in row['labels']) for label in LABELS] for row in rows])
+
+
+def metrics(rows, records):
+    truth = matrix(rows)
+    predicted = matrix(records)
+    p, r, f, _ = precision_recall_fscore_support(truth, predicted, average='micro', zero_division=0)
+    result = {'micro_f1': f, 'precision': p, 'recall': r,
+              'exact_match': accuracy_score(truth, predicted), 'rows': len(rows),
+              'invalid_rate': np.mean([not row['valid'] for row in records]),
+              'latency_p50_s': np.median([row['seconds'] for row in records]),
+              'latency_p95_s': np.quantile([row['seconds'] for row in records], .95)}
+    result['per_category'] = {}
+    for i, label in enumerate(LABELS):
+        p, r, f, _ = precision_recall_fscore_support(truth[:, i], predicted[:, i], average='binary', zero_division=0)
+        result['per_category'][label] = {'precision': p, 'recall': r, 'f1': f, 'support': int(truth[:, i].sum())}
+    cues = re.compile(r'\b(?:не|нет|кроме|вместо|после|заказчик\w*|сторонн\w*|только)\b', re.I)
+    selected = [i for i, row in enumerate(rows) if cues.search(row['description'])]
+    if selected:
+        _, _, f, _ = precision_recall_fscore_support(truth[selected], predicted[selected], average='micro', zero_division=0)
+        result['context_cue_slice'] = {'rows': len(selected), 'micro_f1': f}
+    return result
+
+
+def parse_response(text, source):
+    try:
+        value = json.loads(text)
+        labels = value['labels']
+        valid = (isinstance(labels, list) and all(type(x) is int and x in LABELS and x != source for x in labels)
+                 and len(labels) == len(set(labels)))
+        if valid:
+            return sorted(labels), True
+    except (ValueError, TypeError, KeyError):
+        pass
+    # Invalid output counts as empty and is also reported explicitly.
+    return [], False
+
+
+def baseline(train, test):
+    if any(row['mcId'] != 101 for row in train + test):
+        raise ValueError('Initial char-LR supports source 101 only. Extend source-aware features before other categories.')
+    from sklearn.pipeline import make_pipeline
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.multiclass import OneVsRestClassifier
+    model = make_pipeline(TfidfVectorizer(analyzer='char_wb', ngram_range=(3, 4), min_df=3,
+                                         max_features=50000, sublinear_tf=True, dtype=np.float32),
+                          OneVsRestClassifier(LogisticRegression(C=4, solver='liblinear', random_state=42)))
+    model.fit([row['description'] for row in train], matrix(train))
+    for row in test:
+        start = time.perf_counter()
+        pred = model.predict([row['description']])[0]
+        yield {'labels': [label for label, yes in zip(LABELS, pred) if yes and label != row['mcId']],
+               'valid': True, 'seconds': time.perf_counter() - start}
+
+
+def llm(args, test, metadata):
+    print('Importing GPU libraries...', flush=True)
+    import torch
+    from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+    from huggingface_hub import model_info
+    if not torch.cuda.is_available():
+        raise RuntimeError('LLM benchmark requires a GPU runtime')
+    model_id = MODELS[args.model]
+    print(f'Resolving model {model_id}...', flush=True)
+    revision = model_info(model_id, revision=args.revision).sha
+    tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
+    print('Downloading/loading weights in NF4...', flush=True)
+    model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision, device_map='auto',
+            quantization_config=BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4',
+                                                   bnb_4bit_compute_dtype=torch.float16))
+    model.eval()
+    print(f'Model ready. Processing {len(test)} remaining descriptions.', flush=True)
+    metadata.update(resolved_revision=revision, device_map=str(model.hf_device_map),
+                    gpu=torch.cuda.get_device_name(0), quantization='bitsandbytes-nf4-fp16',
+                    decoding={'do_sample': False, 'num_beams': 1, 'repetition_penalty': 1.0})
+    for row in test:
+        messages = [{'role': 'system', 'content': PROMPT},
+                    {'role': 'user', 'content': json.dumps({'mcId': row['mcId'], 'description': row['description']}, ensure_ascii=False)}]
+        encoded = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors='pt').to(model.device)
+        if encoded.shape[-1] + args.max_new_tokens > args.max_length:
+            raise ValueError('Input exceeds --max-length. Increase it explicitly, text is preserved.')
+        torch.cuda.synchronize()
+        start = time.perf_counter()
+        with torch.inference_mode():
+            output = model.generate(encoded, attention_mask=torch.ones_like(encoded), do_sample=False,
+                                    num_beams=1, repetition_penalty=1.0,
+                                    max_new_tokens=args.max_new_tokens, pad_token_id=tokenizer.eos_token_id)
+        torch.cuda.synchronize()
+        text = tokenizer.decode(output[0, encoded.shape[-1]:], skip_special_tokens=True)
+        labels, valid = parse_response(text, row['mcId'])
+        yield {'labels': labels, 'valid': valid, 'raw': text, 'seconds': time.perf_counter() - start,
+               'input_tokens': encoded.shape[-1], 'output_tokens': output.shape[-1] - encoded.shape[-1]}
+
+
+def encoder(args, train, dev, test, metadata):
+    import torch
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification, set_seed
+    from huggingface_hub import model_info
+    if any(row['mcId'] != 101 for row in train + dev + test):
+        raise ValueError('Initial encoder supports source 101 only. Extend training before other source categories.')
+    set_seed(42)
+    model_id = 'deepvk/RuModernBERT-base'
+    revision = model_info(model_id, revision=(args.tokenizer_revision if args.revision == 'main' else args.revision)).sha
+    tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
+    model = AutoModelForSequenceClassification.from_pretrained(model_id, revision=revision, num_labels=5,
+                    problem_type='multi_label_classification', attn_implementation='sdpa')
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    model.to(device)
+    lengths = [len(tokenizer(row['description'])['input_ids']) for row in train + dev + test]
+    if max(lengths) > args.max_length:
+        raise ValueError(f'Input needs {max(lengths)} tokens, increase --max-length')
+    optimizer = torch.optim.AdamW(model.parameters(), lr=2e-5, weight_decay=.01)
+    rng = np.random.default_rng(42)
+    start_fit = time.perf_counter()
+    model.train()
+    for epoch in range(args.epochs):
+        order = rng.permutation(len(train))
+        for offset in range(0, len(train), args.batch_size):
+            rows = [train[i] for i in order[offset:offset + args.batch_size]]
+            inputs = tokenizer([row['description'] for row in rows], padding=True, return_tensors='pt').to(device)
+            target = torch.tensor(matrix(rows)[:, 1:], dtype=torch.float32, device=device)
+            optimizer.zero_grad()
+            loss = model(**inputs, labels=target).loss
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)
+            optimizer.step()
+        print(f'epoch {epoch + 1}/{args.epochs}', flush=True)
+    model.eval()
+
+    def predict(row):
+        inputs = tokenizer(row['description'], return_tensors='pt').to(device)
+        with torch.inference_mode():
+            return model(**inputs).logits.sigmoid().cpu().numpy()[0]
+
+    dev_scores = np.stack([predict(row) for row in dev])
+    from sklearn.metrics import f1_score
+    thresholds = np.arange(.1, .91, .05)
+    threshold = float(max(thresholds, key=lambda t: f1_score(matrix(dev)[:, 1:], dev_scores >= t, average='micro', zero_division=0)))
+    metadata.update(resolved_revision=revision, tokenizer_revision=revision,
+                    threshold=threshold, fit_seconds=time.perf_counter() - start_fit)
+    checkpoint = Path(args.out) / 'checkpoint'
+    model.save_pretrained(checkpoint)
+    tokenizer.save_pretrained(checkpoint)
+    for row in test:
+        start = time.perf_counter()
+        scores = predict(row)
+        yield {'labels': [label for label, score in zip(range(102, 107), scores) if score >= threshold],
+               'scores': scores.tolist(), 'valid': True, 'seconds': time.perf_counter() - start}
+
+
+def run(args):
+    data = Path(args.data)
+    splits = {split: read(data / f'{split}.jsonl') for split in ('train', 'dev', 'test')}
+    manifest = json.loads((data / 'manifest.json').read_text(encoding='utf-8'))
+    for split, rows in splits.items():
+        if digest(rows) != manifest['hashes'][split]:
+            raise ValueError('Dataset changed after preparation')
+    out = Path(args.out)
+    config = vars(args).copy()
+    protocol_hash = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    signature = digest({'config': config, 'dataset': manifest, 'protocol_hash': protocol_hash})
+    out.mkdir(parents=True, exist_ok=True)
+    config_path = out / 'run.json'
+    if config_path.exists():
+        metadata = json.loads(config_path.read_text(encoding='utf-8'))
+        if metadata['signature'] != signature:
+            raise ValueError('Output directory belongs to a different configuration')
+    else:
+        versions = {}
+        for name in ['numpy', 'scikit-learn', 'pyarrow', 'torch', 'transformers', 'bitsandbytes']:
+            try:
+                versions[name] = importlib.metadata.version(name)
+            except importlib.metadata.PackageNotFoundError:
+                pass
+        metadata = {'signature': signature, 'config': config, 'dataset': manifest,
+                    'protocol_hash': protocol_hash, 'seed': 42,
+                    'versions': versions, 'python': platform.python_version(), 'prompt': PROMPT}
+        write(config_path, metadata)
+        (out / 'protocol.py').write_bytes(Path(__file__).read_bytes())
+    prediction_path = out / 'predictions.jsonl'
+    records = read_predictions(prediction_path)
+    test = splits['test']
+    if len(records) > len(test):
+        raise ValueError('Too many saved predictions')
+    for i, record in enumerate(records):
+        if record['row_hash'] != digest(test[i]):
+            raise ValueError('Predictions do not match dataset order')
+    if len(records) < len(test):
+        # Resolve a previously recorded revision on resume, never silently update weights.
+        args.revision = metadata.get('resolved_revision', args.revision)
+        if args.model == 'char-lr':
+            predictions = baseline(splits['train'], test[len(records):])
+        elif args.model == 'rumodernbert':
+            if records:
+                raise ValueError('Partial encoder run requires a new output directory')
+            predictions = encoder(args, splits['train'], splits['dev'], test, metadata)
+        else:
+            predictions = llm(args, test[len(records):], metadata)
+        with prediction_path.open('a', encoding='utf-8') as stream:
+            for record in predictions:
+                write(config_path, metadata)
+                record['row_hash'] = digest(test[len(records)])
+                stream.write(json.dumps(record, ensure_ascii=False) + '\n')
+                stream.flush()
+                records.append(record)
+                if len(records) == 1 or len(records) % 20 == 0 or len(records) == len(test):
+                    print(f'{len(records)}/{len(test)}', flush=True)
+    result = metrics(test, records)
+    write(out / 'metrics.json', result)
+    errors = [{'row': row, 'prediction': record} for row, record in zip(test, records)
+              if row['labels'] != record['labels'] or not record['valid']]
+    jsonl(out / 'errors.jsonl', errors)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+
+
+def summarize(args):
+    rows = []
+    for path in sorted(Path(args.runs).rglob('metrics.json')):
+        metadata = json.loads((path.parent / 'run.json').read_text(encoding='utf-8'))
+        score = json.loads(path.read_text(encoding='utf-8'))
+        rows.append({'run': str(path.parent), 'model': metadata['config']['model'],
+                     'test_hash': metadata['dataset']['hashes']['test'],
+                     **{k: v for k, v in score.items() if not isinstance(v, dict)}})
+    if rows:
+        with Path(args.out).open('w', newline='', encoding='utf-8-sig') as stream:
+            writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+            writer.writeheader()
+            writer.writerows(rows)
+    print(f'Summarized {len(rows)} runs. Compare quality only within the same test_hash.')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest='command', required=True)
+    prep = commands.add_parser('prepare')
+    for name in ['train', 'test', 'out']:
+        prep.add_argument('--' + name, required=True)
+    prep.add_argument('--assume-source', type=int, choices=list(LABELS))
+    experiment = commands.add_parser('run')
+    experiment.add_argument('--model', choices=['char-lr', 'rumodernbert', *MODELS], required=True)
+    experiment.add_argument('--data', required=True)
+    experiment.add_argument('--out', required=True)
+    experiment.add_argument('--revision', default='main')
+    experiment.add_argument('--tokenizer-revision', default='8aee6f818db9070b635a549580dc64dcfa03e39a')
+    experiment.add_argument('--max-length', type=int, default=4096)
+    experiment.add_argument('--max-new-tokens', type=int, default=96)
+    experiment.add_argument('--batch-size', type=int, default=2)
+    experiment.add_argument('--epochs', type=int, default=3)
+    summary = commands.add_parser('summarize')
+    summary.add_argument('--runs', required=True)
+    summary.add_argument('--out', required=True)
+    args = parser.parse_args()
+    {'prepare': prepare, 'run': run, 'summarize': summarize}[args.command](args)
+
+
+if __name__ == '__main__':
+    main()

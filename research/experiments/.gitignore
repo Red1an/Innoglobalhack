@@ -1,0 +1,7 @@
+runs/
+results*.csv
+.venv*/
+hf-cache/
+*.zip
+clearml.conf
+.env
