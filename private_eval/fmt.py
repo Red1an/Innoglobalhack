@@ -49,6 +49,8 @@ def read_answer(path):
 def check_answer(path, input_path=None, source=101):
     """Returns a list of problems; an empty list means the file can be uploaded."""
     problems = []
+    input_rows = read_input(input_path) if input_path is not None else []
+    source_by_test = {r["testcase"]: r["mcId"] for r in input_rows if r["mcId"] is not None}
     raw = Path(path).read_bytes()
     if b"\r\n" in raw:
         problems.append("переводы строк CRLF, в примере организаторов LF")
@@ -63,14 +65,15 @@ def check_answer(path, input_path=None, source=101):
             continue
         if labels != sorted(set(labels)):
             problems.append(f"{tc}: microcats с повторами или не по возрастанию: {labels}")
-        if source in labels:
-            problems.append(f"{tc}: microcats содержит исходную категорию {source}")
+        row_source = source_by_test.get(tc, source)
+        if row_source in labels:
+            problems.append(f"{tc}: microcats содержит исходную категорию {row_source}")
         if not isinstance(desc, list) or len(desc) != len(labels):
             problems.append(f"{tc}: descriptions не совпадает по длине с microcats")
         elif any(not isinstance(d, str) or not d.strip() for d in desc):
             problems.append(f"{tc}: пустой черновик в descriptions")
     if input_path is not None:
-        expected = [r["testcase"] for r in read_input(input_path)]
+        expected = [r["testcase"] for r in input_rows]
         got = [r["testcase"] for r in rows]
         if set(expected) != set(got):
             problems.append(f"testcase не совпадают с входом: нет {len(set(expected) - set(got))}, "

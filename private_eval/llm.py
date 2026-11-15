@@ -41,13 +41,16 @@ def _cache_path(kind, payload):
 class ApiClient:
     """OpenAI-compatible chat completions. Caila expects the bare key in Authorization."""
 
-    def __init__(self, model, base_url=None, key_env="CAILA_API_KEY", bearer=False, timeout=90, retries=3):
+    def __init__(self, model, base_url=None, key_env="CAILA_API_KEY", bearer=False, timeout=90, retries=3,
+                 *, model_id=None, cache=True):
         if model not in API_ALLOWED and os.environ.get("ALLOW_ANY_API_MODEL") != "1":
             raise SystemExit(f"Платная модель {model} не в списке разрешённых {API_ALLOWED}. "
                              "Добавьте её в API_ALLOWED в private_eval/llm.py или задайте ALLOW_ANY_API_MODEL=1")
         catalog = {m["name"]: m for m in json.loads(API_MODELS.read_text(encoding="utf-8"))}
         entry = catalog.get(model, {"name": model, "model": model, "params": {"temperature": 0}})
         self.name, self.model_id, self.params = entry["name"], entry["model"], dict(entry.get("params", {}))
+        self.model_id = model_id or self.model_id
+        self.cache = cache
         self.base_url = (base_url or os.environ.get("API_BASE_URL") or CAILA_URL).rstrip("/")
         key = os.environ.get(key_env, "")
         if not key:
@@ -96,7 +99,7 @@ class ApiClient:
         if temperature is not None:
             payload["temperature"] = temperature
         path = _cache_path("api", [self.base_url, payload])
-        if READ_CACHE and path.exists():
+        if self.cache and READ_CACHE and path.exists():
             return {**json.loads(path.read_text(encoding="utf-8")), "cached": True}
         body = json.dumps(payload, ensure_ascii=False).encode()
         headers = {"Content-Type": "application/json", "Accept": "application/json", "Authorization": self.auth}
@@ -110,10 +113,11 @@ class ApiClient:
                 usage = value.get("usage") or {}
                 rec = {"raw": (choice.get("message") or {}).get("content"), "finish": choice.get("finish_reason"),
                        "seconds": time.perf_counter() - start, "input_tokens": usage.get("prompt_tokens", 0),
-                       "output_tokens": usage.get("completion_tokens", 0), "error": None}
+                       "output_tokens": usage.get("completion_tokens", 0), "reported_cost": usage.get("cost"),
+                       "error": None}
                 if rec["raw"] is None:
                     rec["error"] = "empty_response"
-                else:
+                elif self.cache:
                     path.parent.mkdir(parents=True, exist_ok=True)
                     path.write_text(json.dumps(rec, ensure_ascii=False), encoding="utf-8")
                 return {**rec, "cached": False}

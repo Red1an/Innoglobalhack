@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Черновики для Авито Услуг</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{color-scheme:light;font:16px/1.45 Inter,system-ui,sans-serif;color:#172722;background:#f3f6f2}
+    *{box-sizing:border-box} main{max-width:1150px;padding:44px 24px;margin:auto}
+    h1{font-size:clamp(1.5rem,4vw,2.5rem);line-height:1.1;margin:0 0 30px;letter-spacing:-.045em}
+    h2{margin:0 0 20px;font-size:1.08rem} .workspace{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel{background:white;padding:24px;border:1px solid #d5ded8;border-radius:16px;min-width:0}
+    label{display:block;margin:0 0 8px;font-weight:600;font-size:.9rem} select,textarea,input{display:block;width:100%;padding:11px 12px;border:1px solid #a8b9ad;border-radius:8px;font:inherit;background:white;color:inherit}
+    select{margin-bottom:18px} textarea{resize:vertical;min-height:145px} button{border:0;border-radius:9px;padding:11px 16px;background:#155135;color:white;font:inherit;font-weight:650;cursor:pointer}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px} .secondary{color:#155135;background:#e5f1e8}
+    button:disabled{opacity:.55;cursor:wait} :focus-visible{outline:3px solid #1a8e54;outline-offset:3px}
+    #csv-form{margin-top:18px} #csv-status{margin:12px 0 0;color:#42524a}
+    [hidden]{display:none!important}
+    #status{margin:0 0 16px;color:#42524a} .card{border-top:1px solid #d5ded8;padding-top:16px;margin-top:16px}
+    .card h3{margin:0 0 12px;font-size:1rem} .card input,.card textarea{margin-bottom:12px} .card textarea{min-height:95px}
+    #demo{margin-bottom:18px}
+    #demo h2{margin-bottom:6px}
+    #demo-progress{margin:16px 0;padding:12px 15px;border-radius:9px;background:#e5f1e8;color:#155135;font-weight:650}
+    .scenario{padding:16px 0;border-bottom:1px solid #d5ded8}
+    .scenario h3{margin:0 0 10px;font-size:1.03rem}
+    .scenario .workspace>div{min-width:0;padding:14px 16px;border-radius:9px;background:#f3f6f2}
+    .scenario h4{margin:0 0 8px;font-size:.85rem;color:#42524a}
+    .scenario p{margin:6px 0 0;overflow-wrap:anywhere}
+    .scenario .counts{font-size:.88rem;color:#42524a;margin-top:12px}
+    #demo-csv{padding:10px;background:#f3f6f2;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem}
+    a{color:#155135}
+    @media(max-width:680px){main{padding:28px 14px}.workspace{grid-template-columns:1fr}.panel{padding:19px}}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Черновики для Авито Услуг</h1>
+    <section class="panel" id="demo" hidden>
+      <h2>Сквозной прогон</h2>
+      <p>Модели получают исходное объявление и его категорию. Под каждым результатом показаны фактические вызовы и токены.</p>
+      <p id="demo-progress" role="status">Запускаем прогон…</p>
+      <div id="demo-steps"></div>
+      <pre id="demo-csv" hidden></pre>
+      <div class="actions">
+        <button id="demo-download" class="secondary" type="button" hidden>Скачать проверенный CSV</button>
+        <button id="demo-again" class="secondary" type="button">Повторить прогон</button>
+      </div>
+    </section>
+    <div class="workspace" id="editor">
+      <form class="panel" id="ad-form">
+        <h2>Исходное объявление</h2>
+        <label for="category">Микрокатегория</label>
+        <select id="category">
+          <option value="101">Ремонт под ключ</option>
+          <option value="102">Штукатурные работы</option>
+          <option value="103">Плиточные работы</option>
+          <option value="104">Сантехника</option>
+          <option value="105">Электрика</option>
+          <option value="106">Поклейка обоев и малярные работы</option>
+        </select>
+        <label for="description">Описание</label>
+        <textarea id="description" required></textarea>
+        <div class="actions">
+          <button id="submit" type="submit">Подготовить черновики</button>
+          <button id="example" class="secondary" type="button">Вставить пример</button>
+        </div>
+        <p><a href="/demo">Запустить сквозное демо</a></p>
+      </form>
+      <section class="panel">
+        <h2>Черновики</h2>
+        <p id="status" role="status">Добавьте описание и выберите микрокатегорию.</p>
+        <div id="results"></div>
+        <div class="actions">
+          <button id="save" class="secondary" type="button" hidden>Скачать черновики JSON</button>
+        </div>
+      </section>
+    </div>
+    <form class="panel" id="csv-form">
+      <h2>Пакетная обработка CSV</h2>
+      <label for="csv-file">Файл с колонками testcase и description</label>
+      <input id="csv-file" type="file" accept=".csv,text/csv" required>
+      <p>Если в строке отсутствует mcId, используется выбранная выше микрокатегория.</p>
+      <button id="batch" type="submit">Обработать и скачать CSV</button>
+      <p id="csv-status" role="status"></p>
+    </form>
+  </main>
+  <script>
+    const form = document.querySelector('#ad-form');
+    const description = document.querySelector('#description');
+    const category = document.querySelector('#category');
+    const status = document.querySelector('#status');
+    const results = document.querySelector('#results');
+    const submit = document.querySelector('#submit');
+    const save = document.querySelector('#save');
+    function download(blob, name) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = name;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    save.addEventListener('click', () => {
+      const drafts = Array.from(results.querySelectorAll('article'), card => ({
+        mcId: Number(card.dataset.category),
+        title: card.querySelector('input').value.trim() || null,
+        text: card.querySelector('textarea').value.trim() || null,
+      }));
+      download(new Blob([JSON.stringify({drafts}, null, 2)], {type: 'application/json'}), 'drafts.json');
+    });
+    const labels = Object.fromEntries(Array.from(category.options, option => [option.value, option.textContent]));
+    document.querySelector('#example').addEventListener('click', () => {
+      category.value = '101';
+      description.value = 'Делаем ремонт квартир под ключ. Отдельно выполняем сантехнические работы: разводим трубы, устанавливаем раковины и унитазы, меняем смесители.';
+      description.focus();
+    });
+
+    function addField(card, tag, value, name, id) {
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.textContent = name;
+      const input = document.createElement(tag);
+      input.id = id;
+      input.value = value ?? '';
+      card.append(label, input);
+    }
+
+    async function requestDrafts(payload) {
+      const response = await fetch('/drafts', {
+        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      return data;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      results.replaceChildren();
+      save.hidden = true;
+      status.textContent = 'Проверяем описание…';
+      submit.disabled = true;
+      try {
+        const data = await requestDrafts({description: description.value, mcId: Number(category.value)});
+        const incomplete = data.drafts.some(draft => draft.title === null || draft.text === null);
+        status.textContent = data.drafts.length ? 'Проверьте и при необходимости отредактируйте черновики.' : 'Подходящих дополнительных микрокатегорий нет.';
+        if (incomplete) status.textContent += ' В некоторых категориях генератор не подготовил текст.';
+        save.hidden = data.drafts.length === 0;
+        for (const draft of data.drafts) {
+          const card = document.createElement('article');
+          card.className = 'card';
+          card.dataset.category = draft.mcId;
+          const heading = document.createElement('h3');
+          heading.textContent = labels[draft.mcId];
+          card.append(heading);
+          addField(card, 'input', draft.title, 'Заголовок', 'title-' + draft.mcId);
+          addField(card, 'textarea', draft.text, 'Текст', 'text-' + draft.mcId);
+          results.append(card);
+        }
+      } catch (error) {
+        status.textContent = 'Не удалось получить черновики. ' + error.message;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+
+    const csvStatus = document.querySelector('#csv-status');
+    const batch = document.querySelector('#batch');
+    async function requestCsv(file, source) {
+      const response = await fetch('/batch', {
+        method: 'POST', headers: {'Content-Type': 'text/csv', 'X-Default-McId': source}, body: file,
+      });
+      if (!response.ok) throw new Error((await response.json()).error);
+      return response.blob();
+    }
+
+    document.querySelector('#csv-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      batch.disabled = true;
+      csvStatus.textContent = 'Обрабатываем файл…';
+      try {
+        const output = await requestCsv(document.querySelector('#csv-file').files[0], category.value);
+        download(output, 'submission.csv');
+        csvStatus.textContent = 'Проверенный по формату CSV скачан.';
+      } catch (error) {
+        csvStatus.textContent = error.message;
+      } finally {
+        batch.disabled = false;
+      }
+    });
+
+    const examples = [
+      {
+        name: 'Ремонт под ключ → Сантехника',
+        mcId: 101, expected: [104],
+        description: 'Делаем ремонт квартир под ключ. Сантехника в комплексный ремонт не входит. Отдельно выполняем разводку труб, установку раковин и унитазов, замену смесителей и подключение стиральных машин. Стоимость сантехнических работ согласовываем до начала работ.',
+      },
+      {
+        name: 'Плиточные работы → Ремонт под ключ',
+        mcId: 103, expected: [101],
+        description: 'Кладу плитку в санузлах как отдельную услугу. Также выполняю ремонт квартир под ключ: от черновых работ до чистовой отделки, сдаю готовую квартиру.',
+      },
+      {
+        name: 'Нет дополнительной услуги',
+        mcId: 101, expected: [],
+        description: 'Собираю шкафы, комоды и письменные столы. Можно заказать сборку одного предмета мебели. Подключение сантехники и электромонтаж не выполняю.',
+      },
+    ];
+
+    function appendText(parent, tag, text, className) {
+      const element = document.createElement(tag);
+      element.textContent = text;
+      if (className) element.className = className;
+      parent.append(element);
+      return element;
+    }
+
+    async function runScenario(container, sample) {
+      const card = document.createElement('article');
+      card.className = 'scenario';
+      appendText(card, 'h3', sample.name);
+      const pair = document.createElement('div');
+      pair.className = 'workspace';
+      card.append(pair);
+      const original = document.createElement('div');
+      const output = document.createElement('div');
+      pair.append(original, output);
+      appendText(original, 'h4', 'Исходник · ' + labels[sample.mcId]);
+      appendText(original, 'p', sample.description);
+      appendText(output, 'h4', 'Ответ моделей');
+      const waiting = appendText(output, 'p', 'Выполняем запрос…');
+      container.append(card);
+      let data;
+      try {
+        data = await requestDrafts({mcId: sample.mcId, description: sample.description});
+      } catch (error) {
+        waiting.textContent = error.message;
+        return false;
+      }
+      waiting.remove();
+      for (const draft of data.drafts) {
+        appendText(output, 'strong', draft.title ?? labels[draft.mcId]);
+        appendText(output, 'p', draft.text ?? 'Текст требует проверки.');
+      }
+      if (!data.drafts.length) appendText(output, 'p', 'Дополнительных черновиков нет.');
+      const ids = data.drafts.map(d => d.mcId);
+      const passed = ids.join() === sample.expected.join() && data.drafts.every(d => d.title && d.text);
+      const m = data.metrics;
+      const tokens = ['classification', 'generation'].filter(stage => m[stage + '_calls'])
+        .map(stage => (m[stage + '_input_tokens'] ?? '—') + ' / ' + (m[stage + '_output_tokens'] ?? '—'));
+      const stages = [m.classification_model, m.generation_model].filter(Boolean)
+        .map(model => model.split('/').at(-1)).join(' → ');
+      appendText(card, 'p', [
+        passed ? 'Проверка пройдена' : 'Требует проверки',
+        'mcId ' + (ids.length ? ids.join(', ') : '[]'), stages,
+        m.total_seconds.toLocaleString('ru', {maximumFractionDigits: 2}) + ' с',
+        (m.classification_calls + m.generation_calls) + ' выз.',
+        'токены вх. / вых. ' + tokens.join(' + '),
+      ].join(' · '), 'counts');
+      return passed;
+    }
+
+    if (location.pathname === '/demo') {
+      const panel = document.querySelector('#demo');
+      const progress = document.querySelector('#demo-progress');
+      const steps = document.querySelector('#demo-steps');
+      const preview = document.querySelector('#demo-csv');
+      const again = document.querySelector('#demo-again');
+      const saveCsv = document.querySelector('#demo-download');
+      let file;
+      panel.hidden = false;
+      document.querySelector('#editor').hidden = true;
+      document.querySelector('#csv-form').hidden = true;
+
+      async function runDemo() {
+        again.disabled = true;
+        saveCsv.hidden = true;
+        preview.hidden = true;
+        steps.replaceChildren();
+        const started = performance.now();
+        let passed = 0;
+        const total = examples.length + 1;
+        for (const [index, sample] of examples.entries()) {
+          progress.textContent = (index + 1) + ' из ' + total + ' · ' + sample.name;
+          passed += Number(await runScenario(steps, sample));
+        }
+        progress.textContent = total + ' из ' + total + ' · CSV на примерах организаторов';
+        let csvStatus;
+        try {
+          const fixture = await fetch('/demo.csv');
+          if (!fixture.ok) throw new Error('Не удалось прочитать примеры организаторов.');
+          file = await requestCsv(await fixture.blob(), 101);
+          const csv = await file.text();
+          if (!csv.includes('case-001,"[102,104]') || !csv.includes('case-002,[],[]')) {
+            throw new Error('Категории в CSV отличаются от эталона примеров.');
+          }
+          preview.textContent = csv;
+          preview.hidden = false;
+          saveCsv.hidden = false;
+          passed++;
+          csvStatus = 'CSV соответствует формату и категориям примеров';
+        } catch (error) {
+          csvStatus = error.message;
+        } finally {
+          const seconds = ((performance.now() - started) / 1000).toLocaleString('ru', {maximumFractionDigits: 1});
+          progress.textContent = 'Пройдено ' + passed + ' из ' + total + ' за ' + seconds + ' с. ' + csvStatus + '.';
+          again.disabled = false;
+        }
+      }
+      saveCsv.addEventListener('click', () => download(file, 'submission.csv'));
+      again.addEventListener('click', runDemo);
+      runDemo();
+    }
+  </script>
+</body>
+</html>
