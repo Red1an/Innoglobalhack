@@ -13,6 +13,7 @@ FILES = [
     'research/experiments/response_contract.py',
     'research/experiments/publish_clearml.py',
     'research/experiments/api_models.json',
+    'research/experiments/prompts/classify_v2.txt',
     'research/experiments/requirements-api.txt',
     'research/experiments/API_BENCHMARK.md',
     'research/experiments/build_api_bundle.py',
