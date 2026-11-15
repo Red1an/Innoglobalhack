@@ -1,0 +1,1040 @@
+{
+  "as_of": "2026-11-15",
+  "source": "Saved local run metadata, predictions counts, metrics and ClearML receipts. No new inference. Partial metrics are not full-test scores.",
+  "runs": [
+    {
+      "group": "baseline-dev-gold-v2",
+      "name": "gigachat-2",
+      "model": "just-ai/sber-gigachat/GigaChat-2",
+      "status": "early_stopped",
+      "evaluated_rows": 30,
+      "metrics": {
+        "micro_f1": 0.7586206896551724,
+        "precision": 0.8148148148148148,
+        "recall": 0.7096774193548387,
+        "exact_match": 0.5333333333333333,
+        "rows": 30,
+        "invalid_rate": 0.4,
+        "latency_p50_s": 0.6096983500010538,
+        "latency_p95_s": 0.8865195049982503,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.7272727272727273,
+            "recall": 0.8888888888888888,
+            "f1": 0.8,
+            "support": 9
+          },
+          "103": {
+            "precision": 0.875,
+            "recall": 0.6363636363636364,
+            "f1": 0.7368421052631579,
+            "support": 11
+          },
+          "104": {
+            "precision": 0.9090909090909091,
+            "recall": 0.6666666666666666,
+            "f1": 0.7692307692307693,
+            "support": 15
+          },
+          "105": {
+            "precision": 0.9090909090909091,
+            "recall": 0.6666666666666666,
+            "f1": 0.7692307692307693,
+            "support": 15
+          },
+          "106": {
+            "precision": 0.6923076923076923,
+            "recall": 0.75,
+            "f1": 0.72,
+            "support": 12
+          }
+        },
+        "context_cue_slice": {
+          "rows": 24,
+          "micro_f1": 0.735632183908046
+        },
+        "dataset": "clean",
+        "model": "just-ai/sber-gigachat/GigaChat-2",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "evaluation_status": "early_stopped",
+        "early_stopped": true,
+        "evaluated_rows": 30,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 16170,
+        "completion_tokens": 438,
+        "retried_rows": 0
+      },
+      "task_id": "2f4da9f475bb47dcae2f3bd3b2210d40",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/2f4da9f475bb47dcae2f3bd3b2210d40/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0.0001,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-gold-v2",
+      "name": "gigachat-2-pro",
+      "model": "just-ai/sber-gigachat/GigaChat-2-Pro",
+      "status": "early_stopped",
+      "evaluated_rows": 30,
+      "metrics": {
+        "micro_f1": 0.9421487603305785,
+        "precision": 0.9661016949152542,
+        "recall": 0.9193548387096774,
+        "exact_match": 0.8666666666666667,
+        "rows": 30,
+        "invalid_rate": 0.3333333333333333,
+        "latency_p50_s": 0.712417650000134,
+        "latency_p95_s": 1.153705095001169,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.8888888888888888,
+            "recall": 0.8888888888888888,
+            "f1": 0.8888888888888888,
+            "support": 9
+          },
+          "103": {
+            "precision": 1.0,
+            "recall": 0.8181818181818182,
+            "f1": 0.9,
+            "support": 11
+          },
+          "104": {
+            "precision": 1.0,
+            "recall": 0.9333333333333333,
+            "f1": 0.9655172413793104,
+            "support": 15
+          },
+          "105": {
+            "precision": 0.9333333333333333,
+            "recall": 0.9333333333333333,
+            "f1": 0.9333333333333333,
+            "support": 15
+          },
+          "106": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 12
+          }
+        },
+        "context_cue_slice": {
+          "rows": 24,
+          "micro_f1": 0.945054945054945
+        },
+        "dataset": "clean",
+        "model": "just-ai/sber-gigachat/GigaChat-2-Pro",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "evaluation_status": "early_stopped",
+        "early_stopped": true,
+        "evaluated_rows": 30,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 16167,
+        "completion_tokens": 401,
+        "retried_rows": 0
+      },
+      "task_id": "32975292596a4ecca7ddcf3256f552ac",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/32975292596a4ecca7ddcf3256f552ac/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0.0001,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-gold-v2",
+      "name": "qwen3-instruct",
+      "model": "just-ai/openrouter-proxy/qwen/qwen3-30b-a3b-instruct-2507",
+      "status": "interrupted",
+      "evaluated_rows": 9,
+      "metrics": null,
+      "task_id": null,
+      "clearml_url": null,
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-gold-v2",
+      "name": "yandexgpt",
+      "model": "just-ai/yandex-yandexgpt/yandexgpt/latest",
+      "status": "early_stopped",
+      "evaluated_rows": 30,
+      "metrics": {
+        "micro_f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "exact_match": 0.43333333333333335,
+        "rows": 30,
+        "invalid_rate": 1.0,
+        "latency_p50_s": 0.8063582000013412,
+        "latency_p95_s": 1.0122293649996208,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 9
+          },
+          "103": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 11
+          },
+          "104": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 15
+          },
+          "105": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 15
+          },
+          "106": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 12
+          }
+        },
+        "context_cue_slice": {
+          "rows": 24,
+          "micro_f1": 0.0
+        },
+        "dataset": "clean",
+        "model": "just-ai/yandex-yandexgpt/yandexgpt/latest",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "evaluation_status": "early_stopped",
+        "early_stopped": true,
+        "evaluated_rows": 30,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 20998,
+        "completion_tokens": 453,
+        "retried_rows": 0
+      },
+      "task_id": "29fea422e1654f218b402eb6f33c22ad",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/29fea422e1654f218b402eb6f33c22ad/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-gold-v2",
+      "name": "yandexgpt-lite",
+      "model": "just-ai/yandex-yandexgpt/yandexgpt-lite/latest",
+      "status": "early_stopped",
+      "evaluated_rows": 30,
+      "metrics": {
+        "micro_f1": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "exact_match": 0.43333333333333335,
+        "rows": 30,
+        "invalid_rate": 1.0,
+        "latency_p50_s": 0.9233920500009845,
+        "latency_p95_s": 1.32944902499803,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 9
+          },
+          "103": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 11
+          },
+          "104": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 15
+          },
+          "105": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 15
+          },
+          "106": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 12
+          }
+        },
+        "context_cue_slice": {
+          "rows": 24,
+          "micro_f1": 0.0
+        },
+        "dataset": "clean",
+        "model": "just-ai/yandex-yandexgpt/yandexgpt-lite/latest",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "evaluation_status": "early_stopped",
+        "early_stopped": true,
+        "evaluated_rows": 30,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 20998,
+        "completion_tokens": 548,
+        "retried_rows": 0
+      },
+      "task_id": "1ed457398dd94d54a30b23f710ce28c4",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/1ed457398dd94d54a30b23f710ce28c4/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-schema-v3",
+      "name": "deepseek-v3.1-chat",
+      "model": "just-ai/deepseek-deepseek/deepseek/deepseek-chat-v3.1",
+      "status": "not_run",
+      "evaluated_rows": 0,
+      "metrics": null,
+      "task_id": null,
+      "clearml_url": null,
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-schema-v3",
+      "name": "gigachat-2",
+      "model": "just-ai/sber-gigachat/GigaChat-2",
+      "status": "completed",
+      "evaluated_rows": 139,
+      "metrics": {
+        "micro_f1": 0.8126801152737753,
+        "precision": 0.815028901734104,
+        "recall": 0.8103448275862069,
+        "exact_match": 0.7050359712230215,
+        "rows": 139,
+        "invalid_rate": 0.45323741007194246,
+        "latency_p50_s": 0.5173223999991023,
+        "latency_p95_s": 0.7969569900003989,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.7,
+            "recall": 1.0,
+            "f1": 0.8235294117647058,
+            "support": 28
+          },
+          "103": {
+            "precision": 0.9310344827586207,
+            "recall": 0.84375,
+            "f1": 0.8852459016393442,
+            "support": 32
+          },
+          "104": {
+            "precision": 0.875,
+            "recall": 0.7,
+            "f1": 0.7777777777777778,
+            "support": 40
+          },
+          "105": {
+            "precision": 0.9333333333333333,
+            "recall": 0.6666666666666666,
+            "f1": 0.7777777777777778,
+            "support": 42
+          },
+          "106": {
+            "precision": 0.7142857142857143,
+            "recall": 0.9375,
+            "f1": 0.8108108108108109,
+            "support": 32
+          }
+        },
+        "context_cue_slice": {
+          "rows": 105,
+          "micro_f1": 0.8135593220338984
+        },
+        "dataset": "clean",
+        "model": "just-ai/sber-gigachat/GigaChat-2",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "legacy_strict_micro_f1": 0.7391304347826086,
+        "legacy_strict_invalid_rate": 0.4892086330935252,
+        "normalized_rate": 0.03597122302158273,
+        "missing_finish_reason_rate": 0.0,
+        "reused_rows": 30,
+        "evaluation_status": "completed",
+        "early_stopped": false,
+        "evaluated_rows": 139,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 58261,
+        "completion_tokens": 1368,
+        "retried_rows": 0
+      },
+      "task_id": "6e14bd169f5f40a68f00776e2619aa16",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/6e14bd169f5f40a68f00776e2619aa16/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0.0001,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-schema-v3",
+      "name": "gigachat-2-pro",
+      "model": "just-ai/sber-gigachat/GigaChat-2-Pro",
+      "status": "completed",
+      "evaluated_rows": 139,
+      "metrics": {
+        "micro_f1": 0.936046511627907,
+        "precision": 0.9470588235294117,
+        "recall": 0.9252873563218391,
+        "exact_match": 0.8920863309352518,
+        "rows": 139,
+        "invalid_rate": 0.38848920863309355,
+        "latency_p50_s": 0.594486699999834,
+        "latency_p95_s": 1.0310295699997367,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.9230769230769231,
+            "recall": 0.8571428571428571,
+            "f1": 0.8888888888888888,
+            "support": 28
+          },
+          "103": {
+            "precision": 1.0,
+            "recall": 0.84375,
+            "f1": 0.9152542372881356,
+            "support": 32
+          },
+          "104": {
+            "precision": 0.9736842105263158,
+            "recall": 0.925,
+            "f1": 0.9487179487179487,
+            "support": 40
+          },
+          "105": {
+            "precision": 0.9534883720930233,
+            "recall": 0.9761904761904762,
+            "f1": 0.9647058823529412,
+            "support": 42
+          },
+          "106": {
+            "precision": 0.8888888888888888,
+            "recall": 1.0,
+            "f1": 0.9411764705882353,
+            "support": 32
+          }
+        },
+        "context_cue_slice": {
+          "rows": 105,
+          "micro_f1": 0.9379310344827586
+        },
+        "dataset": "clean",
+        "model": "just-ai/sber-gigachat/GigaChat-2-Pro",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "legacy_strict_micro_f1": 0.936046511627907,
+        "legacy_strict_invalid_rate": 0.38848920863309355,
+        "normalized_rate": 0.0,
+        "missing_finish_reason_rate": 0.0,
+        "reused_rows": 30,
+        "evaluation_status": "completed",
+        "early_stopped": false,
+        "evaluated_rows": 139,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 57351,
+        "completion_tokens": 1349,
+        "retried_rows": 0
+      },
+      "task_id": "4fd0b8db5e9943f48e88fa247e5eb0eb",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/4fd0b8db5e9943f48e88fa247e5eb0eb/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0.0001,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-schema-v3",
+      "name": "qwen3-instruct",
+      "model": "just-ai/openrouter-proxy/qwen/qwen3-30b-a3b-instruct-2507",
+      "status": "interrupted",
+      "evaluated_rows": 10,
+      "metrics": null,
+      "task_id": null,
+      "clearml_url": null,
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-schema-v3",
+      "name": "yandexgpt",
+      "model": "just-ai/yandex-yandexgpt/yandexgpt/latest",
+      "status": "interrupted",
+      "evaluated_rows": 124,
+      "metrics": null,
+      "task_id": null,
+      "clearml_url": null,
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-schema-v3",
+      "name": "yandexgpt-lite",
+      "model": "just-ai/yandex-yandexgpt/yandexgpt-lite/latest",
+      "status": "completed",
+      "evaluated_rows": 139,
+      "metrics": {
+        "micro_f1": 0.8212290502793296,
+        "precision": 0.7989130434782609,
+        "recall": 0.8448275862068966,
+        "exact_match": 0.7410071942446043,
+        "rows": 139,
+        "invalid_rate": 0.14388489208633093,
+        "latency_p50_s": 0.7038276999992377,
+        "latency_p95_s": 1.2073064299995167,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.6923076923076923,
+            "recall": 0.9642857142857143,
+            "f1": 0.8059701492537313,
+            "support": 28
+          },
+          "103": {
+            "precision": 0.8,
+            "recall": 0.875,
+            "f1": 0.835820895522388,
+            "support": 32
+          },
+          "104": {
+            "precision": 0.8823529411764706,
+            "recall": 0.75,
+            "f1": 0.8108108108108109,
+            "support": 40
+          },
+          "105": {
+            "precision": 0.825,
+            "recall": 0.7857142857142857,
+            "f1": 0.8048780487804879,
+            "support": 42
+          },
+          "106": {
+            "precision": 0.8055555555555556,
+            "recall": 0.90625,
+            "f1": 0.8529411764705882,
+            "support": 32
+          }
+        },
+        "context_cue_slice": {
+          "rows": 105,
+          "micro_f1": 0.8187919463087249
+        },
+        "dataset": "clean",
+        "model": "just-ai/yandex-yandexgpt/yandexgpt-lite/latest",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "legacy_strict_micro_f1": 0.0,
+        "legacy_strict_invalid_rate": 1.0,
+        "normalized_rate": 0.8561151079136691,
+        "missing_finish_reason_rate": 1.0,
+        "reused_rows": 30,
+        "evaluation_status": "completed",
+        "early_stopped": false,
+        "evaluated_rows": 139,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 100585,
+        "completion_tokens": 2309,
+        "retried_rows": 0
+      },
+      "task_id": "e3ab39dfca7546f9a591ec6fe477b55f",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/e3ab39dfca7546f9a591ec6fe477b55f/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-dev-target093-v4",
+      "name": "qwen3-235b-instruct",
+      "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+      "status": "completed",
+      "evaluated_rows": 139,
+      "metrics": {
+        "micro_f1": 0.9385474860335196,
+        "precision": 0.9130434782608695,
+        "recall": 0.9655172413793104,
+        "exact_match": 0.8848920863309353,
+        "rows": 139,
+        "invalid_rate": 0.0,
+        "latency_p50_s": 1.5085156000022835,
+        "latency_p95_s": 4.045227339999835,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.8620689655172413,
+            "recall": 0.8928571428571429,
+            "f1": 0.8771929824561403,
+            "support": 28
+          },
+          "103": {
+            "precision": 0.8888888888888888,
+            "recall": 1.0,
+            "f1": 0.9411764705882353,
+            "support": 32
+          },
+          "104": {
+            "precision": 1.0,
+            "recall": 0.95,
+            "f1": 0.9743589743589743,
+            "support": 40
+          },
+          "105": {
+            "precision": 0.9318181818181818,
+            "recall": 0.9761904761904762,
+            "f1": 0.9534883720930233,
+            "support": 42
+          },
+          "106": {
+            "precision": 0.8648648648648649,
+            "recall": 1.0,
+            "f1": 0.927536231884058,
+            "support": 32
+          }
+        },
+        "context_cue_slice": {
+          "rows": 105,
+          "micro_f1": 0.9337748344370861
+        },
+        "dataset": "clean",
+        "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "legacy_strict_micro_f1": 0.9385474860335196,
+        "legacy_strict_invalid_rate": 0.0,
+        "normalized_rate": 0.0,
+        "missing_finish_reason_rate": 0.0,
+        "reused_rows": 0,
+        "evaluation_status": "completed",
+        "early_stopped": false,
+        "evaluated_rows": 139,
+        "planned_rows": 139,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 174921,
+        "completion_tokens": 1632,
+        "retried_rows": 0
+      },
+      "task_id": "3a8890ba31c84a9e9f8e1e6b175b3f73",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/3a8890ba31c84a9e9f8e1e6b175b3f73/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-gold-v1",
+      "name": "gigachat-2",
+      "model": "just-ai/sber-gigachat/GigaChat-2",
+      "status": "completed_superseded_prompt",
+      "evaluated_rows": 139,
+      "metrics": {
+        "micro_f1": 0.6096033402922756,
+        "precision": 0.4786885245901639,
+        "recall": 0.8390804597701149,
+        "exact_match": 0.49640287769784175,
+        "rows": 139,
+        "invalid_rate": 0.02877697841726619,
+        "latency_p50_s": 0.6403549999995448,
+        "latency_p95_s": 0.8921534300025085,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.3783783783783784,
+            "recall": 1.0,
+            "f1": 0.5490196078431373,
+            "support": 28
+          },
+          "103": {
+            "precision": 0.4716981132075472,
+            "recall": 0.78125,
+            "f1": 0.5882352941176471,
+            "support": 32
+          },
+          "104": {
+            "precision": 0.5370370370370371,
+            "recall": 0.725,
+            "f1": 0.6170212765957447,
+            "support": 40
+          },
+          "105": {
+            "precision": 0.5555555555555556,
+            "recall": 0.8333333333333334,
+            "f1": 0.6666666666666666,
+            "support": 42
+          },
+          "106": {
+            "precision": 0.47540983606557374,
+            "recall": 0.90625,
+            "f1": 0.6236559139784946,
+            "support": 32
+          }
+        },
+        "context_cue_slice": {
+          "rows": 105,
+          "micro_f1": 0.6509186351706037
+        },
+        "dataset": "clean",
+        "model": "just-ai/sber-gigachat/GigaChat-2",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "prompt_hash": "60e9439875d8380eb1ad93ca788715066d522e956980ef20ba38c50d75636a9a",
+        "limited": false,
+        "prompt_tokens": 53811,
+        "completion_tokens": 2179,
+        "retried_rows": 0
+      },
+      "task_id": "749c67f9263b42feb2d0021e46d692ca",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/749c67f9263b42feb2d0021e46d692ca/output/log",
+      "prompt_hash": "60e9439875d8380eb1ad93ca788715066d522e956980ef20ba38c50d75636a9a",
+      "parameters": {
+        "temperature": 0.0001,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "baseline-gold-v1",
+      "name": "gigachat-2-pro",
+      "model": "just-ai/sber-gigachat/GigaChat-2-Pro",
+      "status": "completed_superseded_prompt",
+      "evaluated_rows": 139,
+      "metrics": {
+        "micro_f1": 0.7465437788018433,
+        "precision": 0.6230769230769231,
+        "recall": 0.9310344827586207,
+        "exact_match": 0.6690647482014388,
+        "rows": 139,
+        "invalid_rate": 0.2158273381294964,
+        "latency_p50_s": 0.7425414999997884,
+        "latency_p95_s": 1.2543716799988034,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.48214285714285715,
+            "recall": 0.9642857142857143,
+            "f1": 0.6428571428571429,
+            "support": 28
+          },
+          "103": {
+            "precision": 0.6078431372549019,
+            "recall": 0.96875,
+            "f1": 0.7469879518072289,
+            "support": 32
+          },
+          "104": {
+            "precision": 0.7906976744186046,
+            "recall": 0.85,
+            "f1": 0.8192771084337349,
+            "support": 40
+          },
+          "105": {
+            "precision": 0.7222222222222222,
+            "recall": 0.9285714285714286,
+            "f1": 0.8125,
+            "support": 42
+          },
+          "106": {
+            "precision": 0.5535714285714286,
+            "recall": 0.96875,
+            "f1": 0.7045454545454546,
+            "support": 32
+          }
+        },
+        "context_cue_slice": {
+          "rows": 105,
+          "micro_f1": 0.7397260273972602
+        },
+        "dataset": "clean",
+        "model": "just-ai/sber-gigachat/GigaChat-2-Pro",
+        "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc",
+        "prompt_hash": "60e9439875d8380eb1ad93ca788715066d522e956980ef20ba38c50d75636a9a",
+        "limited": false,
+        "prompt_tokens": 53528,
+        "completion_tokens": 1874,
+        "retried_rows": 0
+      },
+      "task_id": "887e8528c3de4658a9de30c3c21a7c14",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/887e8528c3de4658a9de30c3c21a7c14/output/log",
+      "prompt_hash": "60e9439875d8380eb1ad93ca788715066d522e956980ef20ba38c50d75636a9a",
+      "parameters": {
+        "temperature": 0.0001,
+        "max_tokens": 96
+      },
+      "test_hash": "7a2cd96231cfcac72ecca83d10575dcfe125b8a56d0a315c0be4bb058d742dbc"
+    },
+    {
+      "group": "qwen235-hard-v0",
+      "name": "qwen3-235b-instruct",
+      "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+      "status": "completed",
+      "evaluated_rows": 50,
+      "metrics": {
+        "micro_f1": 0.875,
+        "precision": 0.8513513513513513,
+        "recall": 0.9,
+        "exact_match": 0.82,
+        "rows": 50,
+        "invalid_rate": 0.0,
+        "latency_p50_s": 1.4152397500001825,
+        "latency_p95_s": 2.3509179200016654,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.75,
+            "recall": 0.9230769230769231,
+            "f1": 0.8275862068965517,
+            "support": 13
+          },
+          "103": {
+            "precision": 0.8947368421052632,
+            "recall": 1.0,
+            "f1": 0.9444444444444444,
+            "support": 17
+          },
+          "104": {
+            "precision": 0.8666666666666667,
+            "recall": 0.8125,
+            "f1": 0.8387096774193549,
+            "support": 16
+          },
+          "105": {
+            "precision": 0.8181818181818182,
+            "recall": 0.75,
+            "f1": 0.782608695652174,
+            "support": 12
+          },
+          "106": {
+            "precision": 0.9230769230769231,
+            "recall": 1.0,
+            "f1": 0.96,
+            "support": 12
+          }
+        },
+        "context_cue_slice": {
+          "rows": 19,
+          "micro_f1": 0.9803921568627451
+        },
+        "dataset": "clean",
+        "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+        "test_hash": "62b7c80e4aa395394c7732ad713cf3b82aee6a86e24cafd957db4b75749a6aef",
+        "legacy_strict_micro_f1": 0.875,
+        "legacy_strict_invalid_rate": 0.0,
+        "normalized_rate": 0.0,
+        "missing_finish_reason_rate": 0.0,
+        "reused_rows": 0,
+        "evaluation_status": "completed",
+        "early_stopped": false,
+        "evaluated_rows": 50,
+        "planned_rows": 50,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 40481,
+        "completion_tokens": 598,
+        "retried_rows": 0
+      },
+      "task_id": "01d1fbd21c4f42fbbe0b5d7f7f9497bf",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/01d1fbd21c4f42fbbe0b5d7f7f9497bf/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "62b7c80e4aa395394c7732ad713cf3b82aee6a86e24cafd957db4b75749a6aef"
+    },
+    {
+      "group": "qwen235-test-v7",
+      "name": "qwen3-235b-instruct",
+      "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+      "status": "completed",
+      "evaluated_rows": 80,
+      "metrics": {
+        "micro_f1": 0.9464788732394366,
+        "precision": 0.9281767955801105,
+        "recall": 0.9655172413793104,
+        "exact_match": 0.8125,
+        "rows": 80,
+        "invalid_rate": 0.0,
+        "latency_p50_s": 2.0281176999997115,
+        "latency_p95_s": 11.562987790000621,
+        "per_category": {
+          "101": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "102": {
+            "precision": 0.8620689655172413,
+            "recall": 0.8928571428571429,
+            "f1": 0.8771929824561403,
+            "support": 28
+          },
+          "103": {
+            "precision": 0.8857142857142857,
+            "recall": 0.96875,
+            "f1": 0.9253731343283582,
+            "support": 32
+          },
+          "104": {
+            "precision": 1.0,
+            "recall": 0.975,
+            "f1": 0.9873417721518988,
+            "support": 40
+          },
+          "105": {
+            "precision": 0.9761904761904762,
+            "recall": 0.9761904761904762,
+            "f1": 0.9761904761904762,
+            "support": 42
+          },
+          "106": {
+            "precision": 0.8888888888888888,
+            "recall": 1.0,
+            "f1": 0.9411764705882353,
+            "support": 32
+          }
+        },
+        "context_cue_slice": {
+          "rows": 65,
+          "micro_f1": 0.9395973154362416
+        },
+        "dataset": "clean",
+        "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+        "test_hash": "76a74990032c2913a5eab1fe19e3c02a4c843db937ca296dd847e3a50e532e48",
+        "legacy_strict_micro_f1": 0.9464788732394366,
+        "legacy_strict_invalid_rate": 0.0,
+        "normalized_rate": 0.0,
+        "missing_finish_reason_rate": 0.0,
+        "reused_rows": 0,
+        "evaluation_status": "completed",
+        "early_stopped": false,
+        "evaluated_rows": 80,
+        "planned_rows": 80,
+        "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+        "limited": false,
+        "prompt_tokens": 115435,
+        "completion_tokens": 1263,
+        "retried_rows": 0
+      },
+      "task_id": "2f27c332c61b4f4d82b2588fcf98a860",
+      "clearml_url": "https://app.clear.ml/projects/c9ed86d9cd694ac1b2a139051a720f15/tasks/2f27c332c61b4f4d82b2588fcf98a860/output/log",
+      "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+      "parameters": {
+        "temperature": 0,
+        "max_tokens": 96
+      },
+      "test_hash": "76a74990032c2913a5eab1fe19e3c02a4c843db937ca296dd847e3a50e532e48"
+    }
+  ]
+}

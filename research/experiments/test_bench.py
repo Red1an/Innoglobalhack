@@ -105,6 +105,18 @@ class ProtocolTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             bench.canonical({'description': 'abc', 'labels': []})
 
+    def test_char_lr_constant_category_does_not_raise_other_thresholds(self):
+        # Identical texts give plumbing a probability near 0.6. Empty categories
+        # must not make OvR apply a 0.5 threshold to LR decision_function scores.
+        import warnings
+        rows = [{'description': 'Монтаж сантехники в квартире', 'mcId': 101,
+                 'labels': [104] if i < 6 else []} for i in range(10)]
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', UserWarning)
+            result = list(bench.baseline(rows, [rows[0]]))
+        self.assertEqual(result[0]['labels'], [104])
+        self.assertTrue(result[0]['valid'])
+
     def test_prepare_excludes_leakage_and_conflicts(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

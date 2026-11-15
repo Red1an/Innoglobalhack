@@ -220,3 +220,6 @@ __marimo__/
 .streamlit/secrets.toml
 
 .DS_Store
+
+# Caila evaluation outputs (predictions, dataset snapshots, responses)
+research/api-runs/

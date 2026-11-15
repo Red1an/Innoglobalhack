@@ -1,0 +1,65 @@
+[
+  {
+    "name": "gigachat-2",
+    "origin": "RU",
+    "model": "just-ai/sber-gigachat/GigaChat-2",
+    "params": {
+      "temperature": 0.0001,
+      "max_tokens": 96
+    }
+  },
+  {
+    "name": "gigachat-2-pro",
+    "origin": "RU",
+    "model": "just-ai/sber-gigachat/GigaChat-2-Pro",
+    "params": {
+      "temperature": 0.0001,
+      "max_tokens": 96
+    }
+  },
+  {
+    "name": "yandexgpt-lite",
+    "origin": "RU",
+    "model": "just-ai/yandex-yandexgpt/yandexgpt-lite/latest",
+    "params": {
+      "temperature": 0,
+      "max_tokens": 96
+    }
+  },
+  {
+    "name": "yandexgpt",
+    "origin": "RU",
+    "model": "just-ai/yandex-yandexgpt/yandexgpt/latest",
+    "params": {
+      "temperature": 0,
+      "max_tokens": 96
+    }
+  },
+  {
+    "name": "qwen3-instruct",
+    "origin": "CN",
+    "model": "just-ai/openrouter-proxy/qwen/qwen3-30b-a3b-instruct-2507",
+    "params": {
+      "temperature": 0,
+      "max_tokens": 96
+    }
+  },
+  {
+    "name": "deepseek-v3.1-chat",
+    "origin": "CN",
+    "model": "just-ai/deepseek-deepseek/deepseek/deepseek-chat-v3.1",
+    "params": {
+      "temperature": 0,
+      "max_tokens": 96
+    }
+  },
+  {
+    "name": "qwen3-235b-instruct",
+    "origin": "CN",
+    "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+    "params": {
+      "temperature": 0,
+      "max_tokens": 96
+    }
+  }
+]

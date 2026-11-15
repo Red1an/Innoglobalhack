@@ -1,0 +1,132 @@
+{
+  "test_hash": "76a74990032c2913a5eab1fe19e3c02a4c843db937ca296dd847e3a50e532e48",
+  "rows": 80,
+  "baseline": {
+    "micro_f1": 0.8828828828828829,
+    "tp": 147,
+    "fp": 12,
+    "fn": 27,
+    "exact_rows": 57
+  },
+  "five_outputs_default_05": {
+    "micro_f1": 0.8971428571428571,
+    "tp": 157,
+    "fp": 19,
+    "fn": 17,
+    "exact_rows": 55
+  },
+  "qwen": {
+    "micro_f1": 0.9464788732394366,
+    "tp": 168,
+    "fp": 13,
+    "fn": 6,
+    "exact_rows": 65
+  },
+  "error_overlap": {
+    "both_wrong_label_decisions": 5,
+    "lr_wrong_qwen_correct": 34,
+    "qwen_wrong_lr_correct": 14,
+    "both_wrong_rows": 4,
+    "disagreement_rows": 33,
+    "both_models_identically_wrong_rows": 1
+  },
+  "union": {
+    "micro_f1": 0.9456521739130435,
+    "tp": 174,
+    "fp": 20,
+    "fn": 0,
+    "exact_rows": 65
+  },
+  "intersection": {
+    "micro_f1": 0.88125,
+    "tp": 141,
+    "fp": 5,
+    "fn": 33,
+    "exact_rows": 56
+  },
+  "label_oracle_diagnostic_not_deployable": {
+    "micro_f1": 0.9858356940509915,
+    "tp": 174,
+    "fp": 5,
+    "fn": 0,
+    "exact_rows": 77
+  },
+  "dev_thresholds": {
+    "global": 0.55,
+    "per_class_102_to_106": [
+      0.55,
+      0.475,
+      0.55,
+      0.475,
+      0.4
+    ],
+    "default_dev_micro_f1": 0.9539121114683816,
+    "global_dev_micro_f1": 0.9569543586415747,
+    "per_class_dev_micro_f1": 0.9584226318045435,
+    "global_test": {
+      "micro_f1": 0.9043478260869565,
+      "tp": 156,
+      "fp": 15,
+      "fn": 18,
+      "exact_rows": 58
+    },
+    "per_class_test": {
+      "micro_f1": 0.896358543417367,
+      "tp": 160,
+      "fp": 23,
+      "fn": 14,
+      "exact_rows": 54
+    }
+  },
+  "routing_diagnostic_no_dev_validation": [
+    {
+      "qwen_rows": 16,
+      "request_fraction": 0.2,
+      "metrics": {
+        "micro_f1": 0.9186046511627907,
+        "tp": 158,
+        "fp": 12,
+        "fn": 16,
+        "exact_rows": 60
+      }
+    },
+    {
+      "qwen_rows": 32,
+      "request_fraction": 0.4,
+      "metrics": {
+        "micro_f1": 0.9243697478991597,
+        "tp": 165,
+        "fp": 18,
+        "fn": 9,
+        "exact_rows": 59
+      }
+    },
+    {
+      "qwen_rows": 48,
+      "request_fraction": 0.6,
+      "metrics": {
+        "micro_f1": 0.9441340782122905,
+        "tp": 169,
+        "fp": 15,
+        "fn": 5,
+        "exact_rows": 65
+      }
+    },
+    {
+      "qwen_rows": 64,
+      "request_fraction": 0.8,
+      "metrics": {
+        "micro_f1": 0.9464788732394366,
+        "tp": 168,
+        "fp": 13,
+        "fn": 6,
+        "exact_rows": 65
+      }
+    }
+  ],
+  "fixed_error_overlap": {
+    "both_wrong_label_decisions": 8,
+    "qwen_wrong_fixed_lr_correct": 11,
+    "lr_wrong_qwen_correct": 28
+  }
+}

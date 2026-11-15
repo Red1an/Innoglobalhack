@@ -298,11 +298,13 @@ def baseline(train, test):
     model = make_pipeline(TfidfVectorizer(analyzer='char_wb', ngram_range=(3, 4), min_df=3,
                                          max_features=50000, sublinear_tf=True, dtype=np.float32),
                           OneVsRestClassifier(LogisticRegression(C=4, solver='liblinear', random_state=42)))
-    model.fit([row['description'] for row in train], matrix(train))
+    model.fit([row['description'] for row in train], matrix(train)[:, 1:])
     for row in test:
         start = time.perf_counter()
-        pred = model.predict([row['description']])[0]
-        yield {'labels': [label for label, yes in zip(LABELS, pred) if yes and label != row['mcId']],
+        # Explicit probabilities avoid OvR's shared decision threshold being
+        # changed by a constant predictor for an absent category.
+        pred = model.predict_proba([row['description']])[0] >= .5
+        yield {'labels': [label for label, yes in zip(range(102, 107), pred) if yes],
                'valid': True, 'seconds': time.perf_counter() - start}
 
 

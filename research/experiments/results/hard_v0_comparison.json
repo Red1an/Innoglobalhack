@@ -1,0 +1,142 @@
+{
+  "dataset": "hard_v0",
+  "git_revision": "1556e08",
+  "test_hash": "62b7c80e4aa395394c7732ad713cf3b82aee6a86e24cafd957db4b75749a6aef",
+  "rows": 50,
+  "empty_rows": 14,
+  "qwen_metrics": {
+    "micro_f1": 0.875,
+    "precision": 0.8513513513513513,
+    "recall": 0.9,
+    "exact_match": 0.82,
+    "rows": 50,
+    "invalid_rate": 0.0,
+    "latency_p50_s": 1.4152397500001825,
+    "latency_p95_s": 2.3509179200016654,
+    "per_category": {
+      "101": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "102": {
+        "precision": 0.75,
+        "recall": 0.9230769230769231,
+        "f1": 0.8275862068965517,
+        "support": 13
+      },
+      "103": {
+        "precision": 0.8947368421052632,
+        "recall": 1.0,
+        "f1": 0.9444444444444444,
+        "support": 17
+      },
+      "104": {
+        "precision": 0.8666666666666667,
+        "recall": 0.8125,
+        "f1": 0.8387096774193549,
+        "support": 16
+      },
+      "105": {
+        "precision": 0.8181818181818182,
+        "recall": 0.75,
+        "f1": 0.782608695652174,
+        "support": 12
+      },
+      "106": {
+        "precision": 0.9230769230769231,
+        "recall": 1.0,
+        "f1": 0.96,
+        "support": 12
+      }
+    },
+    "context_cue_slice": {
+      "rows": 19,
+      "micro_f1": 0.9803921568627451
+    },
+    "dataset": "clean",
+    "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+    "test_hash": "62b7c80e4aa395394c7732ad713cf3b82aee6a86e24cafd957db4b75749a6aef",
+    "legacy_strict_micro_f1": 0.875,
+    "legacy_strict_invalid_rate": 0.0,
+    "normalized_rate": 0.0,
+    "missing_finish_reason_rate": 0.0,
+    "reused_rows": 0,
+    "evaluation_status": "completed",
+    "early_stopped": false,
+    "evaluated_rows": 50,
+    "planned_rows": 50,
+    "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+    "limited": false,
+    "prompt_tokens": 40481,
+    "completion_tokens": 598,
+    "retried_rows": 0
+  },
+  "comparison_on_current_gold": {
+    "qwen235": {
+      "micro_f1": 0.875,
+      "precision": 0.8513513513513513,
+      "recall": 0.9,
+      "tp": 63,
+      "fp": 11,
+      "fn": 7,
+      "exact_rows": 41
+    },
+    "char-lr base": {
+      "micro_f1": 0.5850340136054422,
+      "precision": 0.5584415584415584,
+      "recall": 0.6142857142857143,
+      "tp": 43,
+      "fp": 34,
+      "fn": 27,
+      "exact_rows": 18
+    },
+    "char-lr synth_v1": {
+      "micro_f1": 0.5734265734265734,
+      "precision": 0.5616438356164384,
+      "recall": 0.5857142857142857,
+      "tp": 41,
+      "fp": 32,
+      "fn": 29,
+      "exact_rows": 18
+    },
+    "avibe-q8": {
+      "micro_f1": 0.7945205479452054,
+      "precision": 0.7631578947368421,
+      "recall": 0.8285714285714286,
+      "tp": 58,
+      "fp": 18,
+      "fn": 12,
+      "exact_rows": 35
+    },
+    "t-lite-q8": {
+      "micro_f1": 0.7843137254901961,
+      "precision": 0.7228915662650602,
+      "recall": 0.8571428571428571,
+      "tp": 60,
+      "fp": 23,
+      "fn": 10,
+      "exact_rows": 34
+    },
+    "avibe-q8 dynamic own": {
+      "micro_f1": 0.7801418439716312,
+      "precision": 0.7746478873239436,
+      "recall": 0.7857142857142857,
+      "tp": 55,
+      "fp": 16,
+      "fn": 15,
+      "exact_rows": 36
+    },
+    "avibe-q8 dynamic bench": {
+      "micro_f1": 0.8187919463087249,
+      "precision": 0.7721518987341772,
+      "recall": 0.8714285714285714,
+      "tp": 61,
+      "fp": 18,
+      "fn": 9,
+      "exact_rows": 38
+    }
+  },
+  "colleague_predictions_source": "output/hard_v0_predictions.json; positional order from scripts/hard/run_hard.py, dataset and base predictions introduced together in602ddef. Dynamic prompt tailored to hard cases; not independent benchmark."
+}
