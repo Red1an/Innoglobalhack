@@ -1,0 +1,196 @@
+<style>
+#sh-open{position:fixed;right:20px;bottom:20px;z-index:50;background:#111;color:#fff;border:1px solid #333;border-radius:999px;padding:9px 18px;font:500 13px -apple-system,system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.25);display:none}
+#sh-open:hover{background:#000}
+#sh{position:fixed;inset:0;z-index:100;background:#0a0a0b;color:#f2f2f2;display:none;font:15px/1.4 -apple-system,system-ui,sans-serif;overflow:auto}
+#sh.on{display:flex;flex-direction:column;align-items:center;justify-content:center;animation:sh-in .35s ease}
+@keyframes sh-in{from{opacity:0}to{opacity:1}}
+#sh-close{position:absolute;top:18px;right:22px;background:none;border:0;color:#777;font-size:28px;line-height:1;cursor:pointer;padding:4px}
+#sh-close:hover{color:#fff}
+.sh-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#777}
+.sh-title{font-size:26px;font-weight:600;margin:6px 0 2px;text-align:center;padding:0 16px}
+.sh-sub{color:#8a8a8a;font-size:14px;min-height:20px;text-align:center}
+.sh-btn{margin-top:30px;background:#f2f2f2;color:#0a0a0b;border:0;border-radius:999px;padding:11px 26px;font:600 14px -apple-system,system-ui,sans-serif;cursor:pointer;transition:opacity .2s}
+.sh-btn:focus{outline:none}.sh-btn:focus-visible{outline:2px solid #444;outline-offset:3px}
+.sh-btn:disabled{opacity:.25;cursor:default}.sh-btn.ghost{background:none;color:#bbb;border:1px solid #333}
+.sh-gauge{position:relative;width:min(440px,86vw);margin:28px 0 0}
+.sh-gauge svg{width:100%;display:block;overflow:visible}
+.sh-value{text-align:center;margin-top:6px;line-height:1;font-size:clamp(44px,11vw,72px);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.sh-value small{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#777;font-weight:500;margin-top:8px}
+.sh-clock{font-size:clamp(64px,16vw,120px);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.03em;margin:22px 0 6px}
+.sh-dots{display:flex;gap:6px;margin-top:22px}.sh-dots i{width:6px;height:6px;border-radius:50%;background:#333}.sh-dots i.on{background:#f2f2f2}
+.sh-list{margin-top:24px;min-width:min(460px,90vw)}
+.sh-list div{display:flex;justify-content:space-between;gap:24px;padding:10px 2px;border-bottom:1px solid #1f1f1f;font-variant-numeric:tabular-nums}
+.sh-list div.best{color:#7ee2a8}
+.sh-pick{display:flex;flex-direction:column;gap:10px;margin-top:26px}
+.sh-pick .sh-btn{margin:0}
+.sh-fade{animation:sh-fade .5s ease}@keyframes sh-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+<button id="sh-open" type="button">Показ результатов</button>
+<div id="sh" role="dialog" aria-modal="true"><button id="sh-close" type="button" aria-label="Закрыть">×</button><div id="sh-body"></div></div>
+<script>
+(()=>{
+const el=id=>document.getElementById(id), body=()=>el('sh-body');
+const H=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const P=x=>(100*x).toFixed(1);
+let S=null, open=false, mode=null, seq=[], idx=0, anim=null, eta={value:null,at:0,key:''}, watchedStart=null;
+
+let liveJob=null,seen=[];
+const keyOf=r=>r.download;
+function fresh(){return S.runs.filter(r=>r.f1!=null&&Date.parse(r.created)/1000>=liveJob-1).sort((a,b)=>a.created.localeCompare(b.created))}
+function unrevealed(){const k=new Set(seen.map(keyOf));return fresh().filter(r=>!k.has(keyOf(r)))}
+function startLive(){liveJob=S.job.started;seen=[];showOverlay();nextLive()}
+function nextLive(){
+ const ready=unrevealed();
+ if(ready.length)return showLive(ready[0]);
+ if(S.job.running)return showClock();
+ liveJob=null;
+ if(seen.length){seq=seen;summary()}else message('Прогон завершён','У этих датасетов нет меток, метрик не будет.');
+}
+
+async function poll(){
+ try{S=await (await fetch('/api/state')).json()}catch{return}
+ const scored=S.runs.some(r=>r.f1!=null);
+ const live=S.job.running&&S.job.labeled;
+ el('sh-open').style.display=(scored||live)?'block':'none';
+ el('sh-open').textContent=live?'Идёт прогон · показать':'Показ результатов';
+ if(!open&&autoOpen){
+  if(live||(!S.job.running&&S.job.labeled&&S.job.started*1000>=autoOpen-2000)){autoOpen=0;startLive()}
+  else if(Date.now()-autoOpen>8000)autoOpen=0;
+ }
+ if(!open||liveJob==null)return;
+ if(mode==='clock'){if(unrevealed().length||!S.job.running)nextLive();else tickClock()}
+ else if(mode==='live'&&el('sh-next')&&!el('sh-next').disabled)el('sh-next').textContent=(S.job.running||unrevealed().length)?'Следующая модель':'Итоги';
+}
+
+function showLive(r){
+ seen.push(r);mode='live';
+ body().innerHTML=`<div class="sh-fade" style="display:flex;flex-direction:column;align-items:center">
+  <div class="sh-eyebrow">${H(r.dataset)} · модель ${seen.length} из ${S.job.total||seen.length}</div>
+  <div class="sh-title">${H(r.title)}</div><div class="sh-sub" id="sh-meta">&nbsp;</div>
+  <div class="sh-gauge">${gaugeSVG()}<div class="sh-value"><span id="sh-num">0.0</span><small>micro-F1</small></div></div>
+  <button class="sh-btn" id="sh-next" disabled>Следующая модель</button></div>`;
+ el('sh-next').onclick=nextLive;
+ reveal(r.f1,()=>{
+  el('sh-meta').textContent=`macro-F1 ${r.macro==null?'—':P(r.macro)} · ${r.per_row} с на объявление · вызовов LLM ${r.llm_calls}`;
+  if(r.errors){el('sh-meta').style.color='#ff7a6e';el('sh-meta').textContent+=` · ошибок LLM ${r.errors}, там ответы от Char-LR`}
+  el('sh-next').textContent=(S.job.running||unrevealed().length)?'Следующая модель':'Итоги';
+  el('sh-next').disabled=false;el('sh-next').focus();
+ });
+}
+
+function showOverlay(){open=true;el('sh').classList.add('on');document.body.style.overflow='hidden'}
+function close(){open=false;mode=null;liveJob=null;cancelAnimationFrame(anim);el('sh').classList.remove('on');document.body.style.overflow=''}
+el('sh-close').onclick=close;
+document.addEventListener('keydown',e=>{if(open&&e.key==='Escape')close()});
+let autoOpen=0;
+document.getElementById('run').addEventListener('click',()=>{autoOpen=Date.now()});
+el('sh-open').onclick=()=>{if(S&&S.job.running&&S.job.labeled)startLive();else{showOverlay();start()}};
+
+function start(){choose(S.runs.filter(r=>r.f1!=null))}
+function choose(runs){
+ const groups={};for(const r of runs)(groups[r.dataset]??=[]).push(r);
+ const names=Object.keys(groups).sort();
+ if(!names.length){message('Метрик пока нет','Нужен датасет с метками.');return}
+ if(names.length===1)return play(groups[names[0]]);
+ mode='pick';
+ body().innerHTML=`<div class="sh-fade" style="text-align:center"><div class="sh-eyebrow">Выберите датасет</div><div class="sh-pick">${names.map(n=>`<button class="sh-btn ghost" data-n="${H(n)}">${H(n)} · ${groups[n].length}</button>`).join('')}</div></div>`;
+ body().querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>play(groups[b.dataset.n]));
+}
+
+function message(title,sub){mode='msg';body().innerHTML=`<div class="sh-fade" style="text-align:center"><div class="sh-title">${H(title)}</div><div class="sh-sub">${H(sub)}</div><button class="sh-btn ghost" id="sh-x">Закрыть</button></div>`;el('sh-x').onclick=close}
+
+function play(runs){
+ seq=[...runs].sort((a,b)=>a.dataset.localeCompare(b.dataset)||a.f1-b.f1);idx=0;mode='reveal';step();
+}
+
+function gaugeSVG(){
+ const ticks=[0,.25,.5,.75,1].map(t=>{const a=Math.PI*(1-t),x1=150+112*Math.cos(a),y1=150-112*Math.sin(a),x2=150+100*Math.cos(a),y2=150-100*Math.sin(a);
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3a3a3a" stroke-width="2"/>`}).join('');
+ return `<svg viewBox="0 0 300 165"><path d="M30 150 A120 120 0 0 1 270 150" fill="none" stroke="#1d1d1f" stroke-width="14" stroke-linecap="round"/>
+  <path id="sh-arc" d="M30 150 A120 120 0 0 1 270 150" fill="none" stroke="#666" stroke-width="14" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"/>
+  ${ticks}<line id="sh-needle" x1="150" y1="150" x2="150" y2="62" stroke="#f2f2f2" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90 150 150)"/><circle cx="150" cy="150" r="5" fill="#f2f2f2"/></svg>`;
+}
+const hue=v=>Math.max(0,Math.min(1,(v-.5)/.45))*135;
+function setGauge(v){
+ const c=Math.max(0,Math.min(1,v));
+ el('sh-arc').setAttribute('stroke-dashoffset',377*(1-c));
+ el('sh-arc').setAttribute('stroke',`hsl(${hue(c)} 70% 55%)`);
+ el('sh-needle').setAttribute('transform',`rotate(${-90+180*c} 150 150)`);
+ el('sh-num').textContent=P(c);
+}
+
+function step(){
+ const r=seq[idx],last=idx===seq.length-1;
+ body().innerHTML=`<div class="sh-fade" style="display:flex;flex-direction:column;align-items:center">
+  <div class="sh-eyebrow">${H(r.dataset)} · модель ${idx+1} из ${seq.length}</div>
+  <div class="sh-title">${H(r.title)}</div><div class="sh-sub" id="sh-meta">&nbsp;</div>
+  <div class="sh-gauge">${gaugeSVG()}<div class="sh-value"><span id="sh-num">0.0</span><small>micro-F1</small></div></div>
+  <div class="sh-dots">${seq.map((_,i)=>`<i class="${i<=idx?'on':''}"></i>`).join('')}</div>
+  <button class="sh-btn" id="sh-next" disabled>${last?'Итоги':'Следующая модель'}</button></div>`;
+ el('sh-next').onclick=()=>{if(last)summary();else{idx++;step()}};
+ reveal(r.f1,()=>{
+  el('sh-meta').textContent=`macro-F1 ${r.macro==null?'—':P(r.macro)} · ${r.per_row} с на объявление · вызовов LLM ${r.llm_calls}`;
+  if(r.errors){el('sh-meta').style.color='#ff7a6e';el('sh-meta').textContent+=` · ошибок LLM ${r.errors}, там ответы от Char-LR`}
+  el('sh-next').disabled=false;el('sh-next').focus();
+ });
+}
+
+function reveal(v,done){
+ const duration=2600,ease=t=>1-Math.pow(1-t,4);
+ let t0=null;
+ const skip=()=>{cancelAnimationFrame(anim);setGauge(v);done()};
+ body().querySelector('.sh-gauge').onclick=skip;
+ const frame=now=>{
+  t0??=now;const t=Math.min(1,(now-t0)/duration);
+  setGauge(v*ease(t));
+  if(t<1)anim=requestAnimationFrame(frame);else{setGauge(v);done()}
+ };
+ anim=requestAnimationFrame(frame);
+}
+
+function summary(){
+ mode='summary';
+ const groups={};for(const r of seq)(groups[r.dataset]??=[]).push(r);
+ body().innerHTML=`<div class="sh-fade" style="display:flex;flex-direction:column;align-items:center"><div class="sh-eyebrow">Итоги</div>
+  ${Object.entries(groups).map(([d,rs])=>{const top=Math.max(...rs.map(r=>r.f1));return `<div class="sh-title" style="font-size:18px;margin-top:22px">${H(d)}</div><div class="sh-list" style="margin-top:8px">${[...rs].sort((a,b)=>b.f1-a.f1).map(r=>`<div class="${r.f1===top?'best':''}"><span>${H(r.title)}</span><span>${P(r.f1)}</span></div>`).join('')}</div>`}).join('')}
+  <button class="sh-btn ghost" id="sh-x">Закрыть</button></div>`;
+ el('sh-x').onclick=close;
+}
+
+function currentEta(){
+ const log=S.job.log||'',from=log.lastIndexOf('\n=== '),tail=from<0?log:log.slice(from);
+ const m=[...tail.matchAll(/осталось ~(\d+) с/g)].pop();
+ const key=`${S.job.done}|${tail.length}`;
+ if(m&&key!==eta.key&&Number(m[1])!==eta.value){eta={value:Number(m[1]),at:Date.now(),key}}
+ if(!m&&eta.key.split('|')[0]!==String(S.job.done))eta={value:null,at:Date.now(),key};
+ return eta.value==null?null:Math.max(0,eta.value-(Date.now()-eta.at)/1000);
+}
+const mmss=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+let clockTimer=null;
+function showClock(){
+ mode='clock';
+ body().innerHTML=`<div class="sh-fade" style="display:flex;flex-direction:column;align-items:center">
+  <div class="sh-eyebrow" id="sh-step"></div><div class="sh-clock" id="sh-clock">—:——</div>
+  <div class="sh-title" style="font-size:18px" id="sh-cur"></div><div class="sh-sub" id="sh-note"></div></div>`;
+ clearInterval(clockTimer);clockTimer=setInterval(()=>{if(mode==='clock')tickClock();else clearInterval(clockTimer)},250);tickClock();
+}
+function tickClock(){
+ if(!S||!el('sh-clock'))return;
+ const j=S.job,now=Date.now()/1000,plan=j.plan||[],cur=plan[j.done];
+ const logLeft=currentEta(),inTask=now-(j.task_started||now);
+ const curLeft=logLeft!=null?logLeft:cur?Math.max(0,cur.rows*cur.rate-inTask):0;
+ const total=curLeft+plan.slice(j.done+1).reduce((a,t)=>a+t.rows*t.rate,0);
+ const guess=logLeft==null&&cur&&!cur.known;
+ el('sh-step').textContent=`модель ${Math.min(j.done+1,j.total)} из ${j.total}`;
+ el('sh-clock').innerHTML=curLeft<1?'0:00':`<span style="font-size:.45em;color:#666;vertical-align:.35em;margin-right:.15em">≈</span>${mmss(curLeft)}`;
+ el('sh-cur').textContent=(j.current||'').replace(' × ',' · ');
+ const parts=[curLeft<1?'почти готово':'до результата этой модели'];
+ if(j.total>1&&j.done+1<j.total)parts.push(`весь прогон ≈ ${mmss(total)}`);
+ parts.push(`прошло ${mmss(now-(j.started||now))}`);
+ if(guess)parts.push('оценка по типовой скорости, уточнится по ходу');
+ el('sh-note').textContent=parts.join(' · ');
+}
+
+poll();setInterval(poll,1500);
+})();
+</script>

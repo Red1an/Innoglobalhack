@@ -226,3 +226,9 @@ research/api-runs/
 
 # Hybrid cascade LLM response cache
 output/hybrid/cache/
+
+# Private evaluation: organizer data, runs and LLM cache
+private_eval/input/
+private_eval/runs/
+private_eval/cache/
+private_eval/prompt_history/
