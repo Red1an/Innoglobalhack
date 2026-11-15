@@ -1,0 +1,103 @@
+{
+  "version": "train_guide_v1",
+  "guide": {
+    "path": "innoglobalhack_avito/microcategories-guide.md",
+    "sha256": "eea9c18c3d88b9c588cfabafdf8e2d05a425619ff4965b0c58adc4c5b6f29bea",
+    "records": null
+  },
+  "review": {
+    "path": "dataset_review/guide_v1_reviewed.csv",
+    "sha256": "b586df7b60debad1d29144a2f6c8eadee525f4de8afffb50c90b5f7eff7bdba4",
+    "records": 121
+  },
+  "builder_sha256": "a045285cabad8c01015a75d8142e1335568cb6a295c3e3164a606738026ecb38",
+  "pyarrow_version": "26.0.1",
+  "sources": {
+    "train": {
+      "path": "data/processed/train_relabel_v2_synth_v1/train_relabel_v2_synth_v1.parquet",
+      "sha256": "36837b6f47443a6987244d4dd6595f9ae029db0ce9b6118cefca01f668eb26d9",
+      "records": 5311
+    },
+    "raw_train": {
+      "path": "data/raw/public-train-annotated.jsonl",
+      "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+      "records": 10000
+    }
+  },
+  "dataset": {
+    "path": "data/processed/train_guide_v1/train.parquet",
+    "sha256": "2df62bacef4969e5bb4dc18457ccb457f16f09af841d203f1a5de83545ce56b2",
+    "records": 5311
+  },
+  "label_changes": {
+    "path": "data/processed/train_guide_v1/label_changes.csv",
+    "sha256": "db5f78a76cbed8bf5330bf39c8b4d4286a58d8a3ed1e8bde67bff845c97a3609",
+    "records": 91
+  },
+  "records_by_origin": {
+    "real": 4214,
+    "synthetic": 1097
+  },
+  "labels_by_origin": {
+    "real": {
+      "102": 1408,
+      "103": 1892,
+      "104": 1827,
+      "105": 1815,
+      "106": 2174
+    },
+    "synthetic": {
+      "102": 277,
+      "103": 308,
+      "104": 465,
+      "105": 358,
+      "106": 137
+    }
+  },
+  "real_all_five": 820,
+  "raw_comparison": {
+    "parent_train": {
+      "rows": 4214,
+      "same_label_sets": 3474,
+      "same_description": 921,
+      "added_vs_raw": {
+        "102": 48,
+        "103": 96,
+        "104": 76,
+        "105": 79,
+        "106": 81
+      },
+      "removed_vs_raw": {
+        "102": 566,
+        "103": 4,
+        "104": 5,
+        "105": 2,
+        "106": 36
+      }
+    },
+    "guide_train": {
+      "rows": 4214,
+      "same_label_sets": 3445,
+      "same_description": 921,
+      "added_vs_raw": {
+        "102": 49,
+        "103": 97,
+        "104": 78,
+        "105": 80,
+        "106": 114
+      },
+      "removed_vs_raw": {
+        "102": 566,
+        "103": 4,
+        "104": 5,
+        "105": 2,
+        "106": 34
+      }
+    }
+  },
+  "transformations": [
+    "Применены проверенные изменения меток по справочнику",
+    "Состав исходного объединённого train сохранён для сравнения",
+    "synth_checked описывает исходную независимую проверку синтетики"
+  ]
+}

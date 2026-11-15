@@ -25,11 +25,11 @@ run_all.py делает то же, что ноутбук: готовит наб�
 
 uv venv .venv-bench --python 3.10 && UV_HTTP_TIMEOUT=600 uv pip install --python .venv-bench/bin/python -r requirements-ollama.txt "pyarrow>=19,<24" clearml==2.2.0
 
-Прогон исходного train организаторов с test_gold на всех четырёх моделях:
+Прогон исходного train организаторов с текущим gold на всех четырёх моделях:
 
 .venv-bench/bin/python run_all.py --dataset raw-gold --participant member2
 
-Для нового train добавьте в PRESETS файла run_all.py пару (новый train, data/test/test_gold.parquet) под своим именем и запустите с ним и своим --participant. --models выбирает модели, --no-upload отключает ClearML. Повторный запуск продолжает незавершённый прогон LLM.
+Профиль `guide` использует `train_guide_v1` и `data/test/test_guide_v1/test_gold.parquet`. Для другого train с тем же тестом можно указать файлы в профиле `custom` в ноутбуке или добавить пару в `PRESETS` файла `run_all.py`. `--models` выбирает модели, `--no-upload` отключает ClearML.
 
 Одну модель можно прогнать и напрямую:
 
@@ -39,7 +39,7 @@ python bench.py run --model t-lite-q8 --data <каталог prepare> --out runs
 
 В ячейке настроек первый задаёт DATASET = "old", PARTICIPANT = "member1", второй DATASET = "gold", PARTICIPANT = "member2". RUN_GROUP обозначает конфигурацию, например baseline. В обоих случаях общий PROJECT = "avito-microcategories".
 
-Доступны old (исходные train/test, тест 208 строк), processed (очищенные train/test), gold (очищенный train и test_gold.parquet, тест 139 строк), custom (явные пути CUSTOM_TRAIN и CUSTOM_TEST). Выбор gold использует закреплённый командой эталон. Исходные файлы остаются в data/. Для каждого набора создаются train/dev/test JSONL и manifest с хешами. Изменение исходных файлов создаёт новую версию набора.
+Доступны `old` (исходные train/test, тест 208 строк), `processed` (очищенные train/test), `guide` (train и gold по справочнику), `gold` и `raw-gold` (очищенный или исходный train с тем же gold из 80 строк), `gold-v7` и `raw-gold-v7` (прежний gold), `custom` (явные пути `CUSTOM_TRAIN` и `CUSTOM_TEST`). Для каждого набора создаются train/dev/test JSONL и манифест с хешами. Изменение исходных файлов создаёт новую версию набора.
 
 Сравнение old и gold одновременно меняет train, состав теста и разметку. Оно показывает качество на двух версиях данных. Для измерения эффекта изменения train используйте custom с одним фиксированным тестом. Пороги и параметры выбирайте на dev. Семантические дубликаты автоматически не исключаются.
 

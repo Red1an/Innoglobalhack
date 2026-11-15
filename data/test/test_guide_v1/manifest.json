@@ -1,0 +1,74 @@
+{
+  "version": "test_guide_v1",
+  "guide": {
+    "path": "innoglobalhack_avito/microcategories-guide.md",
+    "sha256": "eea9c18c3d88b9c588cfabafdf8e2d05a425619ff4965b0c58adc4c5b6f29bea",
+    "records": null
+  },
+  "review": {
+    "path": "dataset_review/guide_v1_reviewed.csv",
+    "sha256": "b586df7b60debad1d29144a2f6c8eadee525f4de8afffb50c90b5f7eff7bdba4",
+    "records": 121
+  },
+  "builder_sha256": "a045285cabad8c01015a75d8142e1335568cb6a295c3e3164a606738026ecb38",
+  "pyarrow_version": "26.0.1",
+  "sources": {
+    "gold": {
+      "path": "data/test/test_gold.parquet",
+      "sha256": "5ca036c1e8dc4d7c24b6d1c42689feeecb36958ff1dd411ab1b64ef4f83e9189",
+      "records": 80
+    },
+    "stress": {
+      "path": "data/test/stress_suite_v1/stress_suite_v1.parquet",
+      "sha256": "d9a66840c91be7f6114d0fdca4b0decacebdaab5a36a22aba59b7e5967a4b06e",
+      "records": 440
+    },
+    "hard": {
+      "path": "data/hard/hard_v0.xlsx",
+      "sha256": "80148687513538f539b936c4e95f11f3d29136c784782fe4e641a174affcab38",
+      "records": 50
+    },
+    "public": {
+      "path": "data/raw/public-test-dataset.parquet",
+      "sha256": "65b5a45a98b577d853a928932bbbdf8bd9bdeb469ded3016faace4d11f3eabaa",
+      "records": 208
+    }
+  },
+  "datasets": {
+    "gold": {
+      "path": "data/test/test_guide_v1/test_gold.parquet",
+      "sha256": "799c5c05120b67b401969ad6e25455a6bec298204e85be98bbe56b86705113b4",
+      "records": 80
+    },
+    "stress": {
+      "path": "data/test/test_guide_v1/stress_suite.parquet",
+      "sha256": "e31107e1a0be85e15e7b558d83944f4a6569e3a90097fd15f433c11300682423",
+      "records": 440
+    },
+    "stress_jsonl": {
+      "path": "data/test/test_guide_v1/stress_suite.jsonl",
+      "sha256": "6d27a4e26574c8d314b9c2dbca0dde03e2e7d55fae59b49e5627893f63e2a5a1",
+      "records": 440
+    },
+    "hard": {
+      "path": "data/test/test_guide_v1/hard.jsonl",
+      "sha256": "ef0d09f3384a25b20c2989813e0891bf9c55082a87af4258bf4daee1769ce328",
+      "records": 50
+    }
+  },
+  "label_changes": {
+    "path": "data/test/test_guide_v1/label_changes.csv",
+    "sha256": "852525929f89d0748643c8b878fb6470c0d8c325b2be992fe0d1b17689251bdd",
+    "records": 43
+  },
+  "changes_by_dataset": {
+    "gold": 13,
+    "stress": 28,
+    "hard": 2
+  },
+  "transformations": [
+    "Применены проверенные изменения меток по справочнику",
+    "Метки копий gold в stress синхронизированы с новым gold",
+    "hard экспортирован в формат тестового стенда JSONL"
+  ]
+}

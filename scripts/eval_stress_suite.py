@@ -1,4 +1,4 @@
-"""Evaluate a classifier or predictions file across all 7 slices of stress_suite_v1."""
+"""Evaluate a classifier or predictions file across the stress suite slices."""
 import argparse
 import json
 import sys
@@ -31,10 +31,11 @@ def load_jsonl(path: Path) -> list[dict]:
         return [json.loads(line) for line in stream if line.strip()]
 
 
-def build_leak_free_train(suite_rows: list[dict]) -> list[dict]:
+def build_leak_free_train(suite_rows: list[dict], train_path: Path = TRAIN_PATH,
+                          gold_path: Path = GOLD_PATH) -> list[dict]:
     """Build train_fit excluding test_gold, dev split, and any suite overlaps."""
-    raw_train = pq.read_table(TRAIN_PATH).to_pylist()
-    raw_gold = pq.read_table(GOLD_PATH).to_pylist()
+    raw_train = pq.read_table(train_path).to_pylist()
+    raw_gold = pq.read_table(gold_path).to_pylist()
     normalize = gold_overlap_key()
 
     reserved_keys = {key(r["description"]) for r in raw_gold}
@@ -164,9 +165,10 @@ SLICE_ORDER = [
 ]
 
 
-def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_name: str, report_path: Path) -> None:
+def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_name: str,
+                        report_path: Path, suite_path: Path = SUITE_PATH) -> None:
     lines = [
-        f"# Отчёт по стресс-бенчмарку `stress_suite_v1` — `{model_name}`",
+        f"# Отчёт по стресс-бенчмарку `{suite_path.parent.name}/{suite_path.name}` — `{model_name}`",
         "",
         f"Всего строк: **{len(suite_rows)}** (7 диагностических срезов).",
         "",
@@ -234,12 +236,15 @@ def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_na
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", default="char-lr", choices=["char-lr"])
+    parser.add_argument("--suite", type=Path, default=SUITE_PATH)
+    parser.add_argument("--train", type=Path, default=TRAIN_PATH)
+    parser.add_argument("--gold", type=Path, default=GOLD_PATH)
     parser.add_argument("--predictions", help="Optional JSONL with predictions ({row_id, labels} or aligned list)")
     parser.add_argument("--threshold", type=float, default=0.5)
-    parser.add_argument("--report", default=str(DEFAULT_REPORT))
+    parser.add_argument("--report", type=Path)
     args = parser.parse_args()
 
-    suite_rows = load_jsonl(SUITE_PATH)
+    suite_rows = load_jsonl(args.suite)
     if args.predictions:
         raw_preds = load_jsonl(Path(args.predictions))
         if raw_preds and "row_id" in raw_preds[0]:
@@ -250,11 +255,13 @@ def main() -> None:
             preds = [sorted(set(r["labels"])) for r in raw_preds]
         model_name = Path(args.predictions).stem
     else:
-        train_fit = build_leak_free_train(suite_rows)
+        train_fit = build_leak_free_train(suite_rows, args.train, args.gold)
         preds = predict_char_lr(train_fit, suite_rows, threshold=args.threshold)
         model_name = f"char-lr (p>={args.threshold:.2f}, leak-free train_fit={len(train_fit)})"
 
-    evaluate_and_report(suite_rows, preds, model_name, Path(args.report))
+    default_report = (DEFAULT_REPORT if args.suite.resolve() == SUITE_PATH
+                      else args.suite.with_name(f"{args.suite.stem}_report.md"))
+    evaluate_and_report(suite_rows, preds, model_name, args.report or default_report, args.suite)
 
 
 if __name__ == "__main__":

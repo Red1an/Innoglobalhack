@@ -1,13 +1,42 @@
 # Инноглобалхак · кейс Авито
 
-## Актуальный датасет для обучения
+## Разметка по справочнику Авито
+
+`train_guide_v1` содержит 5 311 объявлений из предыдущего объединённого train. Исправлена 91 метка, в том числе 86 пропусков `106`. В основном тесте исправлено 13 меток. Профиль `guide` в терминале и Colab по умолчанию использует эту пару train и gold.
+
+| Назначение | Файл |
+| --- | --- |
+| Обучение | [`train.parquet`](data/processed/train_guide_v1/train.parquet) |
+| Основной тест (80 объявлений) | [`test_gold.parquet`](data/test/test_guide_v1/test_gold.parquet) |
+| Диагностика граничных случаев | [`hard.jsonl`](data/test/test_guide_v1/hard.jsonl), [`stress_suite.jsonl`](data/test/test_guide_v1/stress_suite.jsonl) |
+| Сверка train с исходной разметкой | [`manifest.json`](data/processed/train_guide_v1/manifest.json), [`label_changes.csv`](data/processed/train_guide_v1/label_changes.csv) |
+| Сверка тестов | [`manifest.json`](data/test/test_guide_v1/manifest.json), [`label_changes.csv`](data/test/test_guide_v1/label_changes.csv) |
+| Проверка и сравнение моделей | [`08_guide_v1_audit.ipynb`](dataset_review/08_guide_v1_audit.ipynb) |
+
+Для повторной сборки укажите два новых каталога.
+
+```bash
+python dataset_review/build_guide_v1.py --train-out /tmp/train_guide_v1 --test-out /tmp/test_guide_v1
+```
+
+Для прогона диагностики с обновлённой разметкой используйте:
+
+```bash
+python scripts/eval_stress_suite.py \
+  --suite data/test/test_guide_v1/stress_suite.jsonl \
+  --train data/processed/train_guide_v1/train.parquet \
+  --gold data/test/test_guide_v1/test_gold.parquet \
+  --report /tmp/stress_guide_v1_report.md
+```
+
+## Предыдущий объединённый train
 
 Объединённая версия **`train_relabel_v2_synth_v1`** содержит 5 311 объявлений: 4 214 реальных из `train_relabel_v2` и 1 097 синтетических из `train_synth_v1`, прошедших независимую проверку. Из реальной части исключены 12 пересечений с тестами и 523 строки по согласованному лимиту в 800 объявлений со всеми пятью метками.
 
 | Назначение | Файл |
 | --- | --- |
 | Обучение | [`data/processed/train_relabel_v2_synth_v1/train_relabel_v2_synth_v1.parquet`](data/processed/train_relabel_v2_synth_v1/train_relabel_v2_synth_v1.parquet) |
-| Сравнение моделей | [`data/test/test_gold.parquet`](data/test/test_gold.parquet) |
+| Gold прежних прогонов | [`test_v7.parquet`](data/test/test_v7.parquet), совпадает с `data/test/test_gold.parquet` |
 | Источники, состав и SHA-256 | [`manifest.json`](data/processed/train_relabel_v2_synth_v1/manifest.json) |
 | Исключённые реальные строки | [`excluded_real.csv`](data/processed/train_relabel_v2_synth_v1/excluded_real.csv) |
 | Проверка объединённого train | [`07_train_relabel_v2_synth_v1_audit.ipynb`](dataset_review/07_train_relabel_v2_synth_v1_audit.ipynb) |
@@ -28,12 +57,10 @@
 
 Сборка v2 запускается командой `python dataset_review/build_train_relabel_v2.py`. Для воспроизведения исторической сборки v1 используйте [код из коммита 8b32754](https://github.com/Red1an/Innoglobalhack/tree/8b32754/dataset_review).
 
-В [ноутбуке для экспериментов](research/experiments/colab.ipynb) укажите:
+В [ноутбуке для экспериментов](research/experiments/colab.ipynb) оставьте `DATASET = "guide"`. Эквивалентный запуск Char-LR из корня репозитория:
 
-```python
-DATASET = "custom"
-CUSTOM_TRAIN = ROOT / "data/processed/train_relabel_v2_synth_v1/train_relabel_v2_synth_v1.parquet"
-CUSTOM_TEST = ROOT / "data/test/test_gold.parquet"
+```bash
+python research/experiments/run_all.py --dataset guide --models char-lr --no-upload
 ```
 
 [Инструкция по запуску моделей](research/experiments/README.md)

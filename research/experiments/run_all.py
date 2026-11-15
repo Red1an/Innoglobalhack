@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-from dataset_protocol import dataset_id
+from dataset_protocol import CURRENT_GOLD, GOLD_V7, GUIDE_TRAIN, dataset_id
 
 CODE = Path(__file__).resolve().parent
 ROOT = CODE.parents[1]
@@ -12,16 +12,18 @@ ROOT = CODE.parents[1]
 PRESETS = {
     'old': (ROOT / 'data/raw/public-train-annotated.jsonl', ROOT / 'data/raw/public-test-dataset.parquet'),
     'processed': (ROOT / 'data/processed/train_clean.parquet', ROOT / 'data/processed/test_clean.parquet'),
-    'gold': (ROOT / 'data/processed/train_clean.parquet', ROOT / 'data/test/test_gold.parquet'),
-    # Organizers' original train with the team's gold test. Compared later against a new train on the same test.
-    'raw-gold': (ROOT / 'data/raw/public-train-annotated.jsonl', ROOT / 'data/test/test_gold.parquet'),
+    'guide': (ROOT / GUIDE_TRAIN, ROOT / CURRENT_GOLD),
+    'gold': (ROOT / 'data/processed/train_clean.parquet', ROOT / CURRENT_GOLD),
+    'raw-gold': (ROOT / 'data/raw/public-train-annotated.jsonl', ROOT / CURRENT_GOLD),
+    'gold-v7': (ROOT / 'data/processed/train_clean.parquet', ROOT / GOLD_V7),
+    'raw-gold-v7': (ROOT / 'data/raw/public-train-annotated.jsonl', ROOT / GOLD_V7),
 }
 ASSUME_SOURCE = 101
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--dataset', choices=list(PRESETS), default='gold')
+    parser.add_argument('--dataset', choices=list(PRESETS), default='guide')
     parser.add_argument('--participant', default='member2')
     parser.add_argument('--run-group', default='baseline')
     parser.add_argument('--models', nargs='+', default=['char-lr', 't-lite-q8', 'avibe-q8', 'rumodernbert'])

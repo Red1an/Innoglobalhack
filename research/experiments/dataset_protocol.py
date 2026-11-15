@@ -6,10 +6,13 @@ from pathlib import Path
 
 
 GOLD_OVERLAP_POLICY = 'gold-normalized-overlap-v1'
+GUIDE_TRAIN = Path('data/processed/train_guide_v1/train.parquet')
+CURRENT_GOLD = Path('data/test/test_guide_v1/test_gold.parquet')
+GOLD_V7 = Path('data/test/test_v7.parquet')
 
 
 def uses_gold_overlap(test_path):
-    return Path(test_path).name == 'test_gold.parquet'
+    return Path(test_path).name in ('test_gold.parquet', GOLD_V7.name)
 
 
 def dataset_id(train_path, test_path, assume_source):
