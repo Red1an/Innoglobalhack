@@ -39,6 +39,17 @@ class ParseTest(unittest.TestCase):
         self.assertEqual(parse_labels('Ответ: {"labels": [101, 105]}', allowed), [105])
         self.assertIsNone(parse_labels('{"labels": ["102"]}', allowed))
         self.assertIsNone(parse_labels(None, allowed))
+        self.assertEqual(parse_labels('{"evidence": {"103": "укладка плитки"}, "labels": [103]}', allowed), [103])
+        self.assertEqual(parse_labels('Ответ: {"evidence": {"104": "замена смесителей"}, "labels": [104]}', allowed), [104])
+        self.assertIsNone(parse_labels('{"evidence": {"103": "укл', allowed))
+        self.assertEqual(parse_labels('{"evidence": {"102": null, "103": "плитка в санузле", "104": " ", "105": "замена проводки", "106": null}}', allowed), [103, 105])
+        self.assertEqual(parse_labels('{"evidence": {"102": null, "103": null, "104": null, "105": null, "106": null}}', allowed), [])
+        self.assertIsNone(parse_labels('{"evidence": ["103"]}', allowed))
+        nested = ('{"refusal": null, "evidence": {"102": {"quote": null, "status": "none"}, '
+                  '"103": {"quote": "укладка плитки", "status": "offer"}, '
+                  '"104": {"quote": "сантехнику не делаем", "status": "denied"}, '
+                  '"105": {"quote": null, "status": "offer"}, "106": {"quote": "отделка", "status": "vague"}}}')
+        self.assertEqual(parse_labels(nested, allowed), [103])
 
     def test_draft(self):
         self.assertEqual(parse_draft("Заголовок: Штукатурка\nТекст:\nШтукатурим стены."), ("Штукатурка", "Штукатурим стены."))

@@ -173,6 +173,14 @@ class OllamaClient:
         return {**rec, "cached": False}
 
 
+def _is_offer(value):
+    """Evidence value: a quote (v8) or {"quote": ..., "status": ...} (v9), where only status "offer" counts."""
+    if isinstance(value, dict):
+        quote = value.get("quote")
+        return value.get("status") == "offer" and isinstance(quote, str) and bool(quote.strip())
+    return isinstance(value, str) and bool(value.strip())
+
+
 def parse_labels(content, allowed):
     """Tolerant parse of {"labels": [...]}; returns sorted labels within allowed or None."""
     if not isinstance(content, str):
@@ -183,12 +191,21 @@ def parse_labels(content, allowed):
         text = fence.group(1)
     if not text.startswith("{"):
         found = re.search(r"\{[^{}]*\"labels\"[^{}]*\}", text)
-        if not found:
+        outer = text[text.find("{"):text.rfind("}") + 1] if "{" in text else ""
+        if '"evidence"' in outer:
+            text = outer
+        elif found:
+            text = found.group(0)
+        else:
             return None
-        text = found.group(0)
     try:
-        labels = json.loads(text)["labels"]
-    except (ValueError, TypeError, KeyError):
+        value = json.loads(text)
+        if "labels" in value:
+            labels = value["labels"]
+        else:
+            evidence = value["evidence"]
+            labels = sorted(int(k) for k, v in evidence.items() if _is_offer(v))
+    except (ValueError, TypeError, KeyError, AttributeError):
         return None
     if not isinstance(labels, list) or any(type(x) is not int for x in labels):
         return None

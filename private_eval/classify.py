@@ -13,6 +13,7 @@ from hybrid.stage2 import build_prompt  # noqa: E402
 
 PROMPTS = ROOT / "research" / "experiments" / "prompts"
 TARGETS = [102, 103, 104, 105, 106]
+EVIDENCE_TOKENS = 600
 
 
 def prompt_text(name):
@@ -62,7 +63,7 @@ def classify_llm(rows, client, prompt, stage1, workers, progress):
         if isinstance(client, OllamaClient):
             ans = client.chat(prompt, user, max_tokens=64, schema=label_schema(allowed))
         else:
-            ans = client.chat(prompt, user, max_tokens=96)
+            ans = client.chat(prompt, user, max_tokens=EVIDENCE_TOKENS if '"evidence"' in prompt else 96)
         labels = parse_labels(ans["raw"], allowed) if ans["error"] is None else None
         error = ans["error"] or (None if labels is not None else "invalid_response")
         s1 = stage1.labels(p, r["mcId"])
