@@ -27,6 +27,10 @@
     .scenario .workspace>div{min-width:0;padding:14px 16px;border-radius:9px;background:#f3f6f2}
     .scenario h4{margin:0 0 8px;font-size:.85rem;color:#42524a}
     .scenario p{margin:6px 0 0;overflow-wrap:anywhere}
+    .scenario .draft-text{white-space:pre-wrap}
+    .scenario h5{margin:12px 0 0;font-size:1rem}
+    .scenario details{margin-top:12px}
+    .scenario pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.83rem}
     .scenario .counts{font-size:.88rem;color:#42524a;margin-top:12px}
     #demo-csv{padding:10px;background:#f3f6f2;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem}
     a{color:#155135}
@@ -36,16 +40,22 @@
 <body>
   <main>
     <h1>Черновики для Авито Услуг</h1>
+    <p><a href="/review">Проверить черновики на размеченном наборе →</a></p>
     <section class="panel" id="demo" hidden>
-      <h2>Сквозной прогон</h2>
-      <p>Модели получают исходное объявление и его категорию. Под каждым результатом показаны фактические вызовы и токены.</p>
-      <p id="demo-progress" role="status">Запускаем прогон…</p>
-      <div id="demo-steps"></div>
-      <pre id="demo-csv" hidden></pre>
+      <h2>Готовые сценарии</h2>
+      <p id="demo-progress" role="status"></p>
       <div class="actions">
-        <button id="demo-download" class="secondary" type="button" hidden>Скачать проверенный CSV</button>
-        <button id="demo-again" class="secondary" type="button">Повторить прогон</button>
+        <button id="demo-again" class="secondary" type="button">Запустить модели вживую</button>
+        <button id="demo-replay" class="secondary" type="button" hidden>Показать запись</button>
       </div>
+      <div id="demo-steps"></div>
+      <section id="demo-export" hidden>
+        <h3>CSV · отдельный прогон на двух примерах организаторов</h3>
+        <pre id="demo-csv"></pre>
+        <div class="actions">
+          <button id="demo-download" class="secondary" type="button">Скачать проверенный CSV</button>
+        </div>
+      </section>
     </section>
     <div class="workspace" id="editor">
       <form class="panel" id="ad-form">
@@ -65,7 +75,7 @@
           <button id="submit" type="submit">Подготовить черновики</button>
           <button id="example" class="secondary" type="button">Вставить пример</button>
         </div>
-        <p><a href="/demo">Запустить сквозное демо</a></p>
+        <p><a href="/demo">Открыть готовые сценарии</a></p>
       </form>
       <section class="panel">
         <h2>Черновики</h2>
@@ -85,6 +95,125 @@
       <p id="csv-status" role="status"></p>
     </form>
   </main>
+  <script id="demo-recording" type="application/json">
+{
+  "cases": [
+    {
+      "sample": {
+        "name": "Ремонт под ключ → Сантехника",
+        "mcId": 101,
+        "expected": [
+          104
+        ],
+        "description": "Делаем ремонт квартир под ключ. Сантехника в комплексный ремонт не входит. Отдельно выполняем разводку труб, установку раковин и унитазов, замену смесителей и подключение стиральных машин. Стоимость сантехнических работ согласовываем до начала работ."
+      },
+      "data": {
+        "drafts": [
+          {
+            "mcId": 104,
+            "title": "Сантехнические работы: разводка труб, установка раковин и унитазов",
+            "text": "Выполняем сантехнические работы, которые можно заказать отдельно от комплексного ремонта: разводку труб, установку раковин и унитазов, замену смесителей и подключение стиральных машин. Стоимость сантехнических работ согласовываем до начала работ."
+          }
+        ],
+        "metrics": {
+          "classification_model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+          "generation_model": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+          "classification_calls": 1,
+          "generation_calls": 1,
+          "classification_input_tokens": 3243,
+          "classification_output_tokens": 9,
+          "generation_input_tokens": 1401,
+          "generation_output_tokens": 185,
+          "total_seconds": 4.746656417002669
+        },
+        "generationResponse": "{\n  \"drafts\": [\n    {\n      \"mcId\": 104,\n      \"supported\": true,\n      \"title\": \"Сантехнические работы: разводка труб, установка раковин и унитазов\",\n      \"text\": \"Выполняем сантехнические работы, которые можно заказать отдельно от комплексного ремонта: разводку труб, установку раковин и унитазов, замену смесителей и подключение стиральных машин. Стоимость сантехнических работ согласовываем до начала работ.\",\n      \"quotes\": [\n        \"Сантехника в комплексный ремонт не входит. Отдельно выполняем разводку труб, установку раковин и унитазов, замену смесителей и подключение стиральных машин. Стоимость сантехнических работ согласовываем до начала работ.\"\n      ]\n    }\n  ]\n}"
+      }
+    },
+    {
+      "sample": {
+        "name": "Плиточные работы → Ремонт под ключ",
+        "mcId": 103,
+        "expected": [
+          101
+        ],
+        "description": "Кладу плитку в санузлах как отдельную услугу. Также выполняю ремонт квартир под ключ: от черновых работ до чистовой отделки, сдаю готовую квартиру."
+      },
+      "data": {
+        "drafts": [
+          {
+            "mcId": 101,
+            "title": "Ремонт квартир под ключ",
+            "text": "Выполняю ремонт квартир под ключ: от черновых работ до чистовой отделки. Сдаю готовую квартиру."
+          }
+        ],
+        "metrics": {
+          "classification_model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+          "generation_model": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+          "classification_calls": 1,
+          "generation_calls": 1,
+          "classification_input_tokens": 3215,
+          "classification_output_tokens": 9,
+          "generation_input_tokens": 1395,
+          "generation_output_tokens": 95,
+          "total_seconds": 4.464238500004285
+        },
+        "generationResponse": "{\n  \"drafts\": [\n    {\n      \"mcId\": 101,\n      \"supported\": true,\n      \"title\": \"Ремонт квартир под ключ\",\n      \"text\": \"Выполняю ремонт квартир под ключ: от черновых работ до чистовой отделки. Сдаю готовую квартиру.\",\n      \"quotes\": [\n        \"Также выполняю ремонт квартир под ключ: от черновых работ до чистовой отделки, сдаю готовую квартиру.\"\n      ]\n    }\n  ]\n}"
+      }
+    },
+    {
+      "sample": {
+        "description": "Меняю смесители от 1 200 ₽ за штуку, устраняю протечки. Смеситель покупает заказчик. Сборка мебели от 3 000 ₽, на сборку даю гарантию год.",
+        "mcId": 101,
+        "name": "Сантехника · цена и материалы",
+        "expected": [
+          104
+        ]
+      },
+      "data": {
+        "drafts": [
+          {
+            "mcId": 104,
+            "title": "Замена смесителей и устранение протечек",
+            "text": "Меняю смесители — от 1 200 ₽ за штуку. Также устраняю протечки. Смеситель покупает заказчик."
+          }
+        ],
+        "metrics": {
+          "classification_model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+          "generation_model": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+          "classification_calls": 1,
+          "generation_calls": 1,
+          "classification_input_tokens": 3232,
+          "classification_output_tokens": 9,
+          "generation_input_tokens": 1389,
+          "generation_output_tokens": 107,
+          "total_seconds": 4.8571220000012545
+        },
+        "generationResponse": "{\n  \"drafts\": [\n    {\n      \"mcId\": 104,\n      \"supported\": true,\n      \"title\": \"Замена смесителей и устранение протечек\",\n      \"text\": \"Меняю смесители — от 1 200 ₽ за штуку. Также устраняю протечки. Смеситель покупает заказчик.\",\n      \"quotes\": [\n        \"Меняю смесители от 1 200 ₽ за штуку, устраняю протечки. Смеситель покупает заказчик.\"\n      ]\n    }\n  ]\n}"
+      }
+    },
+    {
+      "sample": {
+        "name": "Нет дополнительной услуги",
+        "mcId": 101,
+        "expected": [],
+        "description": "Собираю шкафы, комоды и письменные столы. Можно заказать сборку одного предмета мебели. Подключение сантехники и электромонтаж не выполняю."
+      },
+      "data": {
+        "drafts": [],
+        "metrics": {
+          "classification_model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+          "classification_calls": 1,
+          "generation_calls": 0,
+          "classification_input_tokens": 3216,
+          "classification_output_tokens": 6,
+          "total_seconds": 1.7872429999988526
+        }
+      }
+    }
+  ],
+  "csv": "testcase,microcats,descriptions\ncase-001,\"[102,104]\",\"[\"\"Штукатурим стены по маякам в квартирах. Работы выполняем по предварительной записи, материалы покупает заказчик.\"\",\"\"Меняем смесители и сифоны, устраняем протечки водопровода. Любую из этих работ можно заказать отдельно. Выезжаем по предварительной записи, материалы покупает заказчик.\"\"]\"\ncase-002,[],[]\n"
+}
+  </script>
   <script>
     const form = document.querySelector('#ad-form');
     const description = document.querySelector('#description');
@@ -190,24 +319,6 @@
       }
     });
 
-    const examples = [
-      {
-        name: 'Ремонт под ключ → Сантехника',
-        mcId: 101, expected: [104],
-        description: 'Делаем ремонт квартир под ключ. Сантехника в комплексный ремонт не входит. Отдельно выполняем разводку труб, установку раковин и унитазов, замену смесителей и подключение стиральных машин. Стоимость сантехнических работ согласовываем до начала работ.',
-      },
-      {
-        name: 'Плиточные работы → Ремонт под ключ',
-        mcId: 103, expected: [101],
-        description: 'Кладу плитку в санузлах как отдельную услугу. Также выполняю ремонт квартир под ключ: от черновых работ до чистовой отделки, сдаю готовую квартиру.',
-      },
-      {
-        name: 'Нет дополнительной услуги',
-        mcId: 101, expected: [],
-        description: 'Собираю шкафы, комоды и письменные столы. Можно заказать сборку одного предмета мебели. Подключение сантехники и электромонтаж не выполняю.',
-      },
-    ];
-
     function appendText(parent, tag, text, className) {
       const element = document.createElement(tag);
       element.textContent = text;
@@ -216,7 +327,7 @@
       return element;
     }
 
-    async function runScenario(container, sample) {
+    function scenarioCard(container, sample) {
       const card = document.createElement('article');
       card.className = 'scenario';
       appendText(card, 'h3', sample.name);
@@ -228,55 +339,89 @@
       pair.append(original, output);
       appendText(original, 'h4', 'Исходник · ' + labels[sample.mcId]);
       appendText(original, 'p', sample.description);
-      appendText(output, 'h4', 'Ответ моделей');
-      const waiting = appendText(output, 'p', 'Выполняем запрос…');
       container.append(card);
-      let data;
+      return {card, output};
+    }
+
+    function showScenarioResult({card, output}, sample, data) {
+      const ids = data.drafts.map(draft => draft.mcId);
+      const m = data.metrics;
+      const classifier = m.classification_model.split('/').at(-1);
+      const generator = m.generation_model?.split('/').at(-1) ?? 'GLM 5.3 Flash';
+      appendText(output, 'h4', 'Классификация · ' + classifier);
+      appendText(output, 'p', ids.length ? ids.map(id => labels[id] + ' (' + id + ')').join(', ') : 'Нет дополнительных категорий · []');
+      appendText(output, 'h4', 'Генерация · ' + generator, 'counts');
+      for (const draft of data.drafts) {
+        appendText(output, 'h5', draft.title ?? labels[draft.mcId]);
+        appendText(output, 'p', draft.text ?? 'Текст требует проверки.', 'draft-text');
+      }
+      if (!m.generation_calls) appendText(output, 'p', 'Вызов пропущен: Qwen не выбрал дополнительные категории.');
+      if (data.generationResponse) {
+        const details = document.createElement('details');
+        appendText(details, 'summary', 'Исходный JSON от GLM с цитатами');
+        appendText(details, 'pre', data.generationResponse);
+        output.append(details);
+      }
+      const passed = ids.join() === sample.expected.join() && data.drafts.every(d => d.title && d.text);
+      const tokens = [['classification', 'Qwen'], ['generation', 'GLM']]
+        .filter(([stage]) => m[stage + '_calls'])
+        .map(([stage, model]) => model + ' ' + (m[stage + '_input_tokens'] ?? '—') + ' / ' + (m[stage + '_output_tokens'] ?? '—'));
+      appendText(card, 'p', [
+        passed ? 'Категории совпали с ожидаемыми' : 'Требует проверки',
+        m.total_seconds.toLocaleString('ru', {maximumFractionDigits: 2}) + ' с',
+        (m.classification_calls + m.generation_calls) + ' выз.',
+        'токены вх. / вых. · ' + tokens.join(' · '),
+      ].join(' · '), 'counts');
+      return passed;
+    }
+
+    async function runScenario(container, sample) {
+      const view = scenarioCard(container, sample);
+      const waiting = appendText(view.output, 'p', 'Выполняем запрос…');
       try {
-        data = await requestDrafts({mcId: sample.mcId, description: sample.description});
+        const data = await requestDrafts({mcId: sample.mcId, description: sample.description});
+        const passed = showScenarioResult(view, sample, data);
+        waiting.remove();
+        return passed;
       } catch (error) {
         waiting.textContent = error.message;
         return false;
       }
-      waiting.remove();
-      for (const draft of data.drafts) {
-        appendText(output, 'strong', draft.title ?? labels[draft.mcId]);
-        appendText(output, 'p', draft.text ?? 'Текст требует проверки.');
-      }
-      if (!data.drafts.length) appendText(output, 'p', 'Дополнительных черновиков нет.');
-      const ids = data.drafts.map(d => d.mcId);
-      const passed = ids.join() === sample.expected.join() && data.drafts.every(d => d.title && d.text);
-      const m = data.metrics;
-      const tokens = ['classification', 'generation'].filter(stage => m[stage + '_calls'])
-        .map(stage => (m[stage + '_input_tokens'] ?? '—') + ' / ' + (m[stage + '_output_tokens'] ?? '—'));
-      const stages = [m.classification_model, m.generation_model].filter(Boolean)
-        .map(model => model.split('/').at(-1)).join(' → ');
-      appendText(card, 'p', [
-        passed ? 'Проверка пройдена' : 'Требует проверки',
-        'mcId ' + (ids.length ? ids.join(', ') : '[]'), stages,
-        m.total_seconds.toLocaleString('ru', {maximumFractionDigits: 2}) + ' с',
-        (m.classification_calls + m.generation_calls) + ' выз.',
-        'токены вх. / вых. ' + tokens.join(' + '),
-      ].join(' · '), 'counts');
-      return passed;
     }
 
     if (location.pathname === '/demo') {
       const panel = document.querySelector('#demo');
       const progress = document.querySelector('#demo-progress');
       const steps = document.querySelector('#demo-steps');
+      const exportInfo = document.querySelector('#demo-export');
       const preview = document.querySelector('#demo-csv');
       const again = document.querySelector('#demo-again');
+      const replay = document.querySelector('#demo-replay');
       const saveCsv = document.querySelector('#demo-download');
+      again.hidden = document.body.dataset.replay === 'true';
+      const recording = JSON.parse(document.querySelector('#demo-recording').textContent);
+      const examples = recording.cases.map(({sample}) => sample);
       let file;
       panel.hidden = false;
       document.querySelector('#editor').hidden = true;
       document.querySelector('#csv-form').hidden = true;
 
+      function showRecording() {
+        progress.textContent = 'Запись реальных запросов · ответы уже готовы';
+        replay.hidden = true;
+        steps.replaceChildren();
+        for (const {sample, data} of recording.cases) {
+          showScenarioResult(scenarioCard(steps, sample), sample, data);
+        }
+        file = new Blob([recording.csv], {type: 'text/csv;charset=utf-8'});
+        preview.textContent = recording.csv;
+        exportInfo.hidden = false;
+      }
+
       async function runDemo() {
         again.disabled = true;
-        saveCsv.hidden = true;
-        preview.hidden = true;
+        replay.hidden = true;
+        exportInfo.hidden = true;
         steps.replaceChildren();
         const started = performance.now();
         let passed = 0;
@@ -296,8 +441,7 @@
             throw new Error('Категории в CSV отличаются от эталона примеров.');
           }
           preview.textContent = csv;
-          preview.hidden = false;
-          saveCsv.hidden = false;
+          exportInfo.hidden = false;
           passed++;
           csvStatus = 'CSV соответствует формату и категориям примеров';
         } catch (error) {
@@ -306,11 +450,13 @@
           const seconds = ((performance.now() - started) / 1000).toLocaleString('ru', {maximumFractionDigits: 1});
           progress.textContent = 'Пройдено ' + passed + ' из ' + total + ' за ' + seconds + ' с. ' + csvStatus + '.';
           again.disabled = false;
+          replay.hidden = false;
         }
       }
       saveCsv.addEventListener('click', () => download(file, 'submission.csv'));
       again.addEventListener('click', runDemo);
-      runDemo();
+      replay.addEventListener('click', showRecording);
+      showRecording();
     }
   </script>
 </body>

@@ -2,6 +2,7 @@ import json
 import os
 import hashlib
 import math
+import re
 import time
 from urllib.parse import urlsplit
 from .categories import load_categories, guide_version
@@ -33,11 +34,23 @@ supported=false, title=null, text=null, quotes=[]. Никаких других �
 В quotes собери точные непрерывные фрагменты description для всех работ и
 относящихся к ним условий, ограничений и обещаний. Не исправляй в quotes
 опечатки, пробелы, регистр и знаки. Включай контекст, необходимый для смысла.
+Не вставляй многоточие и не склеивай части предложения. Если нужные работы
+стоят в перечислении рядом с чужими категориями, процитируй короткий
+непрерывный отрезок с нужными работами или несколько отдельных отрезков.
+Проверь каждый фрагмент: он должен буквально находиться в description.
 Сохраняй область действия: цена конкретной операции, единица, «от», «до»,
 минимальный заказ; гарантия на весь ремонт не равна гарантии на отдельную
 услугу; скидка на материалы не равна скидке на работы. Если условия относятся
 к комплексному заказу, явно назови его. Не обещай отдельный заказ услуги,
 если этого нет в исходнике. Сохраняй явные запреты мелких/отдельных заказов.
+Смета до начала работ не означает фиксированную стоимость. Если фиксированная
+цена обещана лишь для ремонта под ключ, не обещай её для отдельной услуги.
+Если «при заказе под ключ» стоит в общей акции объявления о ремонте под ключ,
+то «под ключ» в акции означает весь ремонт. Исключи такую акцию из объявлений
+об отдельных услугах, даже если они называются «электрика под ключ» или
+«сантехника под ключ». Для целевой операции, прямо названной в акции,
+сохрани условие полностью: «скидка на черновую отделку при заказе всего
+ремонта под ключ». Не переноси общую гарантию на весь ремонт на одну услугу.
 Не утверждай, что отдельно предложенная услуга входит в комплексный ремонт,
 если исходник явно не связывает эти услуги.
 Не добавляй услуги, цены, сроки, стаж, бесплатность и гарантии от себя.
@@ -69,6 +82,18 @@ def validate_input(payload):
             raise ValueError("evidence must be an array of strings")
 
 
+def resolve_rewrite_quote(quote, description):
+    if quote in description:
+        return quote
+    # Accept an abbreviated quote only if its exact anchors identify a unique
+    # continuous source fragment within one sentence.
+    parts = re.split(r"\s*(?:…|\.{3})\s*", quote)
+    if len(parts) != 2 or any(not part.strip() or description.count(part) != 1 for part in parts):
+        return None
+    match = re.search(r"[^\n.!?…]{1,120}".join(map(re.escape, parts)), description)
+    return match.group() if match else None
+
+
 def messages_for(payload, mode, categories=None):
     categories = categories if categories is not None else load_categories()
     style = (
@@ -76,9 +101,47 @@ def messages_for(payload, mode, categories=None):
         "text составь из quotes в исходной формулировке. Полнота работ и "
         "ограничений важнее краткости."
         if mode == "extractive" else
-        "Режим rewrite: напиши связный самостоятельный текст и заголовок. "
-        "Разрешено перефразирование, но все факты и ограничения сохрани. "
-        "Не усиливай обещания. quotes остаются дословными."
+        """Режим rewrite: напиши самостоятельное объявление для покупателя.
+В коротком заголовке назови услугу и при необходимости её специализацию.
+Цену, скидку, гарантию и их условия оставь в описании. Специализацию указывай
+только с прямым подтверждением в исходнике.
+Начни описание с полезной конкретики: что именно делает исполнитель или
+как устроен заказ. Если заголовок уже называет услугу, не повторяй его
+отдельным предложением. Короткий исходник может дать короткий черновик.
+Длинный перечень можно оформить обычным списком с дефисами.
+Сохраняй удачные формулировки дословно. Перефразируй ради ясности, исправляй
+ошибки грамматики и согласования в title и text. В quotes сохраняй оригинал.
+Сформулируй условия с позиции заказчика целевой услуги. Из «Сантехника
+в ремонт не входит. Отдельно меняем смесители» напиши «Меняем смесители.
+Смеситель можно заменить отдельным заказом». Если услуга явно доступна отдельно,
+укажи «Можно заказать отдельно». Пропусти предложения о других этапах ремонта.
+«Принимаем заявки без обязательного заказа остальных этапов» и «можно
+заказать отдельно» — одно условие. Достаточно сказать его один раз.
+Не упоминай соседнюю услугу, её скидку или цену даже для сравнения. Укажи
+связь с другой услугой только если от неё зависит возможность заказать
+целевую. Ограничения целевой услуги сохраняй явно. Общие условия исполнителя,
+которые относятся ко всем перечисленным услугам, включай в каждое объявление:
+кто покупает материалы, что исключено из расчёта или выполняется отдельно.
+Сохраняй формулировку ограничения: «вынос мусора не включён в цену» не значит
+«мусор не выносим». Скидку, цену и единицу расчёта привязывай к исходному виду
+работы. Например, если «за точку» сказано только о розетках, не переноси
+эту единицу на выключатели. Если скидка явно исключена для целевой работы,
+можно сказать «Скидка на укладку не действует» без упоминания чужой скидки.
+Не додумывай поверхность, объект, этапы и место работы по названию услуги.
+Если в исходнике просто «кладём плитку», так и напиши, без «на стены и пол».
+Сохраняй полезные условия расчёта, но убирай риторические вопросы и примеры
+неподходящих заявок. «Для расчёта нужны площадь и фото» достаточно.
+Детали соседней услуги (объект, цена, гарантия, состав работ) не относятся
+к целевой без прямой связи в исходнике. Из «Ремонтирую квартиры под ключ.
+Отдельно крашу потолки» напиши «Крашу потолки». Из этой фразы нельзя узнать,
+красят ли потолки в квартирах и входит ли покраска в ремонт под ключ.
+Сохраняй голос исполнителя. Если исходник от лица команды, пиши от первого
+лица множественного числа. Сохраняй, какой именно опыт назван в источнике.
+«16 лет в отделке» — общий опыт бригады в отделке, а не 16 лет в электрике.
+Если голос неясен, используй нейтральную формулировку. Перед ответом убери
+повторы, канцелярские вводные, рекламу и сравнения с другими исполнителями.
+Сверь, что работы, цена, скидка, гарантия, материалы и ограничения перенесены
+с их исходными условиями, если они относятся к целевой категории."""
     )
     sections = "\n\n".join(categories[t["mcId"]]["section"] for t in payload["targets"])
     return [{"role": "system", "content": SYSTEM + "\n" + style + "\n\n" + sections},
@@ -253,7 +316,7 @@ def generate(payload, mode="extractive", model=None, audit_dir="artifacts/runs")
              "input": payload, "model_calls": 0, "raw_response": None,
              "guide": guide_version(), "configuration": configuration,
              "usage": None, "cost": None, "timing": {"request_seconds": 0.0},
-             "validation": [], "warnings": [], "error": None, "status": "started",
+             "validation": [], "verified_quotes": {}, "warnings": [], "error": None, "status": "started",
              "content_unwrapped": False}
     path = Path(audit_dir)
     path.mkdir(parents=True, exist_ok=True)
@@ -338,19 +401,31 @@ def generate(payload, mode="extractive", model=None, audit_dir="artifacts/runs")
         else:
             draft = candidates[0]
             quotes = draft.get("quotes")
+            verified_quotes = []
+            if isinstance(quotes, list):
+                for quote in quotes:
+                    if not isinstance(quote, str) or not quote.strip():
+                        break
+                    verified = resolve_rewrite_quote(quote, payload["description"]) if mode == "rewrite" else (
+                        quote if quote in payload["description"] else None
+                    )
+                    if verified is None:
+                        break
+                    verified_quotes.append(verified)
             if draft.get("supported") is not True:
                 reason = "unsupported_category"
-            elif not isinstance(quotes, list) or not quotes or any(
-                not isinstance(q, str) or not q.strip() or q not in payload["description"] for q in quotes
-            ):
+            elif not verified_quotes or len(verified_quotes) != len(quotes):
                 reason = "invalid_source_quotes"
             elif mode == "rewrite" and any(
                 not isinstance(draft.get(k), str) or not draft[k].strip() for k in ("title", "text")
             ):
                 reason = "invalid_draft_text"
             else:
+                if verified_quotes != quotes:
+                    audit["warnings"].append({"mcId": mc_id, "resolved_source_quotes": verified_quotes})
+                audit["verified_quotes"][str(mc_id)] = list(dict.fromkeys(verified_quotes))
                 output["title"] = categories[mc_id]["name"] if mode == "extractive" else draft["title"].strip()
-                output["text"] = "\n".join(dict.fromkeys(quotes)) if mode == "extractive" else draft["text"].strip()
+                output["text"] = "\n".join(dict.fromkeys(verified_quotes)) if mode == "extractive" else draft["text"].strip()
         audit["validation"].append({"mcId": mc_id, "status": reason or "quotes_verified"})
     audit["output"] = result
     audit["status"] = "complete"

@@ -1,0 +1,33 @@
+{
+  "drafts": [
+    {
+      "mcId": 103,
+      "title": "Укладка плитки",
+      "text": "Кладём плитку. Скидки на плиточные работы нет. Материалы покупает клиент. Можно заказать отдельно."
+    },
+    {
+      "mcId": 106,
+      "title": "Поклейка обоев",
+      "text": "Клеим обои. Скидка 7% действует на поклейку обоев при площади от 50 м². Материалы покупает клиент. Можно заказать отдельно."
+    }
+  ],
+  "id": "50f00a8f02e0403bb209345d5ce233cf",
+  "metrics": {
+    "generation_calls": 1,
+    "generation_model": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+    "generation_seconds": 4.644607750000432,
+    "generation_input_tokens": 1930,
+    "generation_output_tokens": 251,
+    "generation_reported_cost": 0.049823998859999996,
+    "generation_validation": [
+      {
+        "mcId": 103,
+        "status": "quotes_verified"
+      },
+      {
+        "mcId": 106,
+        "status": "quotes_verified"
+      }
+    ]
+  }
+}

@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Проверка черновиков · Авито Услуги</title>
+  <style>
+    :root {
+      font-family: "Golos Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #20251e;
+      background: #f6f7f3;
+      --muted: #586154;
+      --line: #dbe1d7;
+      --surface: #fff;
+      --accent: #25624a;
+      --tint: #e6f2e9;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button, input, textarea { font: inherit; }
+    button, a, summary { -webkit-tap-highlight-color: transparent; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    button { min-height: 42px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px;
+      color: inherit; background: var(--surface); cursor: pointer; font-weight: 600; }
+    button:hover:enabled { border-color: #7e9583; }
+    button:disabled { cursor: default; opacity: .65; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .primary:hover:enabled { background: #194d38; }
+    .wrap { max-width: 1560px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 44px) 40px; }
+    .site-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 10px 24px; padding: 22px 0 16px; border-bottom: 1px solid var(--line); }
+    .site-head span { font-weight: 650; }
+    .site-head nav { display: flex; gap: 16px; font-size: .9rem; }
+    .intro { display: flex; justify-content: space-between; align-items: end; gap: 16px 26px; padding: 25px 0 20px; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(1.8rem, 4.2vw, 2.55rem); line-height: 1.05; letter-spacing: -.035em; }
+    h2 { font-size: 1.13rem; }
+    h3 { font-size: 1rem; }
+    .summary { margin-top: 9px; }
+    .muted { color: var(--muted); font-size: .875rem; line-height: 1.5; }
+    .batch { display: grid; justify-items: end; gap: 6px; flex: 0 0 auto; }
+    #batch-status:empty { display: none; }
+    .layout { display: grid; grid-template-columns: minmax(220px, 270px) minmax(0, 1fr); gap: 16px; align-items: start; }
+    .rail, .work { min-width: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; }
+    .rail { padding: 14px; }
+    .switch { display: flex; gap: 6px; margin-bottom: 10px; }
+    .switch button { flex: 1; padding-inline: 6px; font-size: .84rem; }
+    .switch button[aria-pressed="true"] { background: var(--tint); color: #194d38; border-color: #b1cdb8; }
+    input, textarea { width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 7px; padding: 9px 10px;
+      color: inherit; background: #fff; line-height: 1.5; }
+    input[type="search"] { font-size: .9rem; }
+    .list { display: grid; gap: 6px; max-height: min(480px, 65vh); overflow: auto; padding: 5px 3px; margin: 7px -3px -3px; }
+    .case { width: 100%; text-align: left; display: grid; gap: 3px; border-color: transparent; padding: 8px 9px; }
+    .case[aria-current="true"] { background: var(--tint); border-color: #b1cdb8; }
+    .case .muted { font-size: .76rem; }
+    .case-title { font-size: .9rem; overflow-wrap: anywhere; }
+    .case[data-state="pending"] .muted, .case[data-state="done"] .muted { color: #245e47; }
+    .work-head { padding: 17px 18px 15px; border-bottom: 1px solid var(--line); }
+    .head-row { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    .source-cat { margin-top: 4px; }
+    .targets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+    .targets span { background: #f2f5f0; border-radius: 5px; padding: 4px 7px; font-size: .8rem; }
+    .targets .warn { background: #fff2d9; color: #724714; }
+    .panes { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: start; }
+    .source, .output { padding: 16px 18px 20px; min-width: 0; }
+    .source { position: sticky; top: 12px; }
+    .output { border-left: 1px solid var(--line); }
+    .source-text, .old-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; font-size: .93rem; }
+    .source-text { margin-top: 12px; max-height: 60vh; overflow: auto; padding: 11px 12px; border-radius: 7px; background: #f4f6f2; }
+    #source-size { margin-top: 4px; }
+    .source [role="status"]:not(:empty) { margin-top: 4px; }
+    .source [role="status"]:not(:empty)::before { content: "Подсветка · "; }
+    .source-text mark { background: #d3e8c6; color: inherit; scroll-margin: 12px; }
+    .source-text mark:focus { outline: 2px solid var(--accent); }
+    details { margin-top: 12px; }
+    summary { width: fit-content; color: var(--accent); cursor: pointer; font-size: .85rem; font-weight: 600; }
+    details p { margin-top: 8px; }
+    #row-status { margin: 5px 0 10px; }
+    #row-status[data-error="true"] { color: #922e2a; }
+    #metrics { margin: 0 0 10px; }
+    .cards { display: grid; gap: 10px; }
+    .draft { border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
+    .draft label { display: block; color: var(--muted); font-size: .8rem; margin: 8px 0 4px; }
+    .draft input { font-weight: 600; }
+    .draft textarea { display: block; min-height: 145px; field-sizing: content; resize: vertical; }
+    .draft .copy { margin-top: 9px; min-height: 34px; padding: 5px 9px; font-size: .82rem; }
+    .quotes ul { display: grid; gap: 5px; list-style: none; padding: 0; margin: 8px 0 0; }
+    .quotes button { width: 100%; text-align: left; font-size: .83rem; font-weight: 400;
+      line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; padding: 7px 9px;
+      background: #f3f7ef; border-color: #d4e2d1; }
+    .checklist { padding: 0 18px 17px; }
+    .checklist ul { margin: 7px 0 0; padding-left: 19px; }
+    .empty { padding: 14px; }
+    @media (max-width: 1050px) {
+      .layout { grid-template-columns: minmax(188px, 220px) minmax(0, 1fr); }
+      .panes { grid-template-columns: minmax(0, 1fr); }
+      .source { position: static; }
+      .output { border-left: 0; border-top: 1px solid var(--line); }
+      .source-text { max-height: 42vh; }
+    }
+    @media (max-width: 690px) {
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .intro { flex-wrap: wrap; }
+      .batch { justify-items: start; }
+      .list { max-height: 235px; }
+      .site-head { padding-top: 15px; }
+      .head-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="site-head">
+      <span>Авито Услуги</span>
+      <nav aria-label="Разделы">
+        <a href="/demo">Демо связки</a>
+        <a href="/">Своё объявление</a>
+      </nav>
+    </header>
+    <section class="intro">
+      <div>
+        <h1>Проверка черновиков</h1>
+        <p class="summary muted" id="dataset-status" role="status">Загружаем размеченный набор…</p>
+      </div>
+      <div class="batch">
+        <button id="run-quick" class="primary" type="button" disabled>Прогнать примеры</button>
+        <p id="batch-status" class="muted" role="status"></p>
+      </div>
+    </section>
+
+    <div class="layout" id="layout" hidden>
+      <aside class="rail" aria-label="Объявления">
+        <div class="switch">
+          <button type="button" id="quick" aria-pressed="true">Примеры</button>
+          <button type="button" id="all" aria-pressed="false">Весь набор</button>
+        </div>
+        <input id="search" type="search" aria-label="Поиск по номеру или началу текста" placeholder="Номер или начало текста">
+        <div id="cases" class="list"></div>
+      </aside>
+
+      <section class="work" aria-labelledby="case-title">
+        <header class="work-head">
+          <div class="head-row">
+            <div>
+              <h2 id="case-title"></h2>
+              <p id="source-category" class="source-cat muted"></p>
+            </div>
+            <button id="run-case" type="button" disabled>Сгенерировать черновики</button>
+          </div>
+          <div id="targets" class="targets"></div>
+        </header>
+        <div class="panes">
+          <section class="source" aria-labelledby="source-heading">
+            <h3 id="source-heading">Исходное объявление</h3>
+            <p id="source-size" class="muted"></p>
+            <p id="source-highlight" class="muted" role="status"></p>
+            <p id="source" class="source-text" tabindex="0"></p>
+            <details id="annotation" hidden>
+              <summary>Комментарий к разметке</summary>
+              <p id="annotation-text" class="muted"></p>
+            </details>
+          </section>
+          <section class="output" aria-labelledby="drafts-heading">
+            <h3 id="drafts-heading">Черновики GLM</h3>
+            <p id="row-status" class="muted" role="status"></p>
+            <p id="metrics" class="muted"></p>
+            <div id="drafts" class="cards"></div>
+          </section>
+        </div>
+        <details class="checklist">
+          <summary>Как проверить черновик</summary>
+          <ul class="muted">
+            <li>Покупатель поймёт, какую конкретно услугу ему предлагают.</li>
+            <li>Цена, сроки, гарантия и ограничения сохранены вместе с условиями из исходника.</li>
+            <li>Текст читается сам по себе, содержит полезные детали и не повторяет их.</li>
+          </ul>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const nodes = Object.fromEntries(Array.from(document.querySelectorAll('[id]'), node => [node.id, node]));
+    const results = new Map();
+    const pending = new Set();
+    const errors = new Map();
+    let index, quickIds, selected, item;
+    let showAll = false;
+    let batchRunning = false;
+    let selectionVersion = 0;
+
+    function element(tag, content, className) {
+      const node = document.createElement(tag);
+      if (content !== undefined) node.textContent = content;
+      if (className) node.className = className;
+      return node;
+    }
+
+    const plural = (count, forms) => forms[new Intl.PluralRules('ru').select(count)] || forms.other;
+    const categoryCount = count => count + ' ' + plural(count, {one: 'цель', few: 'цели', other: 'целей'});
+
+    async function request(url, options) {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Запрос не выполнен.');
+      return data;
+    }
+
+    function renderList() {
+      const focused = nodes.cases.contains(document.activeElement) ? document.activeElement.dataset.case : null;
+      const query = nodes.search.value.trim().toLocaleLowerCase('ru');
+      const all = showAll || Boolean(query);
+      const cases = all ? index.cases : quickIds.map(id => index.cases.find(row => row.testcase === id));
+      nodes.quick.setAttribute('aria-pressed', String(!all));
+      nodes.all.setAttribute('aria-pressed', String(all));
+      nodes.cases.replaceChildren();
+      for (const row of cases) {
+        const id = row.testcase;
+        const name = index.quick[id] || row.preview || id;
+        if (query && ![id, name, row.preview].some(text => text.toLocaleLowerCase('ru').includes(query))) continue;
+        const button = element('button', undefined, 'case');
+        button.type = 'button';
+        button.dataset.case = id;
+        if (id === selected) button.setAttribute('aria-current', 'true');
+        const run = results.get(id);
+        let state = run && run.drafts.every(draft => draft.title && draft.text) ? 'done' : '';
+        if (errors.has(id) || (run && !state)) state = 'failed';
+        if (pending.has(id)) state = 'pending';
+        const suffix = {pending: ' · идёт генерация', failed: ' · проверьте результат', done: ' · готово'}[state] || '';
+        button.dataset.state = state;
+        button.append(element('span', name, 'case-title'),
+                      element('span', id + ' · ' + categoryCount(row.labels.length) + suffix, 'muted'));
+        button.addEventListener('click', () => selectCase(id));
+        nodes.cases.append(button);
+        if (id === focused) button.focus({preventScroll: true});
+      }
+      if (!nodes.cases.childElementCount) nodes.cases.append(element('p', 'Ничего не найдено.', 'empty muted'));
+    }
+
+    async function selectCase(id) {
+      const version = ++selectionVersion;
+      selected = id;
+      const url = new URL(location.href);
+      url.searchParams.set('case', id);
+      history.replaceState(null, '', url);
+      item = null;
+      renderList();
+      nodes['case-title'].textContent = id;
+      nodes['source-category'].textContent = '';
+      nodes['source-size'].textContent = '';
+      nodes.source.textContent = 'Загружаем исходник…';
+      nodes.source.scrollTop = 0;
+      nodes.annotation.hidden = true;
+      nodes.targets.replaceChildren();
+      renderDrafts();
+      try {
+        const loaded = await request('/review/case?testcase=' + encodeURIComponent(id));
+        if (version !== selectionVersion) return;
+        item = loaded;
+        if (loaded.run && !pending.has(id)) results.set(id, loaded.run);
+        nodes['case-title'].textContent = index.quick[id] ? index.quick[id] + ' · ' + id : id;
+        nodes['source-category'].textContent = 'Исходная категория · ' + index.categories[item.mcId];
+        nodes['source-size'].textContent = Array.from(item.description).length.toLocaleString('ru') + ' зн.';
+        nodes.source.textContent = item.description;
+        nodes.annotation.hidden = !item.annotation;
+        nodes.annotation.open = false;
+        nodes['annotation-text'].textContent = item.annotation;
+        for (const label of item.labels) nodes.targets.append(element('span', index.categories[label]));
+        if (item.needs_review) nodes.targets.append(element('span', 'Разметка требует проверки', 'warn'));
+        renderDrafts();
+        renderList();
+      } catch (error) {
+        if (version === selectionVersion) nodes.source.textContent = error.message;
+      }
+    }
+
+    function reviewField(card, name, label, control, value, key) {
+      const id = key + ':' + name;
+      const caption = element('label', label);
+      const input = element(control);
+      input.id = id;
+      caption.htmlFor = id;
+      try { input.value = localStorage.getItem(id) ?? value; } catch { input.value = value; }
+      input.addEventListener('input', () => {
+        try { localStorage.setItem(id, input.value); } catch { /* The field still works in this session. */ }
+      });
+      card.append(caption, input);
+      return input;
+    }
+
+    function highlightSource(quotes, jumpTo) {
+      const source = item.description;
+      const ranges = quotes.map(quote => {
+        const start = source.indexOf(quote);
+        return {start, end: start + quote.length};
+      }).filter(range => range.start >= 0).sort((a, b) => a.start - b.start);
+      const merged = [];
+      for (const range of ranges) {
+        const last = merged.at(-1);
+        if (last && range.start <= last.end) last.end = Math.max(last.end, range.end);
+        else merged.push(range);
+      }
+      const scrollTop = nodes.source.scrollTop;
+      const target = jumpTo ? source.indexOf(jumpTo) : -1;
+      const content = document.createDocumentFragment();
+      let offset = 0;
+      let destination;
+      for (const {start, end} of merged) {
+        const mark = element('mark', source.slice(start, end));
+        content.append(source.slice(offset, start), mark);
+        if (target >= start && target < end) destination = mark;
+        offset = end;
+      }
+      content.append(source.slice(offset));
+      nodes.source.replaceChildren(content);
+      if (destination) {
+        destination.tabIndex = -1;
+        destination.focus({preventScroll: true});
+        destination.scrollIntoView({block: 'nearest'});
+      } else {
+        nodes.source.scrollTop = scrollTop;
+      }
+    }
+
+    function quoteDetails(quotes, open, category) {
+      const details = element('details', undefined, 'quotes');
+      details.open = open;
+      const list = element('ul');
+      for (const quote of quotes) {
+        const entry = element('li');
+        const button = element('button', quote);
+        button.type = 'button';
+        button.setAttribute('aria-label', 'Показать в исходнике: ' + quote);
+        button.addEventListener('click', () => {
+          highlightSource(quotes, quote);
+          nodes['source-highlight'].textContent = category;
+        });
+        entry.append(button);
+        list.append(entry);
+      }
+      details.append(element('summary', 'Фрагменты, которые выбрала GLM'), list);
+      return details;
+    }
+
+    function renderDrafts() {
+      nodes.drafts.replaceChildren();
+      nodes.metrics.textContent = '';
+      const status = nodes['row-status'];
+      status.textContent = '';
+      status.dataset.error = 'false';
+      const runButton = nodes['run-case'];
+      runButton.disabled = !index?.live || !item?.labels.length || pending.has(selected) || batchRunning;
+      nodes['source-highlight'].textContent = '';
+      if (!item) return;
+      const run = results.get(selected) || item.run;
+      const saved = new Map(run?.drafts.map(draft => [draft.mcId, draft]) || []);
+      const complete = run?.drafts.filter(draft => draft.title && draft.text).length || 0;
+      const error = errors.get(selected);
+      if (error) {
+        status.textContent = error + (run ? ' Показан предыдущий результат.' : '');
+        status.dataset.error = 'true';
+      } else if (!item.labels.length) {
+        status.textContent = 'В разметке нет дополнительных категорий. Вызов модели не нужен.';
+      } else if (pending.has(selected)) {
+        status.textContent = 'Генерируем черновики…';
+      } else if (run) {
+        status.textContent = complete + ' из ' + item.labels.length + ' готовы к проверке.';
+      } else {
+        status.textContent = index.live ? 'Нажмите «Сгенерировать черновики».' : 'Для этого объявления нет записи.';
+      }
+      if (run?.metrics.generation_calls) {
+        const metrics = run.metrics;
+        nodes.metrics.textContent = [
+          metrics.generation_seconds == null ? null : metrics.generation_seconds.toLocaleString('ru', {maximumFractionDigits: 2}) + ' с',
+          metrics.generation_input_tokens == null ? null : metrics.generation_input_tokens + ' ток. вход',
+          metrics.generation_output_tokens == null ? null : metrics.generation_output_tokens + ' ток. выход',
+        ].filter(Boolean).join(' · ');
+      }
+
+      let highlighted = false;
+      for (const label of item.labels) {
+        const name = index.categories[label];
+        const draft = saved.get(label);
+        const card = element('article', undefined, 'draft');
+        card.append(element('h3', name));
+        if (draft?.text && draft.title) {
+          const key = 'review:' + selected + ':' + run.id + ':' + label;
+          const title = reviewField(card, 'title', 'Заголовок', 'input', draft.title, key);
+          const body = reviewField(card, 'text', 'Текст объявления', 'textarea', draft.text, key);
+          const copy = element('button', 'Копировать', 'copy');
+          copy.type = 'button';
+          copy.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(title.value + '\n\n' + body.value);
+              copy.textContent = 'Скопировано';
+            } catch {
+              body.select();
+              copy.textContent = 'Текст выделен';
+            }
+          });
+          card.append(copy);
+          const quotes = run.evidence?.[label];
+          if (quotes?.length) {
+            card.append(quoteDetails(quotes, !highlighted, name));
+            if (!highlighted) {
+              highlightSource(quotes);
+              nodes['source-highlight'].textContent = name;
+              highlighted = true;
+            }
+          }
+        } else {
+          card.append(element('p', run ? 'Модель не вернула черновик для этой цели.' :
+            'Черновик ещё не сгенерирован.', 'muted'));
+        }
+        const old = item.baseline[label];
+        if (old) {
+          const details = element('details');
+          details.append(element('summary', 'Старый черновик из выгрузки'), element('p', old, 'old-text'));
+          card.append(details);
+        }
+        nodes.drafts.append(card);
+      }
+    }
+
+    async function generateCase(id) {
+      pending.add(id);
+      nodes['run-quick'].disabled = true;
+      errors.delete(id);
+      if (id === selected) renderDrafts();
+      renderList();
+      try {
+        const result = await request('/review/generate', {
+          method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({testcase: id}),
+        });
+        results.set(id, result);
+        return result.drafts.every(draft => draft.title && draft.text);
+      } catch (error) {
+        errors.set(id, error.message);
+        return false;
+      } finally {
+        pending.delete(id);
+        nodes['run-quick'].disabled = batchRunning || pending.size > 0 || !quickIds.length;
+        if (id === selected) renderDrafts();
+        renderList();
+      }
+    }
+
+    async function runExamples() {
+      batchRunning = true;
+      nodes['run-quick'].disabled = true;
+      nodes['batch-status'].textContent = 'Прогон 0 из ' + quickIds.length;
+      nodes.quick.click();
+      await selectCase(quickIds[0]);
+      let cursor = 0;
+      let done = 0;
+      let allGood = 0;
+      async function next() {
+        while (cursor < quickIds.length) {
+          const current = quickIds[cursor++];
+          if (await generateCase(current)) allGood++;
+          done++;
+          nodes['batch-status'].textContent = 'Прогон ' + done + ' из ' + quickIds.length;
+        }
+      }
+      await Promise.all([next(), next()]);
+      batchRunning = false;
+      nodes['run-quick'].disabled = false;
+      nodes['batch-status'].textContent = 'Завершено · ' + allGood + ' из ' + quickIds.length + ' без пропусков';
+      renderDrafts();
+    }
+
+    nodes.quick.addEventListener('click', () => { nodes.search.value = ''; showAll = false; renderList(); });
+    nodes.all.addEventListener('click', () => { nodes.search.value = ''; showAll = true; renderList(); });
+    nodes.search.addEventListener('input', renderList);
+    nodes['run-case'].addEventListener('click', () => generateCase(selected));
+    nodes['run-quick'].addEventListener('click', runExamples);
+
+    async function init() {
+      try {
+        index = await request('/review/index');
+        quickIds = Object.keys(index.quick);
+        const count = index.cases.length;
+        nodes['dataset-status'].textContent = count + ' объявлений с готовой разметкой · ' +
+          (index.live ? 'цели сразу передаются генератору' : 'режим просмотра сохранённых ответов');
+        nodes['run-quick'].hidden = !index.live;
+        nodes['run-case'].hidden = !index.live;
+        nodes['run-quick'].textContent = 'Прогнать набор из ' + quickIds.length + ' примеров';
+        nodes['run-quick'].disabled = !index.live || !quickIds.length;
+        nodes.layout.hidden = false;
+        const requested = new URLSearchParams(location.search).get('case');
+        const initial = index.cases.some(row => row.testcase === requested) ? requested :
+          quickIds[0] || index.cases[0].testcase;
+        showAll = !quickIds.includes(initial);
+        await selectCase(initial);
+      } catch (error) {
+        nodes['dataset-status'].textContent = 'Не удалось загрузить набор. ' + error.message;
+      }
+    }
+    init();
+  </script>
+</body>
+</html>

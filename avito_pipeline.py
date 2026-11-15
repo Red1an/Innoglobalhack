@@ -35,7 +35,7 @@ def process_ad(payload, classifier, generator, audit_dir, *, system=None, max_to
     started = time.perf_counter()
     description = payload["description"]
     clean, _ = preprocess(description)
-    metrics = {"classification_model": classifier.tag, "classification_calls": 0, "generation_calls": 0}
+    metrics = {"classification_model": classifier.tag, "classification_calls": 0}
     labels = []
     if clean.strip():
         user = json.dumps({"mcId": source, "description": clean}, ensure_ascii=False)
@@ -51,7 +51,15 @@ def process_ad(payload, classifier, generator, audit_dir, *, system=None, max_to
                        classification_output_tokens=ans["output_tokens"],
                        classification_reported_cost=ans.get("reported_cost"))
 
+    result, generation_metrics = generate_targets(description, labels, generator, audit_dir)
+    metrics.update(generation_metrics)
+    metrics["total_seconds"] = time.perf_counter() - started
+    return result, metrics
+
+
+def generate_targets(description, labels, generator, audit_dir, *, include_quotes=False):
     targets = [{"mcId": label} for label in labels]
+    metrics = {"generation_calls": 0}
     if labels and generator is not None:
         # Citations are checked against the original ad, including punctuation and whitespace.
         Path(audit_dir).mkdir(parents=True, exist_ok=False)
@@ -66,9 +74,10 @@ def process_ad(payload, classifier, generator, audit_dir, *, system=None, max_to
                        generation_output_tokens=usage.get("completion_tokens"),
                        generation_reported_cost=usage.get("cost"),
                        generation_error=audit["error"], generation_validation=audit["validation"])
+        if include_quotes:
+            result["evidence"] = audit["verified_quotes"]
     else:
         result = {"drafts": [{**target, "title": None, "text": None} for target in targets]}
-    metrics["total_seconds"] = time.perf_counter() - started
     return result, metrics
 
 
@@ -133,6 +142,7 @@ def main():
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--csv", type=Path, help="CSV организаторов; по умолчанию JSON из stdin")
     modes.add_argument("--serve", action="store_true", help="редактор черновиков и загрузка CSV в браузере")
+    modes.add_argument("--replay", action="store_true", help="показать сохранённое демо и черновики без API")
     modes.add_argument("--export-reviewed", type=Path, help="выгрузить проверенный results.jsonl без вызовов API")
     parser.add_argument("--input", type=Path, help="исходный CSV для проверки выгрузки")
     parser.add_argument("--port", type=int, default=8766)
@@ -149,7 +159,7 @@ def main():
         parser.error("для --export-reviewed укажите --input и --out")
     if args.input and not args.export_reviewed:
         parser.error("--input используется с --export-reviewed")
-    if args.classify_only and (args.serve or args.export_reviewed):
+    if args.classify_only and (args.serve or args.replay or args.export_reviewed):
         parser.error("--classify-only доступен для JSON из stdin и --csv")
     if args.workers < 1:
         parser.error("--workers должен быть положительным")
@@ -165,6 +175,11 @@ def main():
         except (OSError, ValueError) as exc:
             print(str(exc), file=sys.stderr)
             return 2
+
+    if args.replay:
+        from private_eval.final_ui import serve
+        serve(args.port, args.out or RUNS / "browser", args.workers, None, None, ClassificationError, None)
+        return 0
 
     load_env(ROOT / ".env")
     use_glm = args.classifier == "glm"
@@ -189,7 +204,11 @@ def main():
         if args.serve:
             from private_eval.final_ui import serve
             classifier.check()
-            serve(args.port, args.out or RUNS / "browser", args.workers, process, run_batch, ClassificationError)
+            def generate_labeled(description, labels, audit_dir):
+                return generate_targets(description, labels, generator, audit_dir, include_quotes=True)
+
+            serve(args.port, args.out or RUNS / "browser", args.workers, process, run_batch,
+                  ClassificationError, generate_labeled)
             return 0
         if args.csv:
             classifier.check()

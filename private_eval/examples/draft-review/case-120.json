@@ -1,0 +1,24 @@
+{
+  "drafts": [
+    {
+      "mcId": 103,
+      "title": "Укладка напольного керамогранита от 1200 ₽/м²",
+      "text": "Кладу напольный керамогранит: коридоры, кухни, комнаты. Формат плитки — до 60×60. Цена от 1200 ₽/м² при готовом ровном основании, подрезка считается по раскладке. Работаю только по полу: на стены керамогранит не укладываю, мозаику тоже не предлагаю. Для расчёта стоимости нужны площадь и фото помещения."
+    }
+  ],
+  "id": "57d1ff048d1f4ac688f359e74cda131e",
+  "metrics": {
+    "generation_calls": 1,
+    "generation_model": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+    "generation_seconds": 5.442502999998396,
+    "generation_input_tokens": 1801,
+    "generation_output_tokens": 264,
+    "generation_reported_cost": 0.04828199928,
+    "generation_validation": [
+      {
+        "mcId": 103,
+        "status": "quotes_verified"
+      }
+    ]
+  }
+}

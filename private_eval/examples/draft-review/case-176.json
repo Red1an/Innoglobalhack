@@ -1,0 +1,33 @@
+{
+  "drafts": [
+    {
+      "mcId": 102,
+      "title": "Штукатурка стен",
+      "text": "Штукатурим стены. Стаж штукатура — 15 лет. Договор на услугу оформляется отдельно. Срок гарантии на штукатурку обсуждается до подписания договора."
+    },
+    {
+      "mcId": 105,
+      "title": "Монтаж проводки",
+      "text": "Выполняем монтаж проводки. Электрик работает 4 года. Договор на услугу оформляется отдельно. Гарантия на электромонтаж — один год."
+    }
+  ],
+  "id": "b47ef71b2bc5484c856f3f2fe647b909",
+  "metrics": {
+    "generation_calls": 1,
+    "generation_model": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+    "generation_seconds": 4.375094041999546,
+    "generation_input_tokens": 1910,
+    "generation_output_tokens": 237,
+    "generation_reported_cost": 0.04862399916,
+    "generation_validation": [
+      {
+        "mcId": 102,
+        "status": "quotes_verified"
+      },
+      {
+        "mcId": 105,
+        "status": "quotes_verified"
+      }
+    ]
+  }
+}
