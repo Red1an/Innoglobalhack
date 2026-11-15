@@ -26,6 +26,28 @@ def datasets():
                         for _, r in test.iterrows()]}
 
 
+def guide_labels():
+    folder = ROOT / "data/test/test_guide_v1"
+    hard = [json.loads(line) for line in (folder / "hard.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+    test = pd.read_parquet(folder / "test_gold.parquet")
+    return {"hard_v0": {str(r["row_id"]): r["labels"] for r in hard},
+            "test_v7": {str(int(r.row_id)): [mc for mc in MC if r[f"y_{mc}"] == 1] for _, r in test.iterrows()}}
+
+
+def rescore(out):
+    result, old, new = json.loads(out.read_text()), datasets(), guide_labels()
+    for key, run in sorted(result.items()):
+        name = key.split("/")[1]
+        if len(run["predictions"]) != len(old[name]):
+            continue
+        preds = [run["predictions"][str(r[0])] for r in old[name]]
+        guide = [(r[0], r[1], new[name][str(r[0])]) for r in old[name]]
+        run["metrics"], run["metrics_guide_v1"] = score(old[name], preds), score(guide, preds)
+        print(key, *(f"{label} F1 {m['micro_f1']} FP {m['fp']} FN {m['fn']} exact {m['exact']}/{m['rows']}"
+                     for label, m in (("old", run["metrics"]), ("guide_v1", run["metrics_guide_v1"]))), sep=" | ")
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=1))
+
+
 def ask(tag, prompt, text, num_ctx):
     payload = {"model": tag, "stream": False, "format": SCHEMA, "keep_alive": "10m",
                "messages": [{"role": "system", "content": prompt},
@@ -60,12 +82,17 @@ def score(rows, preds):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prompt", type=Path, help="Prompt file; default is bench.PROMPT")
-    parser.add_argument("--name", required=True, help="Run name inside the output file")
+    parser.add_argument("--name", help="Run name inside the output file")
+    parser.add_argument("--rescore", action="store_true", help="Recompute metrics of saved runs on old and guide_v1 labels")
     parser.add_argument("--model", default="hf.co/NightForger/avibe-GGUF:Q8_0")
     parser.add_argument("--data", nargs="+", default=["hard_v0", "test_v7"])
     parser.add_argument("--num-ctx", type=int, default=8192)
     parser.add_argument("--out", type=Path, default=ROOT / "research/experiments/results/static_prompt_local.json")
     args = parser.parse_args()
+    if args.rescore:
+        return rescore(args.out)
+    if not args.name:
+        parser.error("--name is required")
     prompt = PROMPT if args.prompt is None else args.prompt.read_text(encoding="utf-8")
     result = json.loads(args.out.read_text()) if args.out.exists() else {}
     for name in args.data:
