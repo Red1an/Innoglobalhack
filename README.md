@@ -1,5 +1,25 @@
 # Инноглобалхак · кейс Авито
 
+## Guide v3 для хакатона
+
+[Уточнённые правила](dataset_review/guide_v3_rules.md) учитывают услуги в SEO, явно предложенную шпаклёвку и ограничение «только комплекс». Версия собрана поверх `guide_v2`. Проверка train сочетает отбор кандидатов по всем 5 311 строкам, проверку повторяющихся шаблонов и разбор отдельных объявлений. Спорные решения видны в `ambiguous.csv`.
+
+| Назначение | Файл |
+| --- | --- |
+| Обучение | [train.parquet](data/processed/train_guide_v3/train.parquet), [манифест](data/processed/train_guide_v3/manifest.json) |
+| Внутренние тесты | [gold](data/test/test_guide_v3/test_gold.parquet), [hard](data/test/test_guide_v3/hard.jsonl), [стресс-срезы](data/test/test_guide_v3/stress_suite.jsonl), [манифест](data/test/test_guide_v3/manifest.json) |
+| Изменения и спорные метки train | [label_changes.csv](data/processed/train_guide_v3/label_changes.csv), [ambiguous.csv](data/processed/train_guide_v3/ambiguous.csv) |
+| Изменения и спорные метки тестов | [label_changes.csv](data/test/test_guide_v3/label_changes.csv), [ambiguous.csv](data/test/test_guide_v3/ambiguous.csv) |
+| Сравнение guide_v2 и guide_v3 на одном новом тесте | [ноутбук](dataset_review/10_guide_v3_audit.ipynb), [метрики](output/guide_v3_comparison.json) |
+
+```bash
+python dataset_review/build_guide_v3.py train --out /tmp/train_guide_v3
+python dataset_review/build_guide_v3.py test --out /tmp/test_guide_v3
+python dataset_review/compare_guide_v3.py
+```
+
+Для экспериментов в `colab.ipynb` укажите эти train и gold в профиле `custom`. Скрипт сравнения использует одинаковые строки обучения и порог 0,50. Результаты относятся к внутренним gold, hard и стресс-срезам.
+
 ## Guide v2
 
 Правила [guide_v2](dataset_review/guide_v2_rules.md) применяются к новой версии train и внутренним тестам. Формат объявления на входе остаётся прежним. Исходная категория исключается из меток, оценка учитывает 101–106.
