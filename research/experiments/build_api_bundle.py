@@ -14,6 +14,7 @@ FILES = [
     'research/experiments/publish_clearml.py',
     'research/experiments/api_models.json',
     'research/experiments/prompts/classify_v2.txt',
+    'research/experiments/prompts/classify_v2_seo_off.txt',
     'research/experiments/prompts/classify_v3.txt',
     'research/experiments/prompts/classify_v3_seo_on.txt',
     'research/experiments/requirements-api.txt',
