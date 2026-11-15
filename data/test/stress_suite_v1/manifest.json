@@ -1,0 +1,21 @@
+{
+  "total_rows": 440,
+  "slices": {
+    "gold_core": 80,
+    "hard_empty": 40,
+    "decoupled_solo_and_pairs": 100,
+    "context_traps_and_negations": 80,
+    "dirty_text_and_homoglyphs": 50,
+    "non_101_source_mcid": 50,
+    "mentor_borderline_switches": 40
+  },
+  "origin_splits": {
+    "test_gold": 95,
+    "synthetic_stress": 326,
+    "dev": 19
+  },
+  "synthetic_stress_train_overlap": 0,
+  "synthetic_stress_min_len": 160,
+  "synthetic_stress_max_len": 1104,
+  "sha256_jsonl": "acdcd44afbae951c4a21d0e4d6b88f4480de505ad75140a34fdcb364d5ffaa30"
+}
