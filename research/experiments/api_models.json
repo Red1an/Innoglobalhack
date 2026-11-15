@@ -61,5 +61,14 @@
       "temperature": 0,
       "max_tokens": 96
     }
+  },
+  {
+    "name": "glm-5.3-flash",
+    "origin": "CN",
+    "model": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+    "params": {
+      "temperature": 0,
+      "max_tokens": 96
+    }
   }
 ]

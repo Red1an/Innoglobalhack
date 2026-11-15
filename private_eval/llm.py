@@ -15,7 +15,7 @@ CACHE = HERE / "cache"
 CAILA_URL = "https://caila.io/api/adapters/openai"
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 API_MODELS = ROOT / "research" / "experiments" / "api_models.json"
-API_ALLOWED = ["qwen3-235b-instruct"]
+API_ALLOWED = ["qwen3-235b-instruct", "glm-5.3-flash"]
 READ_CACHE = True
 OLLAMA_MODELS = {"avibe-q8": "hf.co/NightForger/avibe-GGUF:Q8_0", "t-lite-q8": "t-lite-it-2.1:q8_0"}
 
@@ -71,7 +71,7 @@ class ApiClient:
             with urlopen(Request(self.base_url + "/models", headers={"Authorization": self.auth,
                                                                      "Accept": "application/json"}),
                          timeout=30) as resp:
-                json.load(resp)
+                listing = json.load(resp)
         except HTTPError as exc:
             body = exc.read(300).decode("utf-8", "replace")
             exc.close()
@@ -83,6 +83,12 @@ class ApiClient:
             raise SystemExit(f"API ответил HTTP {exc.code} на проверку доступа") from None
         except (URLError, TimeoutError, socket.timeout, ValueError) as exc:
             raise SystemExit(f"API недоступен: {type(exc).__name__}." + hint) from None
+        ids = [m.get("id", "") for m in listing.get("data", [])] if isinstance(listing, dict) else []
+        if ids and self.model_id not in ids:
+            family = self.model_id.rsplit("/", 1)[-1].split("-")[0].lower()
+            similar = [i for i in ids if family and family in i.lower()][:15]
+            print(f"Внимание: {self.model_id} нет в списке моделей API. Похожие: {similar or 'не найдены'}. "
+                  f"Исправьте поле model у {self.name} в research/experiments/api_models.json", flush=True)
 
     def chat(self, system, user, max_tokens=96, temperature=None):
         payload = {**self.params, "model": self.model_id, "stream": False, "max_tokens": max_tokens,
