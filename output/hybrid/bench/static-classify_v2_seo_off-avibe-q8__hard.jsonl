@@ -1,0 +1,50 @@
+{"row_id": "hard-001", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105], "llm_error": null, "labels": [102, 103, 104, 105], "seconds": 5.062663624999914, "input_tokens": 1471, "output_tokens": 24, "cached": false}
+{"row_id": "hard-002", "mcId": 101, "stage1": [], "llm": [102, 103, 104], "llm_error": null, "labels": [102, 103, 104], "seconds": 4.104991166001128, "input_tokens": 1459, "output_tokens": 19, "cached": false}
+{"row_id": "hard-003", "mcId": 101, "stage1": [], "llm": [105], "llm_error": null, "labels": [105], "seconds": 2.4343640840015723, "input_tokens": 1454, "output_tokens": 9, "cached": false}
+{"row_id": "hard-004", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 2.5014387920000445, "input_tokens": 1441, "output_tokens": 9, "cached": false}
+{"row_id": "hard-005", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 3.5964741249990766, "input_tokens": 1461, "output_tokens": 14, "cached": false}
+{"row_id": "hard-006", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 5.75753929199891, "input_tokens": 1465, "output_tokens": 29, "cached": false}
+{"row_id": "hard-007", "mcId": 101, "stage1": [], "llm": [105], "llm_error": null, "labels": [105], "seconds": 5.495204417000423, "input_tokens": 1668, "output_tokens": 9, "cached": false}
+{"row_id": "hard-008", "mcId": 101, "stage1": [], "llm": [102], "llm_error": null, "labels": [102], "seconds": 2.8008396249988436, "input_tokens": 1466, "output_tokens": 9, "cached": false}
+{"row_id": "hard-009", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.8825160000014876, "input_tokens": 1443, "output_tokens": 6, "cached": false}
+{"row_id": "hard-010", "mcId": 101, "stage1": [], "llm": [104, 105], "llm_error": null, "labels": [104, 105], "seconds": 3.1138401249991148, "input_tokens": 1440, "output_tokens": 14, "cached": false}
+{"row_id": "hard-011", "mcId": 101, "stage1": [], "llm": [102], "llm_error": null, "labels": [102], "seconds": 1.9998212919999787, "input_tokens": 1419, "output_tokens": 9, "cached": false}
+{"row_id": "hard-012", "mcId": 101, "stage1": [], "llm": [103, 104, 105], "llm_error": null, "labels": [103, 104, 105], "seconds": 3.663786999999502, "input_tokens": 1418, "output_tokens": 19, "cached": false}
+{"row_id": "hard-013", "mcId": 101, "stage1": [], "llm": [102, 105], "llm_error": null, "labels": [102, 105], "seconds": 2.8057396249987505, "input_tokens": 1417, "output_tokens": 14, "cached": false}
+{"row_id": "hard-014", "mcId": 101, "stage1": [], "llm": [104, 105], "llm_error": null, "labels": [104, 105], "seconds": 2.847435540999868, "input_tokens": 1412, "output_tokens": 14, "cached": false}
+{"row_id": "hard-015", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.6709687500006112, "input_tokens": 1415, "output_tokens": 6, "cached": false}
+{"row_id": "hard-016", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.6377399590001005, "input_tokens": 1417, "output_tokens": 6, "cached": false}
+{"row_id": "hard-017", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.5780709169994225, "input_tokens": 1420, "output_tokens": 6, "cached": false}
+{"row_id": "hard-018", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.6377448330003972, "input_tokens": 1415, "output_tokens": 6, "cached": false}
+{"row_id": "hard-019", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105], "llm_error": null, "labels": [102, 103, 104, 105], "seconds": 4.273984999999811, "input_tokens": 1416, "output_tokens": 24, "cached": false}
+{"row_id": "hard-020", "mcId": 101, "stage1": [], "llm": [102, 103, 105, 106], "llm_error": null, "labels": [102, 103, 105, 106], "seconds": 5.169216833000974, "input_tokens": 1466, "output_tokens": 24, "cached": false}
+{"row_id": "hard-021", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 2.4427212919999874, "input_tokens": 1428, "output_tokens": 9, "cached": false}
+{"row_id": "hard-022", "mcId": 101, "stage1": [], "llm": [102], "llm_error": null, "labels": [102], "seconds": 2.0473859169997013, "input_tokens": 1411, "output_tokens": 9, "cached": false}
+{"row_id": "hard-023", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 2.0723297500007902, "input_tokens": 1410, "output_tokens": 9, "cached": false}
+{"row_id": "hard-024", "mcId": 101, "stage1": [], "llm": [104], "llm_error": null, "labels": [104], "seconds": 2.063427875000343, "input_tokens": 1410, "output_tokens": 9, "cached": false}
+{"row_id": "hard-025", "mcId": 101, "stage1": [], "llm": [105], "llm_error": null, "labels": [105], "seconds": 2.017971249999391, "input_tokens": 1413, "output_tokens": 9, "cached": false}
+{"row_id": "hard-026", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 2.1046042920006585, "input_tokens": 1416, "output_tokens": 9, "cached": false}
+{"row_id": "hard-027", "mcId": 101, "stage1": [], "llm": [103, 104, 105], "llm_error": null, "labels": [103, 104, 105], "seconds": 3.5907908330009377, "input_tokens": 1407, "output_tokens": 19, "cached": false}
+{"row_id": "hard-028", "mcId": 101, "stage1": [], "llm": [102], "llm_error": null, "labels": [102], "seconds": 2.057038041000851, "input_tokens": 1396, "output_tokens": 9, "cached": false}
+{"row_id": "hard-029", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 2.9209609999998065, "input_tokens": 1408, "output_tokens": 14, "cached": false}
+{"row_id": "hard-030", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.5668625840007735, "input_tokens": 1402, "output_tokens": 6, "cached": false}
+{"row_id": "hard-031", "mcId": 101, "stage1": [], "llm": [103, 104], "llm_error": null, "labels": [103, 104], "seconds": 2.8399906660015404, "input_tokens": 1402, "output_tokens": 14, "cached": false}
+{"row_id": "hard-032", "mcId": 101, "stage1": [], "llm": [103, 104], "llm_error": null, "labels": [103, 104], "seconds": 2.875829041999168, "input_tokens": 1401, "output_tokens": 14, "cached": false}
+{"row_id": "hard-033", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 2.0386005000000296, "input_tokens": 1404, "output_tokens": 9, "cached": false}
+{"row_id": "hard-034", "mcId": 101, "stage1": [], "llm": [103, 105], "llm_error": null, "labels": [103, 105], "seconds": 2.8803774999996676, "input_tokens": 1398, "output_tokens": 14, "cached": false}
+{"row_id": "hard-035", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 1.7623788750006497, "input_tokens": 1390, "output_tokens": 9, "cached": false}
+{"row_id": "hard-036", "mcId": 101, "stage1": [], "llm": [103, 106], "llm_error": null, "labels": [103, 106], "seconds": 2.8198980420002044, "input_tokens": 1400, "output_tokens": 14, "cached": false}
+{"row_id": "hard-037", "mcId": 101, "stage1": [], "llm": [103, 104, 105], "llm_error": null, "labels": [103, 104, 105], "seconds": 3.658726874999047, "input_tokens": 1403, "output_tokens": 19, "cached": false}
+{"row_id": "hard-038", "mcId": 101, "stage1": [], "llm": [102, 103, 104], "llm_error": null, "labels": [102, 103, 104], "seconds": 3.6409366660009255, "input_tokens": 1414, "output_tokens": 19, "cached": false}
+{"row_id": "hard-039", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 2.557027625000046, "input_tokens": 1450, "output_tokens": 9, "cached": false}
+{"row_id": "hard-040", "mcId": 101, "stage1": [], "llm": [102, 103, 104], "llm_error": null, "labels": [102, 103, 104], "seconds": 3.6289648749989283, "input_tokens": 1401, "output_tokens": 19, "cached": false}
+{"row_id": "hard-041", "mcId": 101, "stage1": [], "llm": [105, 106], "llm_error": null, "labels": [105, 106], "seconds": 2.8370920830002433, "input_tokens": 1396, "output_tokens": 14, "cached": false}
+{"row_id": "hard-042", "mcId": 101, "stage1": [], "llm": [105, 106], "llm_error": null, "labels": [105, 106], "seconds": 2.588368167000226, "input_tokens": 1392, "output_tokens": 14, "cached": false}
+{"row_id": "hard-043", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.5773914590008644, "input_tokens": 1402, "output_tokens": 6, "cached": false}
+{"row_id": "hard-044", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.7572540410001238, "input_tokens": 1412, "output_tokens": 6, "cached": false}
+{"row_id": "hard-045", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.6269465000004857, "input_tokens": 1403, "output_tokens": 6, "cached": false}
+{"row_id": "hard-046", "mcId": 101, "stage1": [], "llm": [102, 105], "llm_error": null, "labels": [102, 105], "seconds": 2.898987541000679, "input_tokens": 1413, "output_tokens": 14, "cached": false}
+{"row_id": "hard-047", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.5390727920002973, "input_tokens": 1397, "output_tokens": 6, "cached": false}
+{"row_id": "hard-048", "mcId": 101, "stage1": [], "llm": [104], "llm_error": null, "labels": [104], "seconds": 1.7376982500009035, "input_tokens": 1391, "output_tokens": 9, "cached": false}
+{"row_id": "hard-049", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.5479222499998286, "input_tokens": 1396, "output_tokens": 6, "cached": false}
+{"row_id": "hard-050", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 2.1296095840007183, "input_tokens": 1408, "output_tokens": 9, "cached": false}

@@ -1,0 +1,69 @@
+{
+  "micro_f1": 0.951048951048951,
+  "precision": 0.9315068493150684,
+  "recall": 0.9714285714285714,
+  "exact_match": 0.88,
+  "rows": 50,
+  "invalid_rate": 0.0,
+  "latency_p50_s": 1.4011051500019676,
+  "latency_p95_s": 2.5513984600002004,
+  "per_category": {
+    "101": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 0
+    },
+    "102": {
+      "precision": 0.9285714285714286,
+      "recall": 1.0,
+      "f1": 0.9629629629629629,
+      "support": 13
+    },
+    "103": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 17
+    },
+    "104": {
+      "precision": 1.0,
+      "recall": 0.9375,
+      "f1": 0.967741935483871,
+      "support": 16
+    },
+    "105": {
+      "precision": 0.8571428571428571,
+      "recall": 1.0,
+      "f1": 0.9230769230769231,
+      "support": 12
+    },
+    "106": {
+      "precision": 0.8461538461538461,
+      "recall": 0.9166666666666666,
+      "f1": 0.88,
+      "support": 12
+    }
+  },
+  "context_cue_slice": {
+    "rows": 19,
+    "micro_f1": 0.9433962264150944
+  },
+  "dataset": "clean",
+  "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+  "test_hash": "62b7c80e4aa395394c7732ad713cf3b82aee6a86e24cafd957db4b75749a6aef",
+  "legacy_strict_micro_f1": 0.951048951048951,
+  "legacy_strict_invalid_rate": 0.0,
+  "normalized_rate": 0.0,
+  "missing_finish_reason_rate": 0.0,
+  "reused_rows": 0,
+  "evaluation_status": "completed",
+  "early_stopped": false,
+  "evaluated_rows": 50,
+  "planned_rows": 50,
+  "prompt_hash": "c4cadf5f943fe8889c2a792e05585d9d3d7795df98e92cae4d52c812d5622d0d",
+  "limited": false,
+  "prompt_tokens": 102681,
+  "completion_tokens": 589,
+  "retried_rows": 0
+}

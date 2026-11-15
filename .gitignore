@@ -223,3 +223,6 @@ __marimo__/
 
 # Caila evaluation outputs (predictions, dataset snapshots, responses)
 research/api-runs/
+
+# Hybrid cascade LLM response cache
+output/hybrid/cache/

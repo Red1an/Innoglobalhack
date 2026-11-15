@@ -1,0 +1,80 @@
+{"row_id": "gold_0", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 29.60788712499925, "input_tokens": 1743, "output_tokens": 29, "cached": false}
+{"row_id": "gold_1", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 4.866374582999924, "input_tokens": 1767, "output_tokens": 6, "cached": false}
+{"row_id": "gold_2", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 4.815966084001047, "input_tokens": 1737, "output_tokens": 6, "cached": false}
+{"row_id": "gold_3", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 8.724303499999223, "input_tokens": 1783, "output_tokens": 29, "cached": false}
+{"row_id": "gold_4", "mcId": 101, "stage1": [], "llm": [104, 105], "llm_error": null, "labels": [104, 105], "seconds": 4.390931541998725, "input_tokens": 1603, "output_tokens": 14, "cached": false}
+{"row_id": "gold_6", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 1.6150365829998918, "input_tokens": 1382, "output_tokens": 9, "cached": false}
+{"row_id": "gold_7", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 8.239553249999517, "input_tokens": 2028, "output_tokens": 6, "cached": false}
+{"row_id": "gold_10", "mcId": 101, "stage1": [], "llm": [105], "llm_error": null, "labels": [105], "seconds": 1.6222355000008974, "input_tokens": 1392, "output_tokens": 9, "cached": false}
+{"row_id": "gold_11", "mcId": 101, "stage1": [], "llm": [102, 104, 105], "llm_error": null, "labels": [102, 104, 105], "seconds": 8.889381291999598, "input_tokens": 1904, "output_tokens": 19, "cached": false}
+{"row_id": "gold_13", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 10.697339750000538, "input_tokens": 1901, "output_tokens": 29, "cached": false}
+{"row_id": "gold_15", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 5.301219875000243, "input_tokens": 1631, "output_tokens": 14, "cached": false}
+{"row_id": "gold_16", "mcId": 101, "stage1": [], "llm": [102, 105], "llm_error": null, "labels": [102, 105], "seconds": 5.3714935000007245, "input_tokens": 1640, "output_tokens": 14, "cached": false}
+{"row_id": "gold_17", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 2.5412892090007517, "input_tokens": 1492, "output_tokens": 6, "cached": false}
+{"row_id": "gold_18", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 10.78700066700003, "input_tokens": 1868, "output_tokens": 29, "cached": false}
+{"row_id": "gold_20", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 9.40288991700072, "input_tokens": 1733, "output_tokens": 29, "cached": false}
+{"row_id": "gold_21", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 16.940519083000254, "input_tokens": 2245, "output_tokens": 29, "cached": false}
+{"row_id": "gold_24", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 15.3174923330007, "input_tokens": 2330, "output_tokens": 6, "cached": false}
+{"row_id": "gold_25", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 11.92403404200013, "input_tokens": 2144, "output_tokens": 6, "cached": false}
+{"row_id": "gold_26", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 9.006440291001127, "input_tokens": 1918, "output_tokens": 6, "cached": false}
+{"row_id": "gold_27", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 10.06969641699834, "input_tokens": 1984, "output_tokens": 6, "cached": false}
+{"row_id": "gold_30", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 21.189311666999856, "input_tokens": 2471, "output_tokens": 29, "cached": false}
+{"row_id": "gold_32", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 16.22136504199989, "input_tokens": 2113, "output_tokens": 29, "cached": false}
+{"row_id": "gold_34", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 9.739768667001044, "input_tokens": 1914, "output_tokens": 6, "cached": false}
+{"row_id": "gold_36", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 16.130443833000754, "input_tokens": 2324, "output_tokens": 6, "cached": false}
+{"row_id": "gold_38", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 6.551402208000582, "input_tokens": 1675, "output_tokens": 14, "cached": false}
+{"row_id": "gold_39", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 6.346545832999254, "input_tokens": 1734, "output_tokens": 6, "cached": false}
+{"row_id": "gold_40", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 14.266318916999808, "input_tokens": 2021, "output_tokens": 29, "cached": false}
+{"row_id": "gold_41", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 8.655470207999315, "input_tokens": 1862, "output_tokens": 6, "cached": false}
+{"row_id": "gold_42", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 19.264252625000154, "input_tokens": 2333, "output_tokens": 29, "cached": false}
+{"row_id": "gold_43", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 6.015006708001238, "input_tokens": 1603, "output_tokens": 14, "cached": false}
+{"row_id": "gold_45", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 12.965882374999637, "input_tokens": 2181, "output_tokens": 6, "cached": false}
+{"row_id": "gold_49", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 15.665366541999902, "input_tokens": 2119, "output_tokens": 29, "cached": false}
+{"row_id": "gold_56", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 11.472577374999673, "input_tokens": 1786, "output_tokens": 29, "cached": false}
+{"row_id": "gold_57", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 6.407173875000808, "input_tokens": 1621, "output_tokens": 14, "cached": false}
+{"row_id": "gold_59", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 3.0341105829993467, "input_tokens": 1487, "output_tokens": 9, "cached": false}
+{"row_id": "gold_61", "mcId": 101, "stage1": [], "llm": [102, 104, 105], "llm_error": null, "labels": [102, 104, 105], "seconds": 12.528284124999118, "input_tokens": 1995, "output_tokens": 19, "cached": false}
+{"row_id": "gold_66", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 14.554665833999024, "input_tokens": 2187, "output_tokens": 6, "cached": false}
+{"row_id": "gold_67", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 14.332860500000606, "input_tokens": 2001, "output_tokens": 29, "cached": false}
+{"row_id": "gold_68", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 4.590227958000469, "input_tokens": 1564, "output_tokens": 9, "cached": false}
+{"row_id": "gold_69", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 12.298084707999806, "input_tokens": 2121, "output_tokens": 6, "cached": false}
+{"row_id": "gold_75", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 2.431223375000627, "input_tokens": 1472, "output_tokens": 6, "cached": false}
+{"row_id": "gold_76", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 10.185445165998317, "input_tokens": 1971, "output_tokens": 9, "cached": false}
+{"row_id": "gold_88", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 8.736535542000638, "input_tokens": 1898, "output_tokens": 6, "cached": false}
+{"row_id": "gold_91", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 20.47621695899943, "input_tokens": 2406, "output_tokens": 29, "cached": false}
+{"row_id": "gold_94", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 11.307093458999589, "input_tokens": 2061, "output_tokens": 6, "cached": false}
+{"row_id": "gold_95", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 9.910513040998921, "input_tokens": 1998, "output_tokens": 6, "cached": false}
+{"row_id": "gold_96", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 7.985240583000632, "input_tokens": 1848, "output_tokens": 6, "cached": false}
+{"row_id": "gold_97", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 5.928048290999868, "input_tokens": 1634, "output_tokens": 14, "cached": false}
+{"row_id": "gold_103", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105], "llm_error": null, "labels": [102, 103, 104, 105], "seconds": 10.166740415999811, "input_tokens": 1820, "output_tokens": 24, "cached": false}
+{"row_id": "gold_112", "mcId": 101, "stage1": [], "llm": [102, 103, 106], "llm_error": null, "labels": [102, 103, 106], "seconds": 19.660758500000156, "input_tokens": 2536, "output_tokens": 19, "cached": false}
+{"row_id": "gold_113", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 7.25861341700147, "input_tokens": 1820, "output_tokens": 6, "cached": false}
+{"row_id": "gold_114", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 4.0143194169995695, "input_tokens": 1607, "output_tokens": 6, "cached": false}
+{"row_id": "gold_120", "mcId": 101, "stage1": [], "llm": [105], "llm_error": null, "labels": [105], "seconds": 2.019452958000329, "input_tokens": 1405, "output_tokens": 9, "cached": false}
+{"row_id": "gold_124", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 9.265640416000679, "input_tokens": 1986, "output_tokens": 6, "cached": false}
+{"row_id": "gold_125", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 2.7448134170008416, "input_tokens": 1481, "output_tokens": 9, "cached": false}
+{"row_id": "gold_128", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 14.770328875001724, "input_tokens": 2145, "output_tokens": 29, "cached": false}
+{"row_id": "gold_130", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 10.260881165999308, "input_tokens": 1805, "output_tokens": 29, "cached": false}
+{"row_id": "gold_131", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 2.329657832999146, "input_tokens": 1485, "output_tokens": 6, "cached": false}
+{"row_id": "gold_132", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 3.010576458000287, "input_tokens": 1491, "output_tokens": 9, "cached": false}
+{"row_id": "gold_134", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 2.4290019999989454, "input_tokens": 1391, "output_tokens": 14, "cached": false}
+{"row_id": "gold_136", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 2.25066570799936, "input_tokens": 1477, "output_tokens": 6, "cached": false}
+{"row_id": "gold_139", "mcId": 101, "stage1": [], "llm": [102, 104, 105], "llm_error": null, "labels": [102, 104, 105], "seconds": 9.995213707999937, "input_tokens": 1901, "output_tokens": 19, "cached": false}
+{"row_id": "gold_144", "mcId": 101, "stage1": [], "llm": [102], "llm_error": null, "labels": [102], "seconds": 1.6687974159995065, "input_tokens": 1386, "output_tokens": 9, "cached": false}
+{"row_id": "gold_148", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 11.641241540999545, "input_tokens": 2167, "output_tokens": 6, "cached": false}
+{"row_id": "gold_150", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 12.184103874998982, "input_tokens": 2249, "output_tokens": 6, "cached": false}
+{"row_id": "gold_154", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 15.314138458001253, "input_tokens": 2204, "output_tokens": 29, "cached": false}
+{"row_id": "gold_159", "mcId": 101, "stage1": [], "llm": [106], "llm_error": null, "labels": [106], "seconds": 3.019841625000481, "input_tokens": 1493, "output_tokens": 9, "cached": false}
+{"row_id": "gold_166", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 2.4027943330002017, "input_tokens": 1488, "output_tokens": 6, "cached": false}
+{"row_id": "gold_168", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 19.34675962500114, "input_tokens": 2510, "output_tokens": 29, "cached": false}
+{"row_id": "gold_170", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 18.444975750000594, "input_tokens": 2418, "output_tokens": 29, "cached": false}
+{"row_id": "gold_172", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 16.679634707999867, "input_tokens": 2273, "output_tokens": 29, "cached": false}
+{"row_id": "gold_173", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 2.6170050839991745, "input_tokens": 1519, "output_tokens": 6, "cached": false}
+{"row_id": "gold_174", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105], "llm_error": null, "labels": [102, 103, 104, 105], "seconds": 13.27050650000092, "input_tokens": 2087, "output_tokens": 24, "cached": false}
+{"row_id": "gold_181", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 3.0595864999995683, "input_tokens": 1495, "output_tokens": 9, "cached": false}
+{"row_id": "gold_183", "mcId": 101, "stage1": [], "llm": [103], "llm_error": null, "labels": [103], "seconds": 2.8681590420001157, "input_tokens": 1483, "output_tokens": 9, "cached": false}
+{"row_id": "gold_186", "mcId": 101, "stage1": [], "llm": [], "llm_error": null, "labels": [], "seconds": 1.2189152920000197, "input_tokens": 1374, "output_tokens": 6, "cached": false}
+{"row_id": "gold_188", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 15.962011624998922, "input_tokens": 2246, "output_tokens": 29, "cached": false}
+{"row_id": "gold_189", "mcId": 101, "stage1": [], "llm": [102, 106], "llm_error": null, "labels": [102, 106], "seconds": 6.55935883300117, "input_tokens": 1705, "output_tokens": 14, "cached": false}
+{"row_id": "gold_196", "mcId": 101, "stage1": [], "llm": [102, 104, 105, 106], "llm_error": null, "labels": [102, 104, 105, 106], "seconds": 5.872468749999825, "input_tokens": 1552, "output_tokens": 24, "cached": false}
+{"row_id": "gold_204", "mcId": 101, "stage1": [], "llm": [102, 103, 104, 105, 106], "llm_error": null, "labels": [102, 103, 104, 105, 106], "seconds": 14.481978582998636, "input_tokens": 2124, "output_tokens": 29, "cached": false}

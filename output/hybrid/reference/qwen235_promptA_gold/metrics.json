@@ -1,0 +1,69 @@
+{
+  "micro_f1": 0.9464788732394366,
+  "precision": 0.9281767955801105,
+  "recall": 0.9655172413793104,
+  "exact_match": 0.8125,
+  "rows": 80,
+  "invalid_rate": 0.0,
+  "latency_p50_s": 2.0281176999997115,
+  "latency_p95_s": 11.562987790000621,
+  "per_category": {
+    "101": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 0
+    },
+    "102": {
+      "precision": 0.8620689655172413,
+      "recall": 0.8928571428571429,
+      "f1": 0.8771929824561403,
+      "support": 28
+    },
+    "103": {
+      "precision": 0.8857142857142857,
+      "recall": 0.96875,
+      "f1": 0.9253731343283582,
+      "support": 32
+    },
+    "104": {
+      "precision": 1.0,
+      "recall": 0.975,
+      "f1": 0.9873417721518988,
+      "support": 40
+    },
+    "105": {
+      "precision": 0.9761904761904762,
+      "recall": 0.9761904761904762,
+      "f1": 0.9761904761904762,
+      "support": 42
+    },
+    "106": {
+      "precision": 0.8888888888888888,
+      "recall": 1.0,
+      "f1": 0.9411764705882353,
+      "support": 32
+    }
+  },
+  "context_cue_slice": {
+    "rows": 65,
+    "micro_f1": 0.9395973154362416
+  },
+  "dataset": "clean",
+  "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+  "test_hash": "76a74990032c2913a5eab1fe19e3c02a4c843db937ca296dd847e3a50e532e48",
+  "legacy_strict_micro_f1": 0.9464788732394366,
+  "legacy_strict_invalid_rate": 0.0,
+  "normalized_rate": 0.0,
+  "missing_finish_reason_rate": 0.0,
+  "reused_rows": 0,
+  "evaluation_status": "completed",
+  "early_stopped": false,
+  "evaluated_rows": 80,
+  "planned_rows": 80,
+  "prompt_hash": "3e7e79210c8392025742a9ef846adb19b175f37aa37cff8487c7210418cfd651",
+  "limited": false,
+  "prompt_tokens": 115435,
+  "completion_tokens": 1263,
+  "retried_rows": 0
+}

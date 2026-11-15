@@ -1,0 +1,69 @@
+{
+  "micro_f1": 0.9211495946941783,
+  "precision": 0.8790436005625879,
+  "recall": 0.9674922600619195,
+  "exact_match": 0.8318181818181818,
+  "rows": 440,
+  "invalid_rate": 0.0,
+  "latency_p50_s": 1.3296989000000394,
+  "latency_p95_s": 2.5664587250002113,
+  "per_category": {
+    "101": {
+      "precision": 0.5,
+      "recall": 0.2857142857142857,
+      "f1": 0.36363636363636365,
+      "support": 7
+    },
+    "102": {
+      "precision": 0.8689655172413793,
+      "recall": 0.984375,
+      "f1": 0.9230769230769231,
+      "support": 128
+    },
+    "103": {
+      "precision": 0.9105691056910569,
+      "recall": 0.9824561403508771,
+      "f1": 0.9451476793248945,
+      "support": 114
+    },
+    "104": {
+      "precision": 0.9183673469387755,
+      "recall": 0.9712230215827338,
+      "f1": 0.9440559440559441,
+      "support": 139
+    },
+    "105": {
+      "precision": 0.8588235294117647,
+      "recall": 0.9864864864864865,
+      "f1": 0.9182389937106918,
+      "support": 148
+    },
+    "106": {
+      "precision": 0.8524590163934426,
+      "recall": 0.9454545454545454,
+      "f1": 0.896551724137931,
+      "support": 110
+    }
+  },
+  "context_cue_slice": {
+    "rows": 232,
+    "micro_f1": 0.9157608695652174
+  },
+  "dataset": "clean",
+  "model": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+  "test_hash": "facf140d5a7eb7a1cc9cdef90294e434f7c3b50d6ee42c7f45d1ee8970beedf9",
+  "legacy_strict_micro_f1": 0.9211495946941783,
+  "legacy_strict_invalid_rate": 0.0022727272727272726,
+  "normalized_rate": 0.0022727272727272726,
+  "missing_finish_reason_rate": 0.0,
+  "reused_rows": 0,
+  "evaluation_status": "completed",
+  "early_stopped": false,
+  "evaluated_rows": 440,
+  "planned_rows": 440,
+  "prompt_hash": "c4cadf5f943fe8889c2a792e05585d9d3d7795df98e92cae4d52c812d5622d0d",
+  "limited": false,
+  "prompt_tokens": 979061,
+  "completion_tokens": 5460,
+  "retried_rows": 0
+}
