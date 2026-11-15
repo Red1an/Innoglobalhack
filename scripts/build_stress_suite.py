@@ -1,6 +1,7 @@
 """Build the diagnostic stress_suite_v1 benchmark in data/test/stress_suite_v1/."""
 import json
 import random
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -40,11 +41,11 @@ from stress_suite_data_traps import (  # noqa: E402
 )
 
 OUT_DIR = ROOT / "data" / "test" / "stress_suite_v1"
-GOLD_PATH = ROOT / "data" / "test" / "test_gold.parquet"
-TRAIN_PATH = ROOT / "data" / "processed" / "train_relabel_v2_synth_v1" / "train_relabel_v2_synth_v1.parquet"
+GOLD_PATH = ROOT / "data" / "test" / "test_guide_v1" / "test_gold.parquet"
+TRAIN_PATH = ROOT / "data" / "processed" / "train_guide_v1" / "train.parquet"
 
-# 15 hardest/most diverse empty rows from test_gold (avoiding repetitive house-lifting duplicates)
-HARD_GOLD_EMPTY_IDS = [1, 6, 17, 26, 41, 66, 68, 75, 96, 113, 114, 131, 166, 186, 189]
+# 15 empty rows from test_gold free of шпаклёвка/106 ambiguity under microcategories-guide.md
+HARD_GOLD_EMPTY_IDS = [1, 2, 17, 25, 26, 41, 66, 75, 96, 113, 114, 131, 166, 186, 189]
 
 # Safe Avito ad intro/outro blocks with ZERO trigger words for 102-106
 SAFE_INTROS = [
@@ -127,10 +128,18 @@ def make_row(
     return row
 
 
+DEV_BAD_RE = {
+    104: re.compile(r"шпакл|шпатл|плитк|кафел|керамогранит|штукатур|электр|проводк|розетк|обои|обоев|покраск|окраск|маляр|штроб", re.I),
+    105: re.compile(r"шпакл|шпатл|плитк|кафел|керамогранит|фартук|штукатур|сантехн|водопровод|канализац|воды|труб|обои|обоев|покраск|окраск|маляр", re.I),
+    102: re.compile(r"шпакл|шпатл|стеклохолст|плитк|кафел|керамогранит|сантехн|водопровод|канализац|электр|проводк|розетк|обои|обоев|покраск|окраск|маляр", re.I),
+}
+
+
 def load_dev_solos(train_rows: list[dict], target_label: int, limit: int) -> list[dict]:
-    """Extract unique real dev rows having exact solo label [target_label]."""
+    """Extract unique real dev rows having exact solo label [target_label] clean under guide."""
     seen = set()
     selected = []
+    bad_pat = DEV_BAD_RE[target_label]
     for r in train_rows:
         if r.get("origin") == "synthetic" and r.get("source_item_id") is not None:
             continue
@@ -138,7 +147,7 @@ def load_dev_solos(train_rows: list[dict], target_label: int, limit: int) -> lis
         if tk in seen or int(digest(tk)[:8], 16) % 5 != 0:
             continue
         labs = sorted(int(e["mcId"]) for e in r["found_microcategories"])
-        if labs == [target_label]:
+        if labs == [target_label] and not bad_pat.search(r["description"]):
             seen.add(tk)
             selected.append(r)
             if len(selected) >= limit:
@@ -180,8 +189,8 @@ def build_slices(gold_rows: list[dict], train_rows: list[dict]) -> list[dict]:
     idx = 0
     for target, dev_n, new_list in [
         (104, 5, SOLO_104_NEW[:15]),
-        (105, 10, SOLO_105_NEW[:10]),
-        (102, 4, SOLO_102_NEW[:6]),
+        (105, 7, SOLO_105_NEW[:13]),
+        (102, 2, SOLO_102_NEW[:8]),
     ]:
         for r in load_dev_solos(train_rows, target, dev_n):
             rows.append(make_row(
@@ -345,6 +354,8 @@ def main() -> None:
 
     manifest = {
         "total_rows": len(rows),
+        "gold_source": str(GOLD_PATH.relative_to(ROOT)),
+        "train_source": str(TRAIN_PATH.relative_to(ROOT)),
         "slices": {k: len(v) for k, v in by_slice.items()},
         "origin_splits": dict(Counter(r["origin_split"] for r in rows)),
         "synthetic_stress_train_overlap": 0,

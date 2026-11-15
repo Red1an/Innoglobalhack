@@ -1,0 +1,1357 @@
+{
+  "threshold": 0.5,
+  "test_sha256": {
+    "test_gold.parquet": "389fdfaf39e302a5a9f40ec9f80751b146c416405e5ee790caf96e97994b1d40",
+    "hard.jsonl": "c396e466f2bee1b1ee452b623e3a93c03c64716168fde4446f839ebb0f10c7d6",
+    "stress_suite.jsonl": "df94f967c5ffb200e34b5729f02249a966a33cd083e6e624f0620e041a676ed3"
+  },
+  "public_sha256": "65b5a45a98b577d853a928932bbbdf8bd9bdeb469ded3016faace4d11f3eabaa",
+  "test_rows": {
+    "gold": 80,
+    "unique_all": 475,
+    "hard": 50,
+    "gold_core": 80,
+    "stress_all": 440,
+    "hard_empty": 40,
+    "decoupled_solo_and_pairs": 100,
+    "context_traps_and_negations": 80,
+    "dirty_text_and_homoglyphs": 50,
+    "non_101_source_mcid": 50,
+    "mentor_borderline_switches": 40
+  },
+  "duplicate_evaluation_rows": 95,
+  "runs": {
+    "guide_v1": {
+      "train_sha256": "2df62bacef4969e5bb4dc18457ccb457f16f09af841d203f1a5de83545ce56b2",
+      "fit_rows": 4351,
+      "fit_item_ids_sha256": "b16ed235906b5ad260fbd0d53ca9a15531cd199fb510015b58dd0ab9f9658f46",
+      "train_full_stress_overlaps": [
+        "decoupled_000",
+        "decoupled_001",
+        "decoupled_002",
+        "decoupled_003",
+        "decoupled_004",
+        "decoupled_020",
+        "decoupled_021",
+        "decoupled_022",
+        "decoupled_023",
+        "decoupled_024",
+        "decoupled_025",
+        "decoupled_026",
+        "decoupled_040",
+        "decoupled_041"
+      ],
+      "fit_by_origin": {
+        "real": 3404,
+        "synthetic": 947
+      },
+      "fit_eval_overlap": 0,
+      "metrics": {
+        "gold": {
+          "rows": 80,
+          "micro_f1": 0.8922155688622755,
+          "precision": 0.9141104294478528,
+          "recall": 0.8713450292397661,
+          "exact_match": 0.675,
+          "empty_rows": 20,
+          "empty_fp_rows": 5,
+          "empty_fp_labels": 7,
+          "glue_104_105": [
+            0,
+            0
+          ],
+          "glue_105_104": [
+            0,
+            4
+          ],
+          "glue_102_106": [
+            0,
+            3
+          ],
+          "glue_total": [
+            0,
+            7
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 21,
+              "fn": 3,
+              "fp": 7
+            },
+            "103": {
+              "tp": 25,
+              "fn": 6,
+              "fp": 2
+            },
+            "104": {
+              "tp": 35,
+              "fn": 3,
+              "fp": 2
+            },
+            "105": {
+              "tp": 38,
+              "fn": 4,
+              "fp": 2
+            },
+            "106": {
+              "tp": 30,
+              "fn": 6,
+              "fp": 1
+            }
+          }
+        },
+        "unique_all": {
+          "rows": 475,
+          "micro_f1": 0.7517433751743375,
+          "precision": 0.7486111111111111,
+          "recall": 0.7549019607843137,
+          "exact_match": 0.4926315789473684,
+          "empty_rows": 88,
+          "empty_fp_rows": 47,
+          "empty_fp_labels": 92,
+          "glue_104_105": [
+            10,
+            93
+          ],
+          "glue_105_104": [
+            5,
+            98
+          ],
+          "glue_102_106": [
+            8,
+            88
+          ],
+          "glue_total": [
+            23,
+            279
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 7,
+              "fp": 0
+            },
+            "102": {
+              "tp": 108,
+              "fn": 33,
+              "fp": 36
+            },
+            "103": {
+              "tp": 97,
+              "fn": 33,
+              "fp": 34
+            },
+            "104": {
+              "tp": 121,
+              "fn": 33,
+              "fp": 46
+            },
+            "105": {
+              "tp": 116,
+              "fn": 43,
+              "fp": 44
+            },
+            "106": {
+              "tp": 97,
+              "fn": 26,
+              "fp": 21
+            }
+          }
+        },
+        "hard": {
+          "rows": 50,
+          "micro_f1": 0.5416666666666666,
+          "precision": 0.5131578947368421,
+          "recall": 0.5735294117647058,
+          "exact_match": 0.26,
+          "empty_rows": 13,
+          "empty_fp_rows": 10,
+          "empty_fp_labels": 26,
+          "glue_104_105": [
+            1,
+            9
+          ],
+          "glue_105_104": [
+            0,
+            5
+          ],
+          "glue_102_106": [
+            3,
+            8
+          ],
+          "glue_total": [
+            4,
+            22
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 9,
+              "fn": 4,
+              "fp": 6
+            },
+            "103": {
+              "tp": 9,
+              "fn": 7,
+              "fp": 7
+            },
+            "104": {
+              "tp": 11,
+              "fn": 4,
+              "fp": 10
+            },
+            "105": {
+              "tp": 5,
+              "fn": 6,
+              "fp": 11
+            },
+            "106": {
+              "tp": 5,
+              "fn": 8,
+              "fp": 3
+            }
+          }
+        },
+        "gold_core": {
+          "rows": 80,
+          "micro_f1": 0.8922155688622755,
+          "precision": 0.9141104294478528,
+          "recall": 0.8713450292397661,
+          "exact_match": 0.675,
+          "empty_rows": 20,
+          "empty_fp_rows": 5,
+          "empty_fp_labels": 7,
+          "glue_104_105": [
+            0,
+            0
+          ],
+          "glue_105_104": [
+            0,
+            4
+          ],
+          "glue_102_106": [
+            0,
+            3
+          ],
+          "glue_total": [
+            0,
+            7
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 21,
+              "fn": 3,
+              "fp": 7
+            },
+            "103": {
+              "tp": 25,
+              "fn": 6,
+              "fp": 2
+            },
+            "104": {
+              "tp": 35,
+              "fn": 3,
+              "fp": 2
+            },
+            "105": {
+              "tp": 38,
+              "fn": 4,
+              "fp": 2
+            },
+            "106": {
+              "tp": 30,
+              "fn": 6,
+              "fp": 1
+            }
+          }
+        },
+        "stress_all": {
+          "rows": 440,
+          "micro_f1": 0.7733952049497294,
+          "precision": 0.7727975270479135,
+          "recall": 0.7739938080495357,
+          "exact_match": 0.5295454545454545,
+          "empty_rows": 90,
+          "empty_fp_rows": 40,
+          "empty_fp_labels": 69,
+          "glue_104_105": [
+            9,
+            84
+          ],
+          "glue_105_104": [
+            5,
+            93
+          ],
+          "glue_102_106": [
+            5,
+            80
+          ],
+          "glue_total": [
+            19,
+            257
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 7,
+              "fp": 0
+            },
+            "102": {
+              "tp": 99,
+              "fn": 29,
+              "fp": 31
+            },
+            "103": {
+              "tp": 88,
+              "fn": 26,
+              "fp": 27
+            },
+            "104": {
+              "tp": 110,
+              "fn": 29,
+              "fp": 37
+            },
+            "105": {
+              "tp": 111,
+              "fn": 37,
+              "fp": 33
+            },
+            "106": {
+              "tp": 92,
+              "fn": 18,
+              "fp": 19
+            }
+          }
+        },
+        "hard_empty": {
+          "rows": 40,
+          "micro_f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "exact_match": 0.4,
+          "empty_rows": 40,
+          "empty_fp_rows": 24,
+          "empty_fp_labels": 46,
+          "glue_104_105": [
+            0,
+            0
+          ],
+          "glue_105_104": [
+            0,
+            0
+          ],
+          "glue_102_106": [
+            0,
+            0
+          ],
+          "glue_total": [
+            0,
+            0
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 9
+            },
+            "103": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 8
+            },
+            "104": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 14
+            },
+            "105": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 7
+            },
+            "106": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 8
+            }
+          }
+        },
+        "decoupled_solo_and_pairs": {
+          "rows": 100,
+          "micro_f1": 0.7053941908713693,
+          "precision": 0.9340659340659341,
+          "recall": 0.5666666666666667,
+          "exact_match": 0.46,
+          "empty_rows": 0,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            1,
+            37
+          ],
+          "glue_105_104": [
+            1,
+            53
+          ],
+          "glue_102_106": [
+            1,
+            43
+          ],
+          "glue_total": [
+            3,
+            133
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 29,
+              "fn": 14,
+              "fp": 0
+            },
+            "103": {
+              "tp": 7,
+              "fn": 10,
+              "fp": 3
+            },
+            "104": {
+              "tp": 21,
+              "fn": 16,
+              "fp": 1
+            },
+            "105": {
+              "tp": 28,
+              "fn": 25,
+              "fp": 1
+            },
+            "106": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 1
+            }
+          }
+        },
+        "context_traps_and_negations": {
+          "rows": 80,
+          "micro_f1": 0.7465753424657534,
+          "precision": 0.6566265060240963,
+          "recall": 0.8650793650793651,
+          "exact_match": 0.375,
+          "empty_rows": 0,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            5,
+            24
+          ],
+          "glue_105_104": [
+            4,
+            11
+          ],
+          "glue_102_106": [
+            3,
+            9
+          ],
+          "glue_total": [
+            12,
+            44
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 22,
+              "fn": 1,
+              "fp": 10
+            },
+            "103": {
+              "tp": 21,
+              "fn": 3,
+              "fp": 11
+            },
+            "104": {
+              "tp": 21,
+              "fn": 5,
+              "fp": 14
+            },
+            "105": {
+              "tp": 10,
+              "fn": 3,
+              "fp": 16
+            },
+            "106": {
+              "tp": 35,
+              "fn": 5,
+              "fp": 6
+            }
+          }
+        },
+        "dirty_text_and_homoglyphs": {
+          "rows": 50,
+          "micro_f1": 0.8552631578947368,
+          "precision": 0.9848484848484849,
+          "recall": 0.7558139534883721,
+          "exact_match": 0.64,
+          "empty_rows": 3,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            1,
+            10
+          ],
+          "glue_105_104": [
+            0,
+            13
+          ],
+          "glue_102_106": [
+            0,
+            13
+          ],
+          "glue_total": [
+            1,
+            36
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 12,
+              "fn": 7,
+              "fp": 0
+            },
+            "103": {
+              "tp": 13,
+              "fn": 4,
+              "fp": 0
+            },
+            "104": {
+              "tp": 13,
+              "fn": 4,
+              "fp": 0
+            },
+            "105": {
+              "tp": 16,
+              "fn": 4,
+              "fp": 1
+            },
+            "106": {
+              "tp": 11,
+              "fn": 2,
+              "fp": 0
+            }
+          }
+        },
+        "non_101_source_mcid": {
+          "rows": 50,
+          "micro_f1": 0.9379310344827586,
+          "precision": 1.0,
+          "recall": 0.8831168831168831,
+          "exact_match": 0.82,
+          "empty_rows": 10,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            0,
+            9
+          ],
+          "glue_105_104": [
+            0,
+            9
+          ],
+          "glue_102_106": [
+            0,
+            9
+          ],
+          "glue_total": [
+            0,
+            27
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 7,
+              "fp": 0
+            },
+            "102": {
+              "tp": 12,
+              "fn": 1,
+              "fp": 0
+            },
+            "103": {
+              "tp": 16,
+              "fn": 0,
+              "fp": 0
+            },
+            "104": {
+              "tp": 13,
+              "fn": 1,
+              "fp": 0
+            },
+            "105": {
+              "tp": 14,
+              "fn": 0,
+              "fp": 0
+            },
+            "106": {
+              "tp": 13,
+              "fn": 0,
+              "fp": 0
+            }
+          }
+        },
+        "mentor_borderline_switches": {
+          "rows": 40,
+          "micro_f1": 0.5783132530120482,
+          "precision": 0.5106382978723404,
+          "recall": 0.6666666666666666,
+          "exact_match": 0.35,
+          "empty_rows": 17,
+          "empty_fp_rows": 11,
+          "empty_fp_labels": 16,
+          "glue_104_105": [
+            2,
+            4
+          ],
+          "glue_105_104": [
+            0,
+            3
+          ],
+          "glue_102_106": [
+            1,
+            3
+          ],
+          "glue_total": [
+            3,
+            10
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 3,
+              "fn": 3,
+              "fp": 5
+            },
+            "103": {
+              "tp": 6,
+              "fn": 3,
+              "fp": 3
+            },
+            "104": {
+              "tp": 7,
+              "fn": 0,
+              "fp": 6
+            },
+            "105": {
+              "tp": 5,
+              "fn": 1,
+              "fp": 6
+            },
+            "106": {
+              "tp": 3,
+              "fn": 5,
+              "fp": 3
+            }
+          }
+        }
+      }
+    },
+    "guide_v2": {
+      "train_sha256": "4295cfa9f06195a353967688a63d3768c582a5ad8fd427f426869b1c2ab3d23e",
+      "fit_rows": 4351,
+      "fit_item_ids_sha256": "b16ed235906b5ad260fbd0d53ca9a15531cd199fb510015b58dd0ab9f9658f46",
+      "train_full_stress_overlaps": [
+        "decoupled_000",
+        "decoupled_001",
+        "decoupled_002",
+        "decoupled_003",
+        "decoupled_004",
+        "decoupled_020",
+        "decoupled_021",
+        "decoupled_022",
+        "decoupled_023",
+        "decoupled_024",
+        "decoupled_025",
+        "decoupled_026",
+        "decoupled_040",
+        "decoupled_041"
+      ],
+      "fit_by_origin": {
+        "real": 3404,
+        "synthetic": 947
+      },
+      "fit_eval_overlap": 0,
+      "metrics": {
+        "gold": {
+          "rows": 80,
+          "micro_f1": 0.8947368421052632,
+          "precision": 0.8947368421052632,
+          "recall": 0.8947368421052632,
+          "exact_match": 0.675,
+          "empty_rows": 20,
+          "empty_fp_rows": 6,
+          "empty_fp_labels": 9,
+          "glue_104_105": [
+            0,
+            0
+          ],
+          "glue_105_104": [
+            0,
+            4
+          ],
+          "glue_102_106": [
+            0,
+            3
+          ],
+          "glue_total": [
+            0,
+            7
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 21,
+              "fn": 3,
+              "fp": 7
+            },
+            "103": {
+              "tp": 25,
+              "fn": 6,
+              "fp": 2
+            },
+            "104": {
+              "tp": 35,
+              "fn": 3,
+              "fp": 2
+            },
+            "105": {
+              "tp": 38,
+              "fn": 4,
+              "fp": 2
+            },
+            "106": {
+              "tp": 34,
+              "fn": 2,
+              "fp": 5
+            }
+          }
+        },
+        "unique_all": {
+          "rows": 475,
+          "micro_f1": 0.7570543702684102,
+          "precision": 0.7442489851150202,
+          "recall": 0.7703081232492998,
+          "exact_match": 0.4968421052631579,
+          "empty_rows": 88,
+          "empty_fp_rows": 49,
+          "empty_fp_labels": 95,
+          "glue_104_105": [
+            10,
+            93
+          ],
+          "glue_105_104": [
+            5,
+            98
+          ],
+          "glue_102_106": [
+            11,
+            88
+          ],
+          "glue_total": [
+            26,
+            279
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 7,
+              "fp": 0
+            },
+            "102": {
+              "tp": 108,
+              "fn": 33,
+              "fp": 36
+            },
+            "103": {
+              "tp": 97,
+              "fn": 33,
+              "fp": 34
+            },
+            "104": {
+              "tp": 121,
+              "fn": 33,
+              "fp": 46
+            },
+            "105": {
+              "tp": 116,
+              "fn": 43,
+              "fp": 44
+            },
+            "106": {
+              "tp": 108,
+              "fn": 15,
+              "fp": 29
+            }
+          }
+        },
+        "hard": {
+          "rows": 50,
+          "micro_f1": 0.5540540540540541,
+          "precision": 0.5125,
+          "recall": 0.6029411764705882,
+          "exact_match": 0.28,
+          "empty_rows": 13,
+          "empty_fp_rows": 11,
+          "empty_fp_labels": 28,
+          "glue_104_105": [
+            1,
+            9
+          ],
+          "glue_105_104": [
+            0,
+            5
+          ],
+          "glue_102_106": [
+            3,
+            8
+          ],
+          "glue_total": [
+            4,
+            22
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 9,
+              "fn": 4,
+              "fp": 6
+            },
+            "103": {
+              "tp": 9,
+              "fn": 7,
+              "fp": 7
+            },
+            "104": {
+              "tp": 11,
+              "fn": 4,
+              "fp": 10
+            },
+            "105": {
+              "tp": 5,
+              "fn": 6,
+              "fp": 11
+            },
+            "106": {
+              "tp": 7,
+              "fn": 6,
+              "fp": 5
+            }
+          }
+        },
+        "gold_core": {
+          "rows": 80,
+          "micro_f1": 0.8947368421052632,
+          "precision": 0.8947368421052632,
+          "recall": 0.8947368421052632,
+          "exact_match": 0.675,
+          "empty_rows": 20,
+          "empty_fp_rows": 6,
+          "empty_fp_labels": 9,
+          "glue_104_105": [
+            0,
+            0
+          ],
+          "glue_105_104": [
+            0,
+            4
+          ],
+          "glue_102_106": [
+            0,
+            3
+          ],
+          "glue_total": [
+            0,
+            7
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 21,
+              "fn": 3,
+              "fp": 7
+            },
+            "103": {
+              "tp": 25,
+              "fn": 6,
+              "fp": 2
+            },
+            "104": {
+              "tp": 35,
+              "fn": 3,
+              "fp": 2
+            },
+            "105": {
+              "tp": 38,
+              "fn": 4,
+              "fp": 2
+            },
+            "106": {
+              "tp": 34,
+              "fn": 2,
+              "fp": 5
+            }
+          }
+        },
+        "stress_all": {
+          "rows": 440,
+          "micro_f1": 0.7782874617737003,
+          "precision": 0.7688821752265861,
+          "recall": 0.7879256965944272,
+          "exact_match": 0.5318181818181819,
+          "empty_rows": 90,
+          "empty_fp_rows": 41,
+          "empty_fp_labels": 70,
+          "glue_104_105": [
+            9,
+            84
+          ],
+          "glue_105_104": [
+            5,
+            93
+          ],
+          "glue_102_106": [
+            8,
+            80
+          ],
+          "glue_total": [
+            22,
+            257
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 7,
+              "fp": 0
+            },
+            "102": {
+              "tp": 99,
+              "fn": 29,
+              "fp": 31
+            },
+            "103": {
+              "tp": 88,
+              "fn": 26,
+              "fp": 27
+            },
+            "104": {
+              "tp": 110,
+              "fn": 29,
+              "fp": 37
+            },
+            "105": {
+              "tp": 111,
+              "fn": 37,
+              "fp": 33
+            },
+            "106": {
+              "tp": 101,
+              "fn": 9,
+              "fp": 25
+            }
+          }
+        },
+        "hard_empty": {
+          "rows": 40,
+          "micro_f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "exact_match": 0.4,
+          "empty_rows": 40,
+          "empty_fp_rows": 24,
+          "empty_fp_labels": 45,
+          "glue_104_105": [
+            0,
+            0
+          ],
+          "glue_105_104": [
+            0,
+            0
+          ],
+          "glue_102_106": [
+            0,
+            0
+          ],
+          "glue_total": [
+            0,
+            0
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 9
+            },
+            "103": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 8
+            },
+            "104": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 14
+            },
+            "105": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 7
+            },
+            "106": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 7
+            }
+          }
+        },
+        "decoupled_solo_and_pairs": {
+          "rows": 100,
+          "micro_f1": 0.6967213114754098,
+          "precision": 0.9042553191489362,
+          "recall": 0.5666666666666667,
+          "exact_match": 0.45,
+          "empty_rows": 0,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            1,
+            37
+          ],
+          "glue_105_104": [
+            1,
+            53
+          ],
+          "glue_102_106": [
+            4,
+            43
+          ],
+          "glue_total": [
+            6,
+            133
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 29,
+              "fn": 14,
+              "fp": 0
+            },
+            "103": {
+              "tp": 7,
+              "fn": 10,
+              "fp": 3
+            },
+            "104": {
+              "tp": 21,
+              "fn": 16,
+              "fp": 1
+            },
+            "105": {
+              "tp": 28,
+              "fn": 25,
+              "fp": 1
+            },
+            "106": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 4
+            }
+          }
+        },
+        "context_traps_and_negations": {
+          "rows": 80,
+          "micro_f1": 0.7635135135135135,
+          "precision": 0.6647058823529411,
+          "recall": 0.8968253968253969,
+          "exact_match": 0.4125,
+          "empty_rows": 0,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            5,
+            24
+          ],
+          "glue_105_104": [
+            4,
+            11
+          ],
+          "glue_102_106": [
+            3,
+            9
+          ],
+          "glue_total": [
+            12,
+            44
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 22,
+              "fn": 1,
+              "fp": 10
+            },
+            "103": {
+              "tp": 21,
+              "fn": 3,
+              "fp": 11
+            },
+            "104": {
+              "tp": 21,
+              "fn": 5,
+              "fp": 14
+            },
+            "105": {
+              "tp": 10,
+              "fn": 3,
+              "fp": 16
+            },
+            "106": {
+              "tp": 39,
+              "fn": 1,
+              "fp": 6
+            }
+          }
+        },
+        "dirty_text_and_homoglyphs": {
+          "rows": 50,
+          "micro_f1": 0.8627450980392157,
+          "precision": 0.9850746268656716,
+          "recall": 0.7674418604651163,
+          "exact_match": 0.64,
+          "empty_rows": 3,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            1,
+            10
+          ],
+          "glue_105_104": [
+            0,
+            13
+          ],
+          "glue_102_106": [
+            0,
+            13
+          ],
+          "glue_total": [
+            1,
+            36
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 12,
+              "fn": 7,
+              "fp": 0
+            },
+            "103": {
+              "tp": 13,
+              "fn": 4,
+              "fp": 0
+            },
+            "104": {
+              "tp": 13,
+              "fn": 4,
+              "fp": 0
+            },
+            "105": {
+              "tp": 16,
+              "fn": 4,
+              "fp": 1
+            },
+            "106": {
+              "tp": 12,
+              "fn": 1,
+              "fp": 0
+            }
+          }
+        },
+        "non_101_source_mcid": {
+          "rows": 50,
+          "micro_f1": 0.9379310344827586,
+          "precision": 1.0,
+          "recall": 0.8831168831168831,
+          "exact_match": 0.82,
+          "empty_rows": 10,
+          "empty_fp_rows": 0,
+          "empty_fp_labels": 0,
+          "glue_104_105": [
+            0,
+            9
+          ],
+          "glue_105_104": [
+            0,
+            9
+          ],
+          "glue_102_106": [
+            0,
+            9
+          ],
+          "glue_total": [
+            0,
+            27
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 7,
+              "fp": 0
+            },
+            "102": {
+              "tp": 12,
+              "fn": 1,
+              "fp": 0
+            },
+            "103": {
+              "tp": 16,
+              "fn": 0,
+              "fp": 0
+            },
+            "104": {
+              "tp": 13,
+              "fn": 1,
+              "fp": 0
+            },
+            "105": {
+              "tp": 14,
+              "fn": 0,
+              "fp": 0
+            },
+            "106": {
+              "tp": 13,
+              "fn": 0,
+              "fp": 0
+            }
+          }
+        },
+        "mentor_borderline_switches": {
+          "rows": 40,
+          "micro_f1": 0.5783132530120482,
+          "precision": 0.5106382978723404,
+          "recall": 0.6666666666666666,
+          "exact_match": 0.325,
+          "empty_rows": 17,
+          "empty_fp_rows": 11,
+          "empty_fp_labels": 16,
+          "glue_104_105": [
+            2,
+            4
+          ],
+          "glue_105_104": [
+            0,
+            3
+          ],
+          "glue_102_106": [
+            1,
+            3
+          ],
+          "glue_total": [
+            3,
+            10
+          ],
+          "per_class": {
+            "101": {
+              "tp": 0,
+              "fn": 0,
+              "fp": 0
+            },
+            "102": {
+              "tp": 3,
+              "fn": 3,
+              "fp": 5
+            },
+            "103": {
+              "tp": 6,
+              "fn": 3,
+              "fp": 3
+            },
+            "104": {
+              "tp": 7,
+              "fn": 0,
+              "fp": 6
+            },
+            "105": {
+              "tp": 5,
+              "fn": 1,
+              "fp": 6
+            },
+            "106": {
+              "tp": 3,
+              "fn": 5,
+              "fp": 3
+            }
+          }
+        }
+      }
+    }
+  }
+}

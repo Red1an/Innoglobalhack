@@ -1,6 +1,29 @@
 # Инноглобалхак · кейс Авито
 
-## Разметка по справочнику Авито
+## Guide v2
+
+Правила [guide_v2](dataset_review/guide_v2_rules.md) применяются к новой версии train и внутренним тестам. Формат объявления на входе остаётся прежним. Исходная категория исключается из меток, оценка учитывает 101–106.
+
+| Назначение | Файл |
+| --- | --- |
+| Обучение, 5 311 строк | [train.parquet](data/processed/train_guide_v2/train.parquet) |
+| Основной тест, 80 строк | [test_gold.parquet](data/test/test_guide_v2/test_gold.parquet) |
+| Hard, 50 строк, и семь стресс-срезов, 440 строк | [hard.jsonl](data/test/test_guide_v2/hard.jsonl), [stress_suite.jsonl](data/test/test_guide_v2/stress_suite.jsonl) |
+| Правки и спорные примеры train | [label_changes.csv](data/processed/train_guide_v2/label_changes.csv), [ambiguous.csv](data/processed/train_guide_v2/ambiguous.csv) |
+| Правки и спорные примеры тестов | [label_changes.csv](data/test/test_guide_v2/label_changes.csv), [ambiguous.csv](data/test/test_guide_v2/ambiguous.csv) |
+| Сравнение обеих версий train | [09_guide_v2_audit.ipynb](dataset_review/09_guide_v2_audit.ipynb), [guide_v2_comparison.json](output/guide_v2_comparison.json) |
+
+Из корня репозитория можно пересобрать версии в новых каталогах и сравнить опубликованные версии Char-LR.
+
+```bash
+python dataset_review/build_guide_v2.py test --out /tmp/test_guide_v2
+python dataset_review/build_guide_v2.py train --out /tmp/train_guide_v2
+python dataset_review/compare_guide_v2.py
+```
+
+Сравнение использует одинаковые 4 351 строки fit и порог 0,50. По описаниям после нормализации пересечений fit с gold, hard, stress и исходным public test нет. Из общего результата исключены 95 повторов gold в стресс-срезах. Во всех строках train исходная категория 101, поэтому Char‑LR не обучается предсказывать 101. Ноутбук использует сохранённые результаты по умолчанию. Флаг `RERUN = True` пересчитывает их.
+
+## Guide v1
 
 `train_guide_v1` содержит 5 311 объявлений из предыдущего объединённого train. Исправлена 91 метка, в том числе 86 пропусков `106`. В основном тесте исправлено 13 меток. Профиль `guide` в терминале и Colab по умолчанию использует эту пару train и gold.
 
@@ -16,7 +39,10 @@
 Для повторной сборки укажите два новых каталога.
 
 ```bash
-python dataset_review/build_guide_v1.py --train-out /tmp/train_guide_v1 --test-out /tmp/test_guide_v1
+git show d926a883e0668b063aa221f4d7e079b9ae194694:data/test/stress_suite_v1/stress_suite_v1.parquet > /tmp/stress_source_for_guide_v1.parquet
+python dataset_review/build_guide_v1.py \
+  --stress-source /tmp/stress_source_for_guide_v1.parquet \
+  --train-out /tmp/train_guide_v1 --test-out /tmp/test_guide_v1
 ```
 
 Для прогона диагностики с обновлённой разметкой используйте:

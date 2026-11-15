@@ -19,10 +19,10 @@ sys.path.insert(0, str(ROOT / "research" / "experiments"))
 
 from bench import canonical, digest, gold_overlap_key, key  # noqa: E402
 
-CLASSES = [102, 103, 104, 105, 106]
+CLASSES = [101, 102, 103, 104, 105, 106]
 SUITE_PATH = ROOT / "data" / "test" / "stress_suite_v1" / "stress_suite_v1.jsonl"
-TRAIN_PATH = ROOT / "data" / "processed" / "train_relabel_v2_synth_v1" / "train_relabel_v2_synth_v1.parquet"
-GOLD_PATH = ROOT / "data" / "test" / "test_gold.parquet"
+TRAIN_PATH = ROOT / "data" / "processed" / "train_guide_v1" / "train.parquet"
+GOLD_PATH = ROOT / "data" / "test" / "test_guide_v1" / "test_gold.parquet"
 DEFAULT_REPORT = ROOT / "output" / "stress_suite_v1_report.md"
 
 
@@ -71,8 +71,14 @@ def build_leak_free_train(suite_rows: list[dict], train_path: Path = TRAIN_PATH,
 
 
 def predict_char_lr(train_fit: list[dict], suite_rows: list[dict], threshold: float = 0.5) -> list[list[int]]:
-    """Train 5-class char-LR and predict with honest probability threshold p >= 0.5."""
-    y_train = np.array([[int(c in r["labels"]) for c in CLASSES] for r in train_fit], dtype=np.int32)
+    """Fit Char-LR for the categories represented by positive training examples."""
+    classes = sorted({label for row in train_fit for label in row["labels"]})
+    if not classes:
+        return [[] for _ in suite_rows]
+    if len(classes) == 1:
+        y_train = np.array([int(classes[0] in row["labels"]) for row in train_fit], dtype=np.int32)
+    else:
+        y_train = np.array([[int(c in r["labels"]) for c in classes] for r in train_fit], dtype=np.int32)
     pipe = make_pipeline(
         TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 4), min_df=3, max_features=50000, sublinear_tf=True, dtype=np.float32),
         OneVsRestClassifier(LogisticRegression(C=4, solver="liblinear", random_state=42)),
@@ -81,10 +87,12 @@ def predict_char_lr(train_fit: list[dict], suite_rows: list[dict], threshold: fl
     pipe.fit([r["description"] for r in train_fit], y_train)
     fit_s = time.perf_counter() - t0
     probs = pipe.predict_proba([r["description"] for r in suite_rows])
+    if len(classes) == 1:
+        probs = probs[:, 1:]
     print(f"char-LR trained on {len(train_fit)} rows in {fit_s:.2f}s (threshold={threshold:.2f})")
     preds = []
     for row, p_vec in zip(suite_rows, probs):
-        preds.append([c for c, p in zip(CLASSES, p_vec) if p >= threshold and c != row["mcId"]])
+        preds.append([c for c, p in zip(classes, p_vec) if p >= threshold and c != row["mcId"]])
     return preds
 
 
@@ -101,7 +109,17 @@ def glue_rate(truth_lists: list[list[int]], pred_lists: list[list[int]], a: int,
     return glued, len(eligible)
 
 
-def score_slice(truth_lists: list[list[int]], pred_lists: list[list[int]]) -> dict:
+def additional_labels(labels, source):
+    labels = set(labels)
+    if labels - set(CLASSES) or source not in CLASSES:
+        raise ValueError(f"Unexpected labels or source category: {sorted(labels)}, {source}")
+    return sorted(labels - {source})
+
+
+def score_slice(truth_lists: list[list[int]], pred_lists: list[list[int]], sources=None) -> dict:
+    if sources is not None:
+        truth_lists = [additional_labels(labels, source) for labels, source in zip(truth_lists, sources, strict=True)]
+        pred_lists = [additional_labels(labels, source) for labels, source in zip(pred_lists, sources, strict=True)]
     yt = to_matrix(truth_lists)
     yp = to_matrix(pred_lists)
     p, r, f1, _ = precision_recall_fscore_support(yt, yp, average="micro", zero_division=0)
@@ -130,6 +148,14 @@ def score_slice(truth_lists: list[list[int]], pred_lists: list[list[int]]) -> di
         "glue_105_104": g105_104,
         "glue_102_106": g102_106,
         "glue_total": (g_tot_num, g_tot_den),
+        "per_class": {
+            str(cat): {
+                "tp": int(np.sum((yt[:, i] == 1) & (yp[:, i] == 1))),
+                "fn": int(np.sum((yt[:, i] == 1) & (yp[:, i] == 0))),
+                "fp": int(np.sum((yt[:, i] == 0) & (yp[:, i] == 1))),
+            }
+            for i, cat in enumerate(CLASSES)
+        },
     }
 
 
@@ -167,6 +193,9 @@ SLICE_ORDER = [
 
 def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_name: str,
                         report_path: Path, suite_path: Path = SUITE_PATH) -> None:
+    sources = [r["mcId"] for r in suite_rows]
+    preds = [additional_labels(labels, source) for labels, source in zip(preds, sources, strict=True)]
+    alternate_seo = all("labels_seo" in r for r in suite_rows)
     lines = [
         f"# Отчёт по стресс-бенчмарку `{suite_path.parent.name}/{suite_path.name}` — `{model_name}`",
         "",
@@ -179,7 +208,7 @@ def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_na
     def add_row(label: str, idx_list: list[int], truth_key: str = "labels") -> dict:
         t = [suite_rows[i][truth_key] for i in idx_list]
         p = [preds[i] for i in idx_list]
-        m = score_slice(t, p)
+        m = score_slice(t, p, [sources[i] for i in idx_list])
         lines.append(
             f"| {label} | {m['rows']} | {fmt_pct(m['micro_f1'])} | {fmt_pct(m['precision'])} | "
             f"{fmt_pct(m['recall'])} | {fmt_pct(m['exact_match'])} | {fmt_empty(m)} | {fmt_glue(m)} |"
@@ -191,12 +220,13 @@ def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_na
         add_row(f"`{sname}`", idxs, "labels")
 
     mentor_idxs = [i for i, r in enumerate(suite_rows) if r["slice"] == "mentor_borderline_switches"]
-    add_row("`mentor_borderline` (strict)", mentor_idxs, "labels_strict")
-    add_row("`mentor_borderline` (with_seo_tags)", mentor_idxs, "labels_seo")
+    add_row("`mentor_borderline_switches`", mentor_idxs)
+    if alternate_seo:
+        add_row("`mentor_borderline` (with_seo_tags)", mentor_idxs, "labels_seo")
 
     stress_only_idxs = [i for i, r in enumerate(suite_rows) if r["slice"] != "gold_core"]
-    add_row("**ИТОГО stress (без gold_core, strict)**", stress_only_idxs, "labels_strict")
-    add_row("**ИТОГО весь suite (strict)**", list(range(len(suite_rows))), "labels_strict")
+    add_row("**ИТОГО stress без gold_core**", stress_only_idxs)
+    add_row("**ИТОГО весь suite**", list(range(len(suite_rows))))
 
     # Detailed subslice breakdown
     lines.extend(["", "## Разбивка по подсрезам (Exact Match / Micro-F1)", "", "| Срез / подсрез | Строк | Micro-F1 | Exact Match | FP на пустых |", "| --- | ---: | ---: | ---: | --- |"])
@@ -207,9 +237,9 @@ def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_na
             seen_pairs.append(pair)
     for sname, sub in seen_pairs:
         idxs = [i for i, r in enumerate(suite_rows) if r["slice"] == sname and r["subslice"] == sub]
-        t_key = "labels_seo" if sub == "seo_tags_only" else "labels"
-        m = score_slice([suite_rows[i][t_key] for i in idxs], [preds[i] for i in idxs])
-        tag = f"`{sname}/{sub}`" + (" (seo)" if sub == "seo_tags_only" else "")
+        t_key = "labels_seo" if alternate_seo and sub == "seo_tags_only" else "labels"
+        m = score_slice([suite_rows[i][t_key] for i in idxs], [preds[i] for i in idxs], [sources[i] for i in idxs])
+        tag = f"`{sname}/{sub}`" + (" (seo)" if t_key == "labels_seo" else "")
         lines.append(f"| {tag} | {m['rows']} | {fmt_pct(m['micro_f1'])} | {fmt_pct(m['exact_match'])} | {fmt_empty(m)} |")
 
     # Sample errors per slice
@@ -218,7 +248,7 @@ def evaluate_and_report(suite_rows: list[dict], preds: list[list[int]], model_na
         errs = [
             (suite_rows[i], preds[i])
             for i, r in enumerate(suite_rows)
-            if r["slice"] == sname and preds[i] != r["labels"]
+            if r["slice"] == sname and preds[i] != additional_labels(r["labels"], sources[i])
         ]
         lines.append(f"### `{sname}` (ошибок: {len(errs)})")
         for r, p in errs[:3]:

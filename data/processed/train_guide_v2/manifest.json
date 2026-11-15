@@ -1,0 +1,70 @@
+{
+  "version": "train_guide_v2",
+  "rules": {
+    "path": "dataset_review/guide_v2_rules.md",
+    "sha256": "b266819974cfd844beaa96adb029d5ece1a2b3cad6f86b7515b4a42ff6567a6c",
+    "records": null
+  },
+  "review": {
+    "path": "dataset_review/guide_v2_train_review.csv",
+    "sha256": "69401797ac64e7a8a189344161c2e071c3edddb8c42f52ba3c4395cef556d4df",
+    "records": 560
+  },
+  "builder": {
+    "path": "dataset_review/build_guide_v2.py",
+    "sha256": "12534914ee9b7ec271298a7ac4e47191e63994247bb3cd83fc9a660c49d132e5",
+    "records": null
+  },
+  "pyarrow_version": "26.0.1",
+  "sources": {
+    "train": {
+      "path": "data/processed/train_guide_v1/train.parquet",
+      "sha256": "2df62bacef4969e5bb4dc18457ccb457f16f09af841d203f1a5de83545ce56b2",
+      "records": 5311
+    },
+    "raw_train": {
+      "path": "data/raw/public-train-annotated.jsonl",
+      "sha256": "b7118d68086624fbeab43839f22a635d4e325e4ee339f22d4aa0ad3c2e986615",
+      "records": 10000
+    },
+    "synthetic_review": {
+      "path": "data/processed/train_synth_v1/synth_review.jsonl",
+      "sha256": "1cd7669520e5563e3a1d5dbc48852e29040c090741bfee45f66ce9887f6deb6b",
+      "records": 1140
+    }
+  },
+  "dataset": {
+    "path": "data/processed/train_guide_v2/train.parquet",
+    "sha256": "4295cfa9f06195a353967688a63d3768c582a5ad8fd427f426869b1c2ab3d23e",
+    "records": 5311
+  },
+  "label_changes": {
+    "path": "data/processed/train_guide_v2/label_changes.csv",
+    "sha256": "0af3b179eb95e2c0113450e76a40d202718536eb5bcc92860a6e23c729f7d4b4",
+    "records": 546
+  },
+  "ambiguous": {
+    "path": "data/processed/train_guide_v2/ambiguous.csv",
+    "sha256": "b03b5558b9b6a2820b88d0a413963a912afad1a334fd861040f2ecb86fad8999",
+    "records": 14
+  },
+  "records_by_origin": {
+    "real": 4214,
+    "synthetic": 1097
+  },
+  "labels_before": {
+    "102": 1685,
+    "103": 2200,
+    "104": 2292,
+    "105": 2173,
+    "106": 2311
+  },
+  "labels_after": {
+    "102": 1685,
+    "103": 2200,
+    "104": 2292,
+    "105": 2173,
+    "106": 2839
+  },
+  "normalized_train_duplicates": 0
+}

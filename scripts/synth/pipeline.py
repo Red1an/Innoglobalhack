@@ -81,6 +81,8 @@ def evaluate(names, require_check=True):
                 reasons.append("нет проверки")
             elif check is not None and check["labels"] != task["target_labels"]:
                 reasons.append("метки не совпали")
+            if check is not None and check["note"].startswith("НЕОДНОЗНАЧНО"):
+                reasons.append("неоднозначная услуга")
             if text:
                 for mc in task["removed_labels"]:
                     if mc != task["trap_label"] and re.search(STEMS[mc], text.lower()):

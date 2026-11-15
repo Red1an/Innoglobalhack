@@ -177,10 +177,10 @@ def set_stress_labels(row, labels):
     set_binary_labels(row, labels)
 
 
-def build_tests(stage, destination, reviews, common):
+def build_tests(stage, destination, reviews, common, stress_path=None):
     gold_path = PARENT_TEST / 'test_gold.parquet'
     public_test = ROOT / 'data/raw/public-test-dataset.parquet'
-    stress_path = PARENT_TEST / 'stress_suite_v1/stress_suite_v1.parquet'
+    stress_path = stress_path or PARENT_TEST / 'stress_suite_v1/stress_suite_v1.parquet'
     gold = pq.read_table(gold_path)
     stress = pq.read_table(stress_path)
     original_test = pq.read_table(public_test, columns=['categories']).column('categories').to_pylist()
@@ -241,7 +241,7 @@ def build_tests(stage, destination, reviews, common):
     }
 
 
-def build(train_out, test_out):
+def build(train_out, test_out, stress_path=None):
     destinations = (train_out.resolve(), test_out.resolve())
     if destinations[0] == destinations[1] or any(path.exists() for path in destinations):
         raise FileExistsError('Для train и тестов выберите два новых каталога')
@@ -258,7 +258,8 @@ def build(train_out, test_out):
             stage = Path(temporary) / 'version'
             stage.mkdir()
             selected = reviews['train'] if builder is build_train else reviews
-            manifest = builder(stage, destination, selected, common)
+            kwargs = {'stress_path': stress_path} if builder is build_tests else {}
+            manifest = builder(stage, destination, selected, common, **kwargs)
             (stage / 'manifest.json').write_text(json.dumps({'version': destination.name, **manifest},
                                                            ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
             built.append((stage, destination))
@@ -271,5 +272,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--train-out', type=Path, default=TRAIN_OUT)
     parser.add_argument('--test-out', type=Path, default=TEST_OUT)
+    parser.add_argument('--stress-source', type=Path, help='Path to the historical stress snapshot')
     args = parser.parse_args()
-    build(args.train_out, args.test_out)
+    build(args.train_out, args.test_out, args.stress_source)

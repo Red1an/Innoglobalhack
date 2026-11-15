@@ -1,0 +1,169 @@
+{
+  "version": "test_guide_v2",
+  "rules": {
+    "path": "dataset_review/guide_v2_rules.md",
+    "sha256": "b266819974cfd844beaa96adb029d5ece1a2b3cad6f86b7515b4a42ff6567a6c",
+    "records": null
+  },
+  "review": {
+    "path": "dataset_review/guide_v2_test_review.csv",
+    "sha256": "ec83c2b420b19e9cb52ed6052efe3973b364b65a240c66a6f8f20c81a0f16bf2",
+    "records": 16
+  },
+  "builder": {
+    "path": "dataset_review/build_guide_v2.py",
+    "sha256": "12534914ee9b7ec271298a7ac4e47191e63994247bb3cd83fc9a660c49d132e5",
+    "records": null
+  },
+  "pyarrow_version": "26.0.1",
+  "sources": {
+    "gold": {
+      "path": "data/test/test_guide_v1/test_gold.parquet",
+      "sha256": "799c5c05120b67b401969ad6e25455a6bec298204e85be98bbe56b86705113b4",
+      "records": 80
+    },
+    "hard": {
+      "path": "data/test/test_guide_v1/hard.jsonl",
+      "sha256": "ef0d09f3384a25b20c2989813e0891bf9c55082a87af4258bf4daee1769ce328",
+      "records": 50
+    },
+    "stress": {
+      "path": "data/test/stress_suite_v1/stress_suite_v1.jsonl",
+      "sha256": "2d1030fb8e49fa23d0d7d156e91bcb67d73179a0d9820eeeb35f96936ef12a1e",
+      "records": 440
+    },
+    "stress_parquet": {
+      "path": "data/test/stress_suite_v1/stress_suite_v1.parquet",
+      "sha256": "d3e6a43b3a8da73b900b1a1fee04f99d8bb88ac00a8379bcec333473304a5831",
+      "records": 440
+    },
+    "public": {
+      "path": "data/raw/public-test-dataset.parquet",
+      "sha256": "65b5a45a98b577d853a928932bbbdf8bd9bdeb469ded3016faace4d11f3eabaa",
+      "records": 208
+    }
+  },
+  "datasets": {
+    "gold": {
+      "path": "data/test/test_guide_v2/test_gold.parquet",
+      "sha256": "389fdfaf39e302a5a9f40ec9f80751b146c416405e5ee790caf96e97994b1d40",
+      "records": 80
+    },
+    "hard": {
+      "path": "data/test/test_guide_v2/hard.jsonl",
+      "sha256": "c396e466f2bee1b1ee452b623e3a93c03c64716168fde4446f839ebb0f10c7d6",
+      "records": 50
+    },
+    "stress": {
+      "path": "data/test/test_guide_v2/stress_suite.parquet",
+      "sha256": "3c7b1b42e4726a9fe511103808971f68e99a22ea23d6c10513300cb00d3a59c4",
+      "records": 440
+    },
+    "stress_jsonl": {
+      "path": "data/test/test_guide_v2/stress_suite.jsonl",
+      "sha256": "df94f967c5ffb200e34b5729f02249a966a33cd083e6e624f0620e041a676ed3",
+      "records": 440
+    }
+  },
+  "slices": {
+    "gold_core": {
+      "parquet": {
+        "path": "data/test/test_guide_v2/gold_core.parquet",
+        "sha256": "76747308bd4f78493933a71b27ba9320f352fe967916c1a7ba8adbb3e3ef7ec5",
+        "records": 80
+      },
+      "jsonl": {
+        "path": "data/test/test_guide_v2/gold_core.jsonl",
+        "sha256": "fec56b502b260433b491b65a2ee78ba4d3917b6f97bb483c370a422a154ef790",
+        "records": 80
+      }
+    },
+    "hard_empty": {
+      "parquet": {
+        "path": "data/test/test_guide_v2/hard_empty.parquet",
+        "sha256": "125bd236f45b44a784c1205dcdee7e1ce87f449dca609a099b173262ff6e216e",
+        "records": 40
+      },
+      "jsonl": {
+        "path": "data/test/test_guide_v2/hard_empty.jsonl",
+        "sha256": "41ba57e1cb9c4b7e1c401eaa26cd527c76b9a1c29dd84a96e773dd3a6371bd5d",
+        "records": 40
+      }
+    },
+    "decoupled_solo_and_pairs": {
+      "parquet": {
+        "path": "data/test/test_guide_v2/decoupled_solo_and_pairs.parquet",
+        "sha256": "a8c349f5b60d1291cc18ef24cb032a710bfb3fddd7c63e0027f9bbfbe769a2fa",
+        "records": 100
+      },
+      "jsonl": {
+        "path": "data/test/test_guide_v2/decoupled_solo_and_pairs.jsonl",
+        "sha256": "dceef58c6d4f00da82739079ee8ef2da8ad48964e4273394528cc72833451c89",
+        "records": 100
+      }
+    },
+    "context_traps_and_negations": {
+      "parquet": {
+        "path": "data/test/test_guide_v2/context_traps_and_negations.parquet",
+        "sha256": "30437b8e40961c0713a68ee006878f074cb4284cc8ec7d75d734501e1a160585",
+        "records": 80
+      },
+      "jsonl": {
+        "path": "data/test/test_guide_v2/context_traps_and_negations.jsonl",
+        "sha256": "ff442e8428a6035097aa11fdf50892db80deaba8c72be82e9c29442f2e353d09",
+        "records": 80
+      }
+    },
+    "dirty_text_and_homoglyphs": {
+      "parquet": {
+        "path": "data/test/test_guide_v2/dirty_text_and_homoglyphs.parquet",
+        "sha256": "392153abc2c6c4be90ee9a6035a2380c75744975bfeaa93b5436cd1018b6bea7",
+        "records": 50
+      },
+      "jsonl": {
+        "path": "data/test/test_guide_v2/dirty_text_and_homoglyphs.jsonl",
+        "sha256": "df7ee05313048022c2bad46b2e87119288e626b978418bc8868e0848b9bb1c2a",
+        "records": 50
+      }
+    },
+    "non_101_source_mcid": {
+      "parquet": {
+        "path": "data/test/test_guide_v2/non_101_source_mcid.parquet",
+        "sha256": "9c220e5329b4bb0b6cd322d040c1bb9e145d2b0302ca640e30c0e8b9a4095b66",
+        "records": 50
+      },
+      "jsonl": {
+        "path": "data/test/test_guide_v2/non_101_source_mcid.jsonl",
+        "sha256": "200b1bfff18befab18e6511ffd833577f21786af79ffa8132f41d52df24531ba",
+        "records": 50
+      }
+    },
+    "mentor_borderline_switches": {
+      "parquet": {
+        "path": "data/test/test_guide_v2/mentor_borderline_switches.parquet",
+        "sha256": "21036b7f23d58904a255ff22be52bf9d41ab3a7a13dcd812d1f36c137f8ca7ec",
+        "records": 40
+      },
+      "jsonl": {
+        "path": "data/test/test_guide_v2/mentor_borderline_switches.jsonl",
+        "sha256": "96e9e9be57ee43d998ba2db1644c0900725cb1ca7dedde75187075c5a9700d49",
+        "records": 40
+      }
+    }
+  },
+  "label_changes": {
+    "path": "data/test/test_guide_v2/label_changes.csv",
+    "sha256": "70d7a68e1b2d17472cda4fbdf6c8cd563a3e18bf076b11ec88bd472d5eb548f7",
+    "records": 15
+  },
+  "ambiguous": {
+    "path": "data/test/test_guide_v2/ambiguous.csv",
+    "sha256": "99e8b8cf7207eae43c4913856788f5abb2fd390f4766950f7cde70cc06e90806",
+    "records": 6
+  },
+  "changes_by_dataset": {
+    "gold": 2,
+    "hard": 4,
+    "stress": 9
+  }
+}

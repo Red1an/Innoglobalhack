@@ -1,5 +1,7 @@
 {
   "total_rows": 440,
+  "gold_source": "data/test/test_guide_v1/test_gold.parquet",
+  "train_source": "data/processed/train_guide_v1/train.parquet",
   "slices": {
     "gold_core": 80,
     "hard_empty": 40,
@@ -11,11 +13,11 @@
   },
   "origin_splits": {
     "test_gold": 95,
-    "synthetic_stress": 326,
-    "dev": 19
+    "synthetic_stress": 331,
+    "dev": 14
   },
   "synthetic_stress_train_overlap": 0,
   "synthetic_stress_min_len": 160,
   "synthetic_stress_max_len": 1104,
-  "sha256_jsonl": "acdcd44afbae951c4a21d0e4d6b88f4480de505ad75140a34fdcb364d5ffaa30"
+  "sha256_jsonl": "1a3a88dba7d3164d97a27a974269401bab466cc1ac0c4aedcb64a36e6a1018cf"
 }
