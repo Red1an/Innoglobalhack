@@ -184,7 +184,7 @@ def write_answer(path, rows):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("input", help="имя CSV в demo/input/ или путь к нему, колонки testcase,description")
-    ap.add_argument("-o", "--out", default=None, help="файл ответа вместо demo/output/<модель>/<имя входа>.csv")
+    ap.add_argument("-o", "--out", default=None, help="имя файла ответа в demo/output/<модель>/ или полный путь")
     ap.add_argument("--model", default=DEFAULT_MODEL, choices=list(MODELS),
                     help=f"модель по названию, по умолчанию {DEFAULT_MODEL}")
     ap.add_argument("--prep", action="store_true", help="предобработка текста: инъекции, эмодзи, омоглифы")
@@ -197,7 +197,9 @@ def main():
         src = INPUT / src
     if not src.exists():
         raise SystemExit(f"Нет файла {args.input} ни по этому пути, ни в {INPUT}")
-    out = Path(args.out) if args.out else OUTPUT / args.model / f"{src.stem}{'-prep' if args.prep else ''}.csv"
+    out = Path(args.out or f"{src.stem}{'-prep' if args.prep else ''}.csv")
+    if out.parent == Path("."):
+        out = OUTPUT / args.model / out.name
     args.input = str(src)
 
     rows = read_input(args.input)[:args.limit]
