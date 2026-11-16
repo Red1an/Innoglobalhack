@@ -1,11 +1,13 @@
 """Классификация объявлений
 
-Вход берётся из demo/input/, ответ пишется в demo/output/<модель>/<имя входа>[-prep].csv.
+Вход берётся из demo/input/, ответ пишется в demo/output/<имя входа>-<модель>[-prep].csv.
+В descriptions названия категорий, с --drafts тексты черновиков из demo/drafts.py.
 
 Пример:
   python demo/predict.py example.csv
   python demo/predict.py private-test.csv --prep
   python demo/predict.py private-test.csv --model qwen
+  python demo/predict.py private-test.csv --prep --drafts   классификация и тексты черновиков в том же ответе
 """
 import argparse
 import csv
@@ -24,10 +26,6 @@ from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE))
-
-from drafts import extract  # noqa: E402
-
 PROMPT = HERE / "prompt_v9.txt"
 INPUT = HERE / "input"
 OUTPUT = HERE / "output"
@@ -37,7 +35,16 @@ MODELS = {"glm": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
 DEFAULT_MODEL = "glm"
 MAX_TOKENS = 600
 SOURCE_MCID = 101
+NAMES = {101: "Ремонт под ключ", 102: "Штукатурные работы", 103: "Плиточные работы", 104: "Сантехника",
+         105: "Электрика", 106: "Поклейка обоев и малярные работы"}
 RETRIES = 3
+
+
+def rel(path):
+    try:
+        return str(Path(path).resolve().relative_to(Path.cwd()))
+    except ValueError:
+        return str(path)
 
 
 def load_key():
@@ -184,11 +191,12 @@ def write_answer(path, rows):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("input", help="имя CSV в demo/input/ или путь к нему, колонки testcase,description")
-    ap.add_argument("-o", "--out", default=None, help="имя файла ответа в demo/output/<модель>/ или полный путь")
+    ap.add_argument("-o", "--out", default=None, help="имя файла ответа в demo/output/ или полный путь")
     ap.add_argument("--model", default=DEFAULT_MODEL, choices=list(MODELS),
                     help=f"модель по названию, по умолчанию {DEFAULT_MODEL}")
     ap.add_argument("--prep", action="store_true", help="предобработка текста: инъекции, эмодзи, омоглифы")
     ap.add_argument("--workers", type=int, default=4, help="параллельные запросы к API, по умолчанию 4")
+    ap.add_argument("--drafts", action="store_true", help="после классификации записать в descriptions тексты черновиков")
     ap.add_argument("--limit", type=int, default=None, help="только первые N строк, для пробы")
     args = ap.parse_args()
 
@@ -197,15 +205,15 @@ def main():
         src = INPUT / src
     if not src.exists():
         raise SystemExit(f"Нет файла {args.input} ни по этому пути, ни в {INPUT}")
-    out = Path(args.out or f"{src.stem}{'-prep' if args.prep else ''}.csv")
+    out = Path(args.out or f"{src.stem}-{args.model}{'-prep' if args.prep else ''}.csv")
     if out.parent == Path("."):
-        out = OUTPUT / args.model / out.name
+        out = OUTPUT / out.name
     args.input = str(src)
 
     rows = read_input(args.input)[:args.limit]
     prompt = PROMPT.read_text(encoding="utf-8-sig")
     model = MODELS[args.model]
-    print(f"Вход: {args.input}, строк {len(rows)}")
+    print(f"Вход: {rel(args.input)}, строк {len(rows)}")
     print(f"Модель: {args.model} ({model})")
     print(f"Промпт: {PROMPT.name}, sha256 {hashlib.sha256(prompt.encode()).hexdigest()[:12]}")
     if args.prep:
@@ -233,10 +241,10 @@ def main():
     seconds = time.perf_counter() - start
 
     for r, res in zip(rows, results):
-        res["drafts"] = [extract(r["description"], c) for c in res["labels"]]
+        res["drafts"] = [f"{NAMES[c]}." for c in res["labels"]]
     out.parent.mkdir(parents=True, exist_ok=True)
     write_answer(out, results)
-    log = out.with_suffix(".responses.jsonl")
+    log = out.with_suffix(".classification.jsonl")
     with log.open("w", encoding="utf-8") as stream:
         stream.write(json.dumps({"model": model, "prompt": PROMPT.name, "prep": args.prep,
                                  "input": str(Path(args.input).resolve())}, ensure_ascii=False) + "\n")
@@ -252,8 +260,14 @@ def main():
           + ", ".join(f"{c}: {n}" for c, n in counts.items()))
     if errors:
         print(f"Ошибки API у {len(errors)} строк, им записан пустой список: {', '.join(errors[:10])}")
-    print(f"Ответ: {out}")
-    print(f"Сырые ответы модели: {log}")
+    print(f"Ответ: {rel(out)}")
+    print(f"Сырые ответы модели: {rel(log)}")
+    if args.drafts:
+        from drafts import run
+        print("\nЧерновики")
+        run(str(out), args.input, args.workers, answer=out)
+    else:
+        print(f"Черновики отдельно: python demo/drafts.py {rel(out)} --source {rel(args.input)}")
 
 
 if __name__ == "__main__":
