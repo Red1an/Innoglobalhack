@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Микрокатегории и черновики</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Основано на unslop by Damir Sokolovsky (@heydamir), CC BY 4.0 */
+:root{
+  --bg:#fafafa;--panel:#fff;--raised:#f4f4f5;--ink:#171717;--ink2:#525252;--muted:#737373;--line:rgba(23,23,23,.08);
+  --accent:#1d4ed8;--accent-soft:#eef2fb;--ok:#16a34a;--ok-soft:#e7f6ec;--bad:#dc2626;--bad-soft:#fdecec;
+  --c102:#c2410c;--c103:#0f766e;--c104:#1d4ed8;--c105:#6d28d9;--c106:#be185d;
+  --c102s:#fbe9dc;--c103s:#dcf1ee;--c104s:#e2e9fb;--c105s:#ece4fa;--c106s:#f8e1ec;
+  --ease:cubic-bezier(.22,1,.36,1);--sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#141415;--panel:#19191b;--raised:#232325;--ink:#ededed;--ink2:#a1a1a6;--muted:#85858b;--line:rgba(237,237,237,.08);
+  --accent:#8fb0ff;--accent-soft:#1f2433;--ok:#4cc38a;--ok-soft:#17291f;--bad:#e5484d;--bad-soft:#331a1b;
+  --c102:#f0a46b;--c103:#5cc8b8;--c104:#8fb0ff;--c105:#b79cf5;--c106:#ef8fbb;
+  --c102s:#3a2718;--c103s:#16302c;--c104s:#1c2640;--c105s:#2a2140;--c106s:#3a1d2b;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/20px var(--sans)}
+b{font-weight:500}
+header{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:32px;padding:0 32px;height:56px}
+header h1{font-size:16px;margin:0;font-weight:500;white-space:nowrap}
+nav{display:flex;gap:4px;height:100%}
+nav button{border:0;background:none;color:var(--ink2);font:inherit;padding:0 12px;cursor:pointer;box-shadow:inset 0 -2px transparent;transition:color .15s var(--ease),box-shadow .15s var(--ease)}
+nav button:hover{color:var(--ink)}
+nav button.on{color:var(--ink);box-shadow:inset 0 -2px var(--ink)}
+.grow{flex:1}
+main{padding:24px 32px 64px;max-width:1520px;margin:0 auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+.card h2{font-size:15px;font-weight:500;margin:0 0 16px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;min-height:32px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button.btn{height:32px;border:1px solid var(--line);background:var(--raised);color:var(--ink);border-radius:8px;padding:0 16px;font:inherit;font-weight:500;cursor:pointer;transition:filter .15s var(--ease),transform .15s var(--ease)}
+button.btn:hover{filter:brightness(.97)}
+button.btn:active{transform:scale(.98)}
+button.primary{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+button.primary:hover{filter:brightness(1.15)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select{height:32px;border:1px solid var(--line);background:var(--raised);color:var(--ink);border-radius:8px;padding:0 8px;font:inherit;font-weight:400}
+.muted{color:var(--muted)}
+.small{font-size:12px;line-height:16px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;height:40px;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:400}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td.num{font-family:var(--mono);font-size:13px}
+tbody tr{cursor:pointer;transition:background-color .15s var(--ease)}
+tbody tr:hover{background:var(--raised)}
+tbody tr.sel,tbody tr.sel:hover{background:var(--accent-soft);box-shadow:inset 2px 0 var(--accent)}
+.scroll{overflow-x:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.kpi{background:var(--raised);border-radius:8px;padding:12px 16px}
+.kpi b{display:block;font-size:24px;line-height:32px;font-weight:500;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;line-height:16px;color:var(--ink2)}
+.chip{display:inline-flex;align-items:center;gap:4px;height:20px;border-radius:4px;padding:0 8px 0 4px;font-size:12px;color:var(--ink2);background:var(--raised);white-space:nowrap}
+.chip.plain{padding:0 8px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.d102{background:var(--c102)}.d103{background:var(--c103)}.d104{background:var(--c104)}.d105{background:var(--c105)}.d106{background:var(--c106)}
+.ad{border:1px solid transparent;border-top-color:var(--line);border-radius:0;padding:12px 8px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:background-color .15s var(--ease),border-color .15s var(--ease)}
+.ad:hover{background:var(--raised)}
+.ad .tc{font-family:var(--mono);font-size:12px;line-height:20px;color:var(--muted);width:72px;flex:none}
+.ad .text{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ad.open{background:var(--raised);border-color:var(--line);border-radius:12px;margin:4px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.ad.open+.ad{border-top-color:transparent}
+.ad.open .tc{color:var(--ink2)}
+.ad.open .text{-webkit-line-clamp:unset;white-space:pre-wrap}
+.ad .labels{flex:none;width:320px;display:flex;justify-content:flex-end;align-items:flex-start}
+.cats{display:flex;flex-direction:column;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden;font:inherit;color:inherit;padding:0;text-align:left;cursor:pointer;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
+.cats .set{display:flex;flex-wrap:wrap;gap:4px 12px;padding:8px 12px}
+.cats .c{display:inline-flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--ink2);white-space:nowrap}
+.cats .go{display:flex;align-items:center;gap:8px;height:28px;padding:0 12px;border-top:1px solid var(--line);font-size:12px;font-weight:500;color:var(--accent);transition:background-color .15s var(--ease)}
+.cats .go svg{width:16px;height:16px;margin-left:auto;transition:transform .15s var(--ease)}
+.cats:hover{border-color:color-mix(in srgb,var(--ink) 20%,transparent);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.cats:hover .go{background:var(--accent-soft)}
+.cats:hover .go svg{transform:translateX(2px)}
+.cats:active{transform:scale(.99)}
+.cats:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ad .empty-pred{font-size:12px;line-height:20px;color:var(--muted)}
+.job{border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin-bottom:12px}
+.bar{height:4px;background:var(--raised);border-radius:2px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;width:100%;background:var(--accent);transform-origin:left;transition:transform .3s var(--ease)}
+pre.log{margin:8px 0 0;font:12px/16px var(--mono);color:var(--bad);white-space:pre-wrap}
+.split{display:grid;grid-template-columns:344px 1fr;gap:16px;align-items:start}
+.list{max-height:calc(100vh - 160px);overflow:auto;padding:0}
+.list .it{padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:background-color .15s var(--ease)}
+.list .it:hover{background:var(--raised)}
+.list .it.sel{background:var(--accent-soft);box-shadow:inset 2px 0 var(--accent)}
+.list .it .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;color:var(--ink2);margin:4px 0 8px}
+.sticky{position:sticky;top:80px}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;font-size:13px;font-weight:400;color:var(--ink2)}
+.switch input{position:absolute;opacity:0}
+.switch i{width:32px;height:20px;border-radius:10px;background:var(--raised);border:1px solid var(--line);position:relative;transition:background-color .15s var(--ease)}
+.switch i:after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--muted);transition:transform .15s var(--ease),background-color .15s var(--ease)}
+.switch input:checked+i{background:var(--ink)}
+.switch input:checked+i:after{transform:translateX(12px);background:var(--panel)}
+.switch input:focus-visible+i{outline:2px solid var(--accent);outline-offset:2px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;padding:4px;background:var(--raised);border-radius:10px;width:max-content;max-width:100%}
+.tabs button{display:inline-flex;align-items:center;gap:8px;height:28px;border:0;background:none;color:var(--ink2);border-radius:6px;padding:0 12px;font:inherit;font-size:13px;cursor:pointer;transition:background-color .15s var(--ease),color .15s var(--ease)}
+.tabs button:hover{color:var(--ink)}
+.tabs button.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06),inset 0 0 0 1px var(--line)}
+.doc{white-space:pre-wrap;font-size:15px;line-height:24px;padding:16px 20px;background:var(--panel);border:1px solid var(--line);border-radius:8px;max-height:62vh;overflow:auto;margin-top:12px}
+.doc del,.legend del{background:var(--bad-soft);color:var(--bad);text-decoration:line-through;text-decoration-thickness:1px}
+.doc ins,.legend ins{background:var(--ok-soft);color:var(--ok);text-decoration:none}
+.doc .gone,.legend .gone{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.doc .fold{display:inline-block;padding:0 8px;border-radius:4px;background:var(--bad-soft);color:var(--bad);font:12px/20px var(--mono);cursor:pointer}
+.doc mark{border-radius:2px;color:inherit}
+.m102{background:var(--c102s);box-shadow:inset 0 -2px var(--c102)}.m103{background:var(--c103s);box-shadow:inset 0 -2px var(--c103)}
+.m104{background:var(--c104s);box-shadow:inset 0 -2px var(--c104)}.m105{background:var(--c105s);box-shadow:inset 0 -2px var(--c105)}
+.m106{background:var(--c106s);box-shadow:inset 0 -2px var(--c106)}
+.mmulti{background:repeating-linear-gradient(135deg,var(--raised) 0 4px,var(--line) 4px 8px);box-shadow:inset 0 -2px var(--ink2)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;line-height:16px;color:var(--ink2);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:16px;height:12px;border-radius:2px;display:inline-block}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--panel);color:var(--ink);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.08),inset 3px 0 var(--bad);padding:12px 16px;border-radius:8px;z-index:50;max-width:80vw}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .8s linear infinite;flex:none}
+@keyframes s{to{transform:rotate(360deg)}}
+@media (max-width:900px){header,main{padding-left:16px;padding-right:16px}.split{grid-template-columns:1fr}.ad{flex-wrap:wrap}.ad .labels{width:100%;justify-content:flex-start;padding-left:84px}.sticky{position:static}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Микрокатегории и черновики</h1>
+  <nav><button data-tab="cls" class="on">Классификация</button><button data-tab="drf">Черновики</button></nav>
+</header>
+<main>
+  <section id="cls">
+    <div class="card">
+      <h2>Прогоны<span class="grow"></span>
+        <select id="rModel"></select>
+        <button class="btn primary" id="rerun">Запустить заново</button></h2>
+      <div id="jobsCls"></div>
+      <div class="scroll"><table id="runs"></table></div>
+    </div>
+    <div class="card">
+      <h2 id="runTitle">Объявления прогона</h2>
+      <div id="ads"></div>
+    </div>
+  </section>
+
+  <section id="drf" hidden>
+    <div class="card">
+      <h2>Черновики прогона <select id="dRun"></select><span class="grow"></span>
+        <button class="btn primary" id="allDrafts">Сгенерировать для всех объявлений</button></h2>
+      <div id="jobsDrf"></div>
+      <div class="kpis" id="drfKpis"></div>
+    </div>
+    <div class="split">
+      <div class="card list" id="dList"></div>
+      <div class="sticky" id="dDetail"></div>
+    </div>
+  </section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SHORT = {102:"штукатурка",103:"плитка",104:"сантехника",105:"электрика",106:"обои/малярка"};
+const S = {state:null, run:null, detail:null, open:new Set(), dSel:null, dCat:"all", diff:true, busy:new Set(), unfold:new Set(), jobs:{}};
+let NAMES = {};
+
+const fmt = {
+  n: v => v == null ? "—" : Number(v).toLocaleString("ru-RU"),
+  s: v => { if (v == null) return "—"; v = Number(v); if (v < 60) return v.toFixed(v < 10 ? 2 : 1).replace(".", ",") + " с";
+           const m = Math.floor(v / 60); return `${m} мин ${Math.round(v - m * 60)} с`; },
+  rub: c => c ? `${c.amount.toFixed(2).replace(".", ",")} ${c.currency === "RUB" ? "₽" : c.currency}` : "—",
+  dt: s => new Date(s).toLocaleString("ru-RU", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"}),
+};
+async function api(path, body) {
+  let r;
+  try { r = await fetch(path, body ? {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)} : {}); }
+  catch (e) { throw new Error("Сервер интерфейса не отвечает, проверьте, что demo_ui/server.py запущен"); }
+  let j = null;
+  try { j = await r.json(); } catch (e) {}
+  if (!r.ok || !j) throw new Error(errorText(j?.error) || `Сервер интерфейса ответил HTTP ${r.status}`);
+  return j;
+}
+function errorText(e) {
+  if (!e) return "";
+  if (typeof e === "string") return e;
+  return e.message || e.type || JSON.stringify(e);
+}
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.append(t);
+  setTimeout(() => t.remove(), 6000);
+}
+const chip = c => `<span class="chip" title="${esc(NAMES[c])}"><i class="dot d${c}"></i>${c} ${SHORT[c]}</span>`;
+const ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+const catsButton = r => !r.pred.length ? `<span class="empty-pred">микрокатегорий нет</span>` :
+  `<button class="cats" data-go="${esc(r.testcase)}" title="Открыть черновики ${esc(r.testcase)}">
+    <span class="set">${r.pred.map(c => `<span class="c" title="${esc(NAMES[c])}"><i class="dot d${c}"></i>${c} ${SHORT[c]}</span>`).join("")}</span>
+    <span class="go">Черновики${ARROW}</span></button>`;
+const chips = labels => labels.length ? labels.map(chip).join("") : `<span class="chip plain">пусто</span>`;
+
+function showTab(tab) {
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x.dataset.tab === tab));
+  $("#cls").hidden = tab !== "cls"; $("#drf").hidden = tab !== "drf";
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+function openDrafts(tc) {
+  S.dSel = tc; S.dCat = "all";
+  showTab("drf"); renderDrafts(); window.scrollTo(0, 0);
+  const list = $("#dList"), it = list.querySelector(".it.sel");
+  if (it) list.scrollTop += it.getBoundingClientRect().top - list.getBoundingClientRect().top;
+}
+
+async function loadState() {
+  S.state = await api("/api/state");
+  NAMES = S.state.names;
+  if (!S.state.runs.find(r => r.id === S.run)) S.run = S.state.runs[0]?.id || null;
+  $("#rModel").innerHTML = S.state.models.map(m => `<option>${m}</option>`).join("");
+  renderRuns(); renderJobs();
+  if (S.run) await loadRun(S.run);
+}
+async function loadRun(id) {
+  S.run = id; S.detail = await api("/api/run?id=" + encodeURIComponent(id));
+  const s = S.detail.summary; $("#rModel").value = s.model;
+  renderRuns(); renderAds(); renderDrafts();
+}
+
+$("#rerun").onclick = async () => {
+  try { await api("/api/classify", {run:S.run, model:$("#rModel").value}); poll(); } catch (e) { toast(e.message); }
+};
+$("#allDrafts").onclick = async () => {
+  try { await api("/api/drafts/all", {run:S.run}); poll(); } catch (e) { toast(e.message); }
+};
+$("#dRun").onchange = e => loadRun(e.target.value);
+
+function renderRuns() {
+  $("#runs").innerHTML = `<thead><tr><th>Запуск</th><th>Вход</th><th>Модель</th><th class="num">Объявлений</th>
+    <th class="num">micro-F1</th><th class="num">Время всего</th><th class="num">На объявление</th>
+    <th class="num">Токены вх.</th><th class="num">Токены вых.</th><th class="num">Стоимость</th></tr></thead><tbody>` +
+    S.state.runs.map(r => `<tr class="${r.id === S.run ? "sel" : ""}" data-id="${esc(r.id)}">
+      <td>${fmt.dt(r.started_at)}</td><td>${esc(r.input)}</td><td>${esc(r.model)}${r.prep ? " + prep" : ""}</td>
+      <td class="num">${r.rows}</td><td class="num"><b style="color:var(--ink)">${r.micro_f1 == null ? "нет эталона" : r.micro_f1.toFixed(4).replace(".", ",")}</b></td>
+      <td class="num">${r.seconds_estimated ? "≈ " : ""}${fmt.s(r.seconds)}</td><td class="num">${fmt.s(r.per_ad_seconds)}</td>
+      <td class="num">${fmt.n(r.input_tokens)}</td><td class="num">${fmt.n(r.output_tokens)}</td>
+      <td class="num" title="${esc(r.cost?.note || "")}">${fmt.rub(r.cost)}</td></tr>`).join("") + "</tbody>";
+  $("#runs").querySelectorAll("tr[data-id]").forEach(tr => tr.onclick = () => loadRun(tr.dataset.id));
+}
+
+function renderJobs() {
+  for (const j of S.state.jobs) {
+    if (S.jobs[j.id] === "running" && j.status !== "running") {
+      if (j.status === "done") S.run = j.run;
+      setTimeout(loadState, 50);
+    }
+    S.jobs[j.id] = j.status;
+  }
+  const html = kind => S.state.jobs.filter(j => j.kind === kind && (j.status !== "done" || Date.now() / 1000 - j.finished < 5)).map(j => `
+    <div class="job"><div class="row">${j.status === "running" ? `<span class="spin"></span>` : ""}<b>${esc(j.title)}</b>
+      <span class="grow"></span><span class="muted small" style="font-family:var(--mono)">${j.total ? `${j.done} из ${j.total}` : ""}</span>
+      ${j.status === "failed" ? `<button class="btn" data-dismiss="${j.id}">Скрыть</button>` : ""}</div>
+      ${j.status === "running" ? `<div class="bar"><i style="transform:scaleX(${j.total ? j.done / j.total : 0})"></i></div>` : ""}
+      ${j.status === "failed" ? `<pre class="log">${esc(j.log)}</pre>` : ""}</div>`).join("");
+  $("#jobsCls").innerHTML = html("classify"); $("#jobsDrf").innerHTML = html("drafts");
+  document.querySelectorAll("[data-dismiss]").forEach(b => b.onclick = async () => {
+    await api("/api/jobs/dismiss", {id:b.dataset.dismiss});
+    S.state.jobs = S.state.jobs.filter(j => j.id !== b.dataset.dismiss); renderJobs();
+  });
+  clearTimeout(S.pollT);
+  if (S.state.jobs.some(j => j.status === "running")) S.pollT = setTimeout(poll, 1000);
+}
+async function poll() { S.state.jobs = (await api("/api/state")).jobs; renderJobs(); }
+
+function renderAds() {
+  const s = S.detail.summary;
+  $("#runTitle").innerHTML = `Объявления прогона <span class="muted small" style="font-weight:400;font-family:var(--mono)">${esc(s.model)}${s.prep ? " + prep" : ""} · ${fmt.dt(s.started_at)}</span>`;
+  $("#ads").innerHTML = S.detail.rows.map(r => `<div class="ad ${S.open.has(r.testcase) ? "open" : ""}" data-tc="${esc(r.testcase)}">
+    <div class="tc">${esc(r.testcase)}</div><div class="text">${esc(r.description)}</div><div class="labels">${catsButton(r)}</div></div>`).join("");
+  $("#ads").querySelectorAll("[data-go]").forEach(b => b.onclick = e => { e.stopPropagation(); openDrafts(b.dataset.go); });
+  $("#ads").querySelectorAll(".ad").forEach(el => el.onclick = () => {
+    const tc = el.dataset.tc; S.open.has(tc) ? S.open.delete(tc) : S.open.add(tc); el.classList.toggle("open");
+  });
+}
+
+function renderDrafts() {
+  $("#dRun").innerHTML = S.state.runs.map(r => `<option value="${esc(r.id)}" ${r.id === S.run ? "selected" : ""}>${fmt.dt(r.started_at)} · ${esc(r.model)}${r.prep ? " + prep" : ""} · ${esc(r.input)}</option>`).join("");
+  const ds = S.detail.summary.drafts;
+  $("#drfKpis").innerHTML = ds ? [
+    [fmt.n(ds.input_tokens), "токенов на входе"], [fmt.n(ds.output_tokens), "токенов на выходе"],
+    [ds.seconds != null ? fmt.s(ds.seconds) : "≈ " + fmt.s(ds.request_seconds / 4), `на ${ds.ads} объявлений`],
+  ].map(([b, t]) => `<div class="kpi"><b>${b}</b><span>${t}</span></div>`).join("") : `<div class="muted">Черновиков для этого прогона ещё нет</div>`;
+  const rows = S.detail.rows.filter(r => r.pred.length);
+  if (!rows.find(r => r.testcase === S.dSel)) S.dSel = rows[0]?.testcase || null;
+  $("#dList").innerHTML = rows.map(r => `<div class="it ${r.testcase === S.dSel ? "sel" : ""}" data-tc="${esc(r.testcase)}">
+      <div class="row small"><span style="font-family:var(--mono);color:var(--ink2)">${esc(r.testcase)}</span><span class="grow"></span>${S.busy.has(r.testcase) ? `<span class="spin"></span>` : ""}</div>
+      <div class="t">${esc(r.description)}</div><div class="row" style="gap:4px">${chips(r.pred)}</div></div>`).join("");
+  $("#dList").querySelectorAll(".it").forEach(el => el.onclick = () => { S.dSel = el.dataset.tc; S.dCat = "all"; renderDrafts(); });
+  renderDraftDetail();
+}
+
+async function genOne(tc) {
+  S.busy.add(tc); renderDrafts();
+  try {
+    S.detail.rows.find(x => x.testcase === tc).draft = await api("/api/drafts/one", {run:S.run, testcase:tc});
+    S.state = await api("/api/state");
+    S.detail.summary = S.state.runs.find(x => x.id === S.run) || S.detail.summary;
+  } catch (e) { toast(e.message); }
+  S.busy.delete(tc); renderDrafts();
+}
+
+function renderDraftDetail() {
+  const r = S.detail.rows.find(x => x.testcase === S.dSel);
+  if (!r) { $("#dDetail").innerHTML = `<div class="card empty">Нет объявлений с предиктом</div>`; return; }
+  const dr = r.draft, busy = S.busy.has(r.testcase), drafts = dr?.drafts || [];
+  const head = `<div class="card"><h2><span style="font-family:var(--mono);font-weight:400">${esc(r.testcase)}</span>
+      <span class="row" style="gap:4px">${chips(r.pred)}</span><span class="grow"></span>
+      <button class="btn primary" id="genOne" ${busy ? "disabled" : ""}>${busy ? `<span class="spin"></span> Генерация…` : "Сгенерировать черновики"}</button></h2>
+      ${dr ? `<div class="kpis">
+        <div class="kpi"><b>${fmt.n(dr.input_tokens)}</b><span>токенов на входе</span></div>
+        <div class="kpi"><b>${fmt.n(dr.output_tokens)}</b><span>токенов на выходе</span></div>
+        <div class="kpi"><b>${drafts.length ? fmt.s(dr.seconds / drafts.length) : "—"}</b><span>на черновик по конкретной микрокатегории</span></div>
+        <div class="kpi"><b>${fmt.s(dr.seconds)}</b><span>время генерации всех черновиков объявления</span></div>
+      </div>${dr.error ? `<pre class="log" style="margin-top:12px">${esc(errorText(dr.error))}</pre>` : ""}` : ""}</div>`;
+  if (!drafts.length) {
+    $("#dDetail").innerHTML = head + `<div class="card"><h2>Исходное объявление</h2><div class="doc">${esc(r.description)}</div></div>`;
+    $("#genOne").onclick = () => genOne(r.testcase); return;
+  }
+  const cats = drafts.map(x => x.mcId);
+  if (S.dCat !== "all" && !cats.includes(+S.dCat)) S.dCat = "all";
+  const tabs = `<div class="tabs"><button data-c="all" class="${S.dCat === "all" ? "on" : ""}">Исходное объявление</button>` +
+    drafts.map(x => `<button data-c="${x.mcId}" class="${+S.dCat === x.mcId ? "on" : ""}"><i class="dot d${x.mcId}"></i>${x.mcId} ${SHORT[x.mcId]}</button>`).join("") + `</div>`;
+  let body, legend = "";
+  if (S.dCat === "all") {
+    body = S.diff ? coverage(r.description, dr.quotes || {}) : esc(r.description);
+    if (S.diff) legend = `<div class="legend">${cats.map(c => `<span><i class="sw m${c}"></i>ушло в ${c} ${SHORT[c]}</span>`).join("")}<span><i class="sw mmulti"></i>в несколько черновиков</span><span><span class="gone">зачёркнуто</span> не попало ни в один черновик</span></div>`;
+  } else {
+    const x = drafts.find(x => x.mcId === +S.dCat);
+    body = `<b>${esc(x.title || NAMES[x.mcId])}</b>\n\n` + (!x.text ? `<span class="muted">Генератор не написал текст для этой категории</span>`
+      : S.diff ? wordDiff(r.description, x.text, r.testcase + ":" + x.mcId) : esc(x.text));
+    if (S.diff) legend = `<div class="legend"><span><del>удалено</del> из исходника</span><span><ins>добавлено</ins> в черновике</span><span>остальное перенесено без изменений</span></div>`;
+  }
+  $("#dDetail").innerHTML = head + `<div class="card"><h2>Что стало с объявлением<span class="grow"></span>
+      <label class="switch"><input type="checkbox" id="diffSw" ${S.diff ? "checked" : ""}><i></i>показать изменения</label></h2>
+      ${tabs}${legend}<div class="doc" id="doc">${body}</div></div>`;
+  $("#genOne").onclick = () => genOne(r.testcase);
+  $("#diffSw").onchange = e => { S.diff = e.target.checked; renderDraftDetail(); };
+  $("#dDetail").querySelectorAll("[data-c]").forEach(b => b.onclick = () => { S.dCat = b.dataset.c; renderDraftDetail(); });
+  $("#doc").querySelectorAll(".fold").forEach(f => f.onclick = () => { S.unfold.add(f.dataset.k); renderDraftDetail(); });
+}
+
+function coverage(text, quotes) {
+  const owner = Array.from({length:text.length}, () => new Set());
+  for (const [c, qs] of Object.entries(quotes)) for (const q of qs || []) {
+    const needle = (q || "").trim(); if (!needle) continue;
+    let i = text.indexOf(needle), len = needle.length;
+    if (i < 0) {
+      const re = new RegExp(needle.split(/\s+/).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s+"));
+      const m = re.exec(text); if (!m) continue; i = m.index; len = m[0].length;
+    }
+    for (let k = i; k < i + len; k++) owner[k].add(c);
+  }
+  let out = "", cur = null, buf = "";
+  const key = s => s.size === 0 ? "" : s.size === 1 ? [...s][0] : "multi";
+  const flush = () => {
+    if (!buf) return;
+    if (cur === "") out += /\S/.test(buf) ? `<span class="gone">${esc(buf)}</span>` : esc(buf);
+    else out += `<mark class="m${cur}">${esc(buf)}</mark>`;
+    buf = "";
+  };
+  for (let k = 0; k < text.length; k++) { const kk = key(owner[k]); if (kk !== cur) { flush(); cur = kk; } buf += text[k]; }
+  flush();
+  return out;
+}
+
+function wordDiff(a, b, foldKey) {
+  const words = ts => ts.map((t, i) => [t, /\s/.test(ts[i + 1] || "") ? ts[i + 1] : " "]).filter(([t]) => /\S/.test(t));
+  const wa = words(a.match(/\s+|[^\s]+/g) || []), wb = words(b.match(/\s+|[^\s]+/g) || []);
+  const norm = t => t.toLowerCase().replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "") || t;
+  const A = wa.map(x => norm(x[0])), B = wb.map(x => norm(x[0]));
+  const n = A.length, m = B.length, L = new Array(n + 1);
+  for (let i = 0; i <= n; i++) L[i] = new Uint16Array(m + 1);
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const ops = []; let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (A[i] === B[j]) { ops.push(["=", wb[j]]); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) ops.push(["-", wa[i++]]); else ops.push(["+", wb[j++]]);
+  }
+  while (i < n) ops.push(["-", wa[i++]]); while (j < m) ops.push(["+", wb[j++]]);
+  const groups = [];
+  for (const [o, t] of ops) { const g = groups[groups.length - 1]; if (g && g.o === o) g.t.push(t); else groups.push({o, t:[t]}); }
+  const keep = ws => /\n/.test(ws) ? ws.replace(/[^\n]/g, "") : " ";
+  return groups.map((g, gi) => {
+    const tail = keep(g.t[g.t.length - 1][1]);
+    if (g.o !== "-") {
+      const s = g.t.map(([t, ws], k) => esc(t) + (k < g.t.length - 1 ? keep(ws) : "")).join("");
+      return (g.o === "=" ? s : `<ins>${s}</ins>`) + tail;
+    }
+    const t = g.t.map(x => x[0]), k = foldKey + ":" + gi;
+    if (t.length > 24 && !S.unfold.has(k))
+      return `<del>${esc(t.slice(0, 8).join(" "))}</del> <span class="fold" data-k="${k}">… ещё ${t.length - 12} слов удалено</span> <del>${esc(t.slice(-4).join(" "))}</del> `;
+    return `<del>${esc(t.join(" "))}</del> `;
+  }).join("");
+}
+
+loadState().catch(e => { $("main").innerHTML = `<div class="card empty">Не удалось загрузить данные: ${esc(e.message)}</div>`; });
+</script>
+</body>
+</html>

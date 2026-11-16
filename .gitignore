@@ -232,3 +232,8 @@ private_eval/input/
 private_eval/runs/
 private_eval/cache/
 private_eval/prompt_history/
+
+# Demo: organizer data and answers
+demo/input/*
+!demo/input/example.csv
+demo/output/
