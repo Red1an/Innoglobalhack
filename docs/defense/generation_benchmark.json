@@ -1,0 +1,1221 @@
+{
+  "protocol": {
+    "opportunities": {
+      "ads": 12,
+      "dev_ads": 8,
+      "holdout_ads": 4,
+      "expected": 16,
+      "unsupported": 5
+    },
+    "holdout_opportunities": {
+      "expected": 5,
+      "unsupported": 2
+    },
+    "facts": "retained is the number of source fact patterns matched out of facts. This is a regex-based check.",
+    "fp": "draft without labeled support",
+    "fn": "expected draft missing",
+    "errors": "request or model failures",
+    "time": "p50 and p95 in seconds, including retries",
+    "tokens": "input and output are totals across usage_n responses with token counters",
+    "tok_s": "median output tokens per second including HTTP or local request overhead",
+    "cost_per_1000": "RUB per 1,000 successful generation requests. API means reported usage.cost. тариф means tariff estimate.",
+    "rank": "within mode for complete cloud groups, ascending fp, errors, fn, then descending retained and ascending p50"
+  },
+  "cloud_comparative_run": {
+    "recorded_request_cases": 438,
+    "planned_request_cases": 456,
+    "complete_groups": {
+      "extractive": [
+        {
+          "rank": 1,
+          "name": "Gemini 3.8 Flash",
+          "model_id": "just-ai/google-gemini/gemini-3.8-flash",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 0,
+          "errors": 0,
+          "facts": 102,
+          "retained": 53,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 27
+          },
+          "time": [
+            3.540244229500786,
+            6.865040832999512
+          ],
+          "input": 17439,
+          "output": 2735,
+          "usage_n": 12,
+          "tok_s": 58.08179802554489,
+          "cost_per_1000": 203.01885000000001,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 2,
+          "name": "Sonnet 5.5",
+          "model_id": "just-ai/anthropic-claude/claude-sonnet-5-5",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 0,
+          "errors": 0,
+          "facts": 102,
+          "retained": 46,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 20
+          },
+          "time": [
+            7.6269119789994875,
+            14.840457540998614
+          ],
+          "input": 27640,
+          "output": 10072,
+          "usage_n": 12,
+          "tok_s": 107.61350012074445,
+          "cost_per_1000": 1357.2,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 3,
+          "name": "Gemini 3.5 Flash Lite",
+          "model_id": "just-ai/google-gemini/gemini-3.5-flash-lite",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 2,
+          "errors": 0,
+          "facts": 102,
+          "retained": 17,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 4
+          },
+          "time": [
+            1.6326302500001475,
+            4.049218874999497
+          ],
+          "input": 17439,
+          "output": 3124,
+          "usage_n": 12,
+          "tok_s": 137.2514374172559,
+          "cost_per_1000": 130.48220849999998,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 4,
+          "name": "Qwen3-235B Instruct-2507",
+          "model_id": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 4,
+          "errors": 0,
+          "facts": 102,
+          "retained": 29,
+          "holdout": {
+            "fp": 0,
+            "fn": 3,
+            "facts": 37,
+            "retained": 5
+          },
+          "time": [
+            3.989332375000231,
+            21.460181582999212
+          ],
+          "input": 20822,
+          "output": 3067,
+          "usage_n": 12,
+          "tok_s": 33.46255721472795,
+          "cost_per_1000": 72.833916,
+          "cost_source": "API"
+        },
+        {
+          "rank": 5,
+          "name": "Qwen 3.5 35b A3b",
+          "model_id": "just-ai/openrouter-proxy/qwen/qwen3.5-35b-a3b",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 4,
+          "errors": 0,
+          "facts": 102,
+          "retained": 29,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 14
+          },
+          "time": [
+            43.918743375499616,
+            62.29101516599985
+          ],
+          "input": 17289,
+          "output": 60919,
+          "usage_n": 12,
+          "tok_s": 145.81146093288567,
+          "cost_per_1000": 820.4510826000001,
+          "cost_source": "API"
+        },
+        {
+          "rank": 6,
+          "name": "Gpt 5.4 Mini",
+          "model_id": "just-ai/openai-proxy/gpt-5.4-mini",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 5,
+          "errors": 0,
+          "facts": 102,
+          "retained": 18,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 7
+          },
+          "time": [
+            1.6801540830010708,
+            2.3157924999995885
+          ],
+          "input": 16997,
+          "output": 1235,
+          "usage_n": 12,
+          "tok_s": 57.91138566803583,
+          "cost_per_1000": 183.14402625,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 7,
+          "name": "Glm 5.3 Flash",
+          "model_id": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 6,
+          "errors": 0,
+          "facts": 102,
+          "retained": 47,
+          "holdout": {
+            "fp": 0,
+            "fn": 3,
+            "facts": 37,
+            "retained": 18
+          },
+          "time": [
+            7.70224324999981,
+            12.808068874999663
+          ],
+          "input": 17632,
+          "output": 5071,
+          "usage_n": 12,
+          "tok_s": 56.67712837780946,
+          "cost_per_1000": 51.828499345000004,
+          "cost_source": "API"
+        },
+        {
+          "rank": 8,
+          "name": "Ministral 14b 2512",
+          "model_id": "just-ai/openrouter-proxy/mistralai/ministral-14b-2512",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 8,
+          "errors": 0,
+          "facts": 102,
+          "retained": 14,
+          "holdout": {
+            "fp": 0,
+            "fn": 2,
+            "facts": 37,
+            "retained": 3
+          },
+          "time": [
+            3.4047677919998023,
+            6.26992516700011
+          ],
+          "input": 20756,
+          "output": 2792,
+          "usage_n": 12,
+          "tok_s": 62.3461405358023,
+          "cost_per_1000": 38.48191594,
+          "cost_source": "API"
+        },
+        {
+          "rank": 9,
+          "name": "Gpt 4.1 Mini",
+          "model_id": "just-ai/openai-proxy/gpt-4.1-mini",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 9,
+          "errors": 0,
+          "facts": 102,
+          "retained": 15,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 8
+          },
+          "time": [
+            2.076838021000185,
+            15.371776542000589
+          ],
+          "input": 17009,
+          "output": 1462,
+          "usage_n": 12,
+          "tok_s": 35.19118890703578,
+          "cost_per_1000": 91.47371400000002,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 10,
+          "name": "Gpt 4.1 Nano",
+          "model_id": "just-ai/openrouter-proxy/openai/gpt-4.1-nano",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 11,
+          "errors": 0,
+          "facts": 102,
+          "retained": 8,
+          "holdout": {
+            "fp": 0,
+            "fn": 4,
+            "facts": 37,
+            "retained": 0
+          },
+          "time": [
+            1.9739939165001488,
+            2.50620720799634
+          ],
+          "input": 17009,
+          "output": 1551,
+          "usage_n": 12,
+          "tok_s": 62.67936852547745,
+          "cost_per_1000": 23.224082674999995,
+          "cost_source": "API"
+        },
+        {
+          "rank": 11,
+          "name": "Ministral 8b 2512",
+          "model_id": "just-ai/openrouter-proxy/mistralai/ministral-8b-2512",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 12,
+          "errors": 0,
+          "facts": 102,
+          "retained": 12,
+          "holdout": {
+            "fp": 0,
+            "fn": 2,
+            "facts": 37,
+            "retained": 9
+          },
+          "time": [
+            2.826148833500156,
+            4.354622333001316
+          ],
+          "input": 20756,
+          "output": 2731,
+          "usage_n": 12,
+          "tok_s": 77.52448205522313,
+          "cost_per_1000": 29.1155827,
+          "cost_source": "API"
+        },
+        {
+          "rank": 12,
+          "name": "Haiku 5.5",
+          "model_id": "just-ai/anthropic-claude/claude-haiku-5-5",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 1,
+          "errors": 1,
+          "facts": 102,
+          "retained": 19,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 4
+          },
+          "time": [
+            9.228406062500653,
+            19.51916604199505
+          ],
+          "input": 27640,
+          "output": 19747,
+          "usage_n": 12,
+          "tok_s": 174.404938713871,
+          "cost_per_1000": 96.48458181818182,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 13,
+          "name": "Kimi K3",
+          "model_id": "just-ai/openrouter-proxy/moonshotai/kimi-k3",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 3,
+          "errors": 1,
+          "facts": 102,
+          "retained": 50,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 22
+          },
+          "time": [
+            19.74042347950035,
+            42.668606124998405
+          ],
+          "input": 25623,
+          "output": 11765,
+          "usage_n": 12,
+          "tok_s": 46.9058600889133,
+          "cost_per_1000": 1951.3761810545454,
+          "cost_source": "API"
+        },
+        {
+          "rank": 14,
+          "name": "Qwen 3.8 27b",
+          "model_id": "just-ai/openrouter-proxy/qwen/qwen3.8-27b",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 5,
+          "errors": 1,
+          "facts": 102,
+          "retained": 31,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 11
+          },
+          "time": [
+            46.497916562499995,
+            74.42790137500015
+          ],
+          "input": 17265,
+          "output": 27016,
+          "usage_n": 12,
+          "tok_s": 56.04993537414787,
+          "cost_per_1000": 321.7313629690909,
+          "cost_source": "API"
+        },
+        {
+          "rank": 15,
+          "name": "YandexGPT Pro 5.1",
+          "model_id": "just-ai/yandex-yandexgpt/yandexgpt/rc",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 7,
+          "errors": 1,
+          "facts": 102,
+          "retained": 12,
+          "holdout": {
+            "fp": 0,
+            "fn": 3,
+            "facts": 37,
+            "retained": 3
+          },
+          "time": [
+            1.241874229000132,
+            2.658886083001562
+          ],
+          "input": 12689,
+          "output": 1688,
+          "usage_n": 12,
+          "tok_s": 96.46086027127822,
+          "cost_per_1000": 1045.6000000000001,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 16,
+          "name": "Deepseek V4.1 Flash",
+          "model_id": "just-ai/openrouter-proxy/deepseek/deepseek-v4.1-flash-1017",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 0,
+          "fn": 12,
+          "errors": 6,
+          "facts": 102,
+          "retained": 11,
+          "holdout": {
+            "fp": 0,
+            "fn": 4,
+            "facts": 37,
+            "retained": 2
+          },
+          "time": [
+            20.056888020500082,
+            22.843971708000026
+          ],
+          "input": 19946,
+          "output": 33901,
+          "usage_n": 12,
+          "tok_s": 181.44442373783764,
+          "cost_per_1000": 252.13766583000003,
+          "cost_source": "API"
+        },
+        {
+          "rank": 17,
+          "name": "Gpt 5.4 Nano",
+          "model_id": "just-ai/openrouter-proxy/openai/gpt-5.4-nano",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 1,
+          "fn": 5,
+          "errors": 0,
+          "facts": 102,
+          "retained": 20,
+          "holdout": {
+            "fp": 1,
+            "fn": 2,
+            "facts": 37,
+            "retained": 5
+          },
+          "time": [
+            2.18752685400068,
+            3.2044060839998565
+          ],
+          "input": 16997,
+          "output": 1740,
+          "usage_n": 12,
+          "tok_s": 64.82326792244628,
+          "cost_per_1000": 55.77141591,
+          "cost_source": "API"
+        },
+        {
+          "rank": 18,
+          "name": "Gemma 3 12b It",
+          "model_id": "just-ai/openrouter-proxy/google/gemma-3-12b-it",
+          "mode": "extractive",
+          "n": 12,
+          "fp": 1,
+          "fn": 9,
+          "errors": 0,
+          "facts": 102,
+          "retained": 8,
+          "holdout": {
+            "fp": 1,
+            "fn": 2,
+            "facts": 37,
+            "retained": 3
+          },
+          "time": [
+            3.5928696875007518,
+            7.805558792000738
+          ],
+          "input": 17547,
+          "output": 2979,
+          "usage_n": 12,
+          "tok_s": 60.12219493065959,
+          "cost_per_1000": 24.443082675,
+          "cost_source": "API"
+        }
+      ],
+      "rewrite": [
+        {
+          "rank": 1,
+          "name": "Sonnet 5.5",
+          "model_id": "just-ai/anthropic-claude/claude-sonnet-5-5",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 0,
+          "errors": 0,
+          "facts": 102,
+          "retained": 50,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 20
+          },
+          "time": [
+            9.260512583499803,
+            15.606706040998688
+          ],
+          "input": 27772,
+          "output": 11989,
+          "usage_n": 12,
+          "tok_s": 111.71896900919536,
+          "cost_per_1000": 1526.2758000000001,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 2,
+          "name": "Glm 5.3 Flash",
+          "model_id": "just-ai/openrouter-proxy/z-ai/glm-5.3-flash",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 1,
+          "errors": 0,
+          "facts": 102,
+          "retained": 71,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 29
+          },
+          "time": [
+            7.285290249499667,
+            21.01790229100152
+          ],
+          "input": 17668,
+          "output": 4928,
+          "usage_n": 12,
+          "tok_s": 50.89189969004101,
+          "cost_per_1000": 51.167165970000006,
+          "cost_source": "API"
+        },
+        {
+          "rank": 3,
+          "name": "Gemini 3.5 Flash Lite",
+          "model_id": "just-ai/google-gemini/gemini-3.5-flash-lite",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 1,
+          "errors": 0,
+          "facts": 102,
+          "retained": 49,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 24
+          },
+          "time": [
+            1.795126208500733,
+            2.7756964589989366
+          ],
+          "input": 17475,
+          "output": 3340,
+          "usage_n": 12,
+          "tok_s": 142.240630400086,
+          "cost_per_1000": 135.9929625,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 4,
+          "name": "Qwen 3.5 35b A3b",
+          "model_id": "just-ai/openrouter-proxy/qwen/qwen3.5-35b-a3b",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 3,
+          "errors": 0,
+          "facts": 102,
+          "retained": 40,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 21
+          },
+          "time": [
+            48.28154689550047,
+            59.242366165999556
+          ],
+          "input": 17373,
+          "output": 66617,
+          "usage_n": 12,
+          "tok_s": 139.98743317449225,
+          "cost_per_1000": 894.6986660000001,
+          "cost_source": "API"
+        },
+        {
+          "rank": 5,
+          "name": "Gpt 5.4 Mini",
+          "model_id": "just-ai/openai-proxy/gpt-5.4-mini",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 6,
+          "errors": 0,
+          "facts": 102,
+          "retained": 18,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 7
+          },
+          "time": [
+            1.7610623129994565,
+            3.789933916996233
+          ],
+          "input": 17021,
+          "output": 1865,
+          "usage_n": 12,
+          "tok_s": 75.100539955937,
+          "cost_per_1000": 211.68829125,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 6,
+          "name": "Gemma 3 12b It",
+          "model_id": "just-ai/openrouter-proxy/google/gemma-3-12b-it",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 7,
+          "errors": 0,
+          "facts": 102,
+          "retained": 16,
+          "holdout": {
+            "fp": 0,
+            "fn": 3,
+            "facts": 37,
+            "retained": 3
+          },
+          "time": [
+            4.219895624499259,
+            5.507648708000488
+          ],
+          "input": 17583,
+          "output": 2638,
+          "usage_n": 12,
+          "tok_s": 54.15902964460056,
+          "cost_per_1000": 23.48616595,
+          "cost_source": "API"
+        },
+        {
+          "rank": 7,
+          "name": "Gpt 4.1 Mini",
+          "model_id": "just-ai/openai-proxy/gpt-4.1-mini",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 8,
+          "errors": 0,
+          "facts": 102,
+          "retained": 11,
+          "holdout": {
+            "fp": 0,
+            "fn": 2,
+            "facts": 37,
+            "retained": 3
+          },
+          "time": [
+            1.645884395999019,
+            6.022138583999549
+          ],
+          "input": 17033,
+          "output": 1889,
+          "usage_n": 12,
+          "tok_s": 61.64676046255442,
+          "cost_per_1000": 98.40517799999999,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 8,
+          "name": "Ministral 14b 2512",
+          "model_id": "just-ai/openrouter-proxy/mistralai/ministral-14b-2512",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 9,
+          "errors": 0,
+          "facts": 102,
+          "retained": 11,
+          "holdout": {
+            "fp": 0,
+            "fn": 3,
+            "facts": 37,
+            "retained": 1
+          },
+          "time": [
+            3.3725536045003537,
+            5.789502207999249
+          ],
+          "input": 20768,
+          "output": 2858,
+          "usage_n": 12,
+          "tok_s": 67.53033547519998,
+          "cost_per_1000": 42.405665915,
+          "cost_source": "API"
+        },
+        {
+          "rank": 9,
+          "name": "Ministral 8b 2512",
+          "model_id": "just-ai/openrouter-proxy/mistralai/ministral-8b-2512",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 10,
+          "errors": 0,
+          "facts": 102,
+          "retained": 11,
+          "holdout": {
+            "fp": 0,
+            "fn": 2,
+            "facts": 37,
+            "retained": 6
+          },
+          "time": [
+            3.5035901039991586,
+            4.95983091600101
+          ],
+          "input": 20768,
+          "output": 3461,
+          "usage_n": 12,
+          "tok_s": 85.37670519504907,
+          "cost_per_1000": 31.882249364999996,
+          "cost_source": "API"
+        },
+        {
+          "rank": 10,
+          "name": "Gpt 4.1 Nano",
+          "model_id": "just-ai/openrouter-proxy/openai/gpt-4.1-nano",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 15,
+          "errors": 0,
+          "facts": 102,
+          "retained": 1,
+          "holdout": {
+            "fp": 0,
+            "fn": 5,
+            "facts": 37,
+            "retained": 0
+          },
+          "time": [
+            2.082034791499609,
+            3.7338564159999805
+          ],
+          "input": 17033,
+          "output": 1378,
+          "usage_n": 12,
+          "tok_s": 52.724079514731045,
+          "cost_per_1000": 22.555832624999997,
+          "cost_source": "API"
+        },
+        {
+          "rank": 11,
+          "name": "Gemini 3.8 Flash",
+          "model_id": "just-ai/google-gemini/gemini-3.8-flash",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 1,
+          "errors": 1,
+          "facts": 102,
+          "retained": 75,
+          "holdout": {
+            "fp": 0,
+            "fn": 0,
+            "facts": 37,
+            "retained": 29
+          },
+          "time": [
+            5.284548291499959,
+            9.263685833000636
+          ],
+          "input": 17475,
+          "output": 5536,
+          "usage_n": 12,
+          "tok_s": 84.50991302982914,
+          "cost_per_1000": 293.31891818181816,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 12,
+          "name": "Kimi K3",
+          "model_id": "just-ai/openrouter-proxy/moonshotai/kimi-k3",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 1,
+          "errors": 1,
+          "facts": 102,
+          "retained": 65,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 18
+          },
+          "time": [
+            13.856026250000468,
+            39.932800582999334
+          ],
+          "input": 25657,
+          "output": 16845,
+          "usage_n": 12,
+          "tok_s": 70.47549814755193,
+          "cost_per_1000": 2780.634999490909,
+          "cost_source": "API"
+        },
+        {
+          "rank": 13,
+          "name": "Haiku 5.5",
+          "model_id": "just-ai/anthropic-claude/claude-haiku-5-5",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 3,
+          "errors": 1,
+          "facts": 102,
+          "retained": 18,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 5
+          },
+          "time": [
+            11.627209291500549,
+            19.452969416999622
+          ],
+          "input": 27772,
+          "output": 23043,
+          "usage_n": 12,
+          "tok_s": 175.17653342497687,
+          "cost_per_1000": 112.24044000000002,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 14,
+          "name": "YandexGPT Pro 5.1",
+          "model_id": "just-ai/yandex-yandexgpt/yandexgpt/rc",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 7,
+          "errors": 1,
+          "facts": 102,
+          "retained": 26,
+          "holdout": {
+            "fp": 0,
+            "fn": 3,
+            "facts": 37,
+            "retained": 7
+          },
+          "time": [
+            1.2473905005017514,
+            2.7756822499995906
+          ],
+          "input": 12711,
+          "output": 1734,
+          "usage_n": 12,
+          "tok_s": 95.61046333416874,
+          "cost_per_1000": 1050.5454545454547,
+          "cost_source": "тариф"
+        },
+        {
+          "rank": 15,
+          "name": "Qwen 3.8 27b",
+          "model_id": "just-ai/openrouter-proxy/qwen/qwen3.8-27b",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 10,
+          "errors": 4,
+          "facts": 102,
+          "retained": 18,
+          "holdout": {
+            "fp": 0,
+            "fn": 3,
+            "facts": 37,
+            "retained": 6
+          },
+          "time": [
+            41.443632999998954,
+            90.26592004099984
+          ],
+          "input": 11637,
+          "output": 13933,
+          "usage_n": 8,
+          "tok_s": 64.08126955264481,
+          "cost_per_1000": 274.28312457749996,
+          "cost_source": "API"
+        },
+        {
+          "rank": 16,
+          "name": "Deepseek V4.1 Flash",
+          "model_id": "just-ai/openrouter-proxy/deepseek/deepseek-v4.1-flash-1017",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 0,
+          "fn": 8,
+          "errors": 5,
+          "facts": 102,
+          "retained": 28,
+          "holdout": {
+            "fp": 0,
+            "fn": 5,
+            "facts": 37,
+            "retained": 0
+          },
+          "time": [
+            15.207284854499449,
+            23.99695100000099
+          ],
+          "input": 19994,
+          "output": 32577,
+          "usage_n": 12,
+          "tok_s": 178.51518792564713,
+          "cost_per_1000": 269.62142787428576,
+          "cost_source": "API"
+        },
+        {
+          "rank": 17,
+          "name": "Qwen3-235B Instruct-2507",
+          "model_id": "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 1,
+          "fn": 4,
+          "errors": 0,
+          "facts": 102,
+          "retained": 34,
+          "holdout": {
+            "fp": 1,
+            "fn": 2,
+            "facts": 37,
+            "retained": 7
+          },
+          "time": [
+            6.112789896000322,
+            20.271932290999757
+          ],
+          "input": 20810,
+          "output": 4089,
+          "usage_n": 12,
+          "tok_s": 44.717207523172064,
+          "cost_per_1000": 81.805582695,
+          "cost_source": "API"
+        },
+        {
+          "rank": 18,
+          "name": "Gpt 5.4 Nano",
+          "model_id": "just-ai/openrouter-proxy/openai/gpt-5.4-nano",
+          "mode": "rewrite",
+          "n": 12,
+          "fp": 1,
+          "fn": 6,
+          "errors": 0,
+          "facts": 102,
+          "retained": 27,
+          "holdout": {
+            "fp": 0,
+            "fn": 1,
+            "facts": 37,
+            "retained": 7
+          },
+          "time": [
+            3.0122693544999493,
+            8.274076208001134
+          ],
+          "input": 17021,
+          "output": 4167,
+          "usage_n": 12,
+          "tok_s": 99.06257933676345,
+          "cost_per_1000": 86.17208267000001,
+          "cost_source": "API"
+        }
+      ]
+    },
+    "incomplete_groups": [
+      {
+        "name": "Qwen 3.5 9b",
+        "model_id": "just-ai/openrouter-proxy/qwen/qwen3.5-9b",
+        "mode": "extractive",
+        "n": 3,
+        "fp": 0,
+        "fn": 5,
+        "errors": 3,
+        "facts": 27,
+        "retained": 0,
+        "holdout": {
+          "fp": 0,
+          "fn": 1,
+          "facts": 6,
+          "retained": 0
+        },
+        "time": [
+          90.65190070899553,
+          90.78015933300048
+        ],
+        "input": 0,
+        "output": 0,
+        "usage_n": 0,
+        "tok_s": null,
+        "cost_per_1000": null,
+        "cost_source": null
+      },
+      {
+        "name": "Qwen 3.5 9b",
+        "model_id": "just-ai/openrouter-proxy/qwen/qwen3.5-9b",
+        "mode": "rewrite",
+        "n": 3,
+        "fp": 0,
+        "fn": 3,
+        "errors": 3,
+        "facts": 31,
+        "retained": 0,
+        "holdout": {
+          "fp": 0,
+          "fn": 2,
+          "facts": 25,
+          "retained": 0
+        },
+        "time": [
+          90.27856279199477,
+          90.45087691699882
+        ],
+        "input": 0,
+        "output": 0,
+        "usage_n": 0,
+        "tok_s": null,
+        "cost_per_1000": null,
+        "cost_source": null
+      }
+    ]
+  },
+  "ollama_colab_T4": [
+    {
+      "model_id": "hf.co/t-tech/T-lite-it-2.1-GGUF:Q8_0",
+      "mode": "extractive",
+      "n": 12,
+      "fp": 0,
+      "fn": 15,
+      "errors": 6,
+      "facts": 102,
+      "retained": 3,
+      "holdout": {
+        "fp": 0,
+        "fn": 5,
+        "facts": 37,
+        "retained": 0
+      },
+      "time": [
+        37.0647201955,
+        90.14381939600003
+      ],
+      "input": 11674,
+      "output": 4303,
+      "usage_n": 9,
+      "tok_s": 17.91714427181885
+    },
+    {
+      "model_id": "hf.co/t-tech/T-lite-it-2.1-GGUF:Q8_0",
+      "mode": "rewrite",
+      "n": 12,
+      "fp": 0,
+      "fn": 14,
+      "errors": 4,
+      "facts": 102,
+      "retained": 7,
+      "holdout": {
+        "fp": 0,
+        "fn": 4,
+        "facts": 37,
+        "retained": 4
+      },
+      "time": [
+        17.587201253500098,
+        90.10866016499995
+      ],
+      "input": 15096,
+      "output": 5486,
+      "usage_n": 11,
+      "tok_s": 21.044855174449935
+    },
+    {
+      "model_id": "hf.co/NightForger/avibe-GGUF:Q8_0",
+      "mode": "extractive",
+      "n": 12,
+      "fp": 1,
+      "fn": 8,
+      "errors": 1,
+      "facts": 102,
+      "retained": 12,
+      "holdout": {
+        "fp": 0,
+        "fn": 4,
+        "facts": 37,
+        "retained": 4
+      },
+      "time": [
+        7.566320831000041,
+        90.11725898399999
+      ],
+      "input": 13363,
+      "output": 1454,
+      "usage_n": 11,
+      "tok_s": 19.458011347771023
+    },
+    {
+      "model_id": "hf.co/NightForger/avibe-GGUF:Q8_0",
+      "mode": "rewrite",
+      "n": 12,
+      "fp": 1,
+      "fn": 10,
+      "errors": 0,
+      "facts": 102,
+      "retained": 11,
+      "holdout": {
+        "fp": 0,
+        "fn": 4,
+        "facts": 37,
+        "retained": 2
+      },
+      "time": [
+        10.08462289299996,
+        75.37022422499996
+      ],
+      "input": 14663,
+      "output": 2291,
+      "usage_n": 12,
+      "tok_s": 12.592981757915226
+    }
+  ],
+  "ollama_m1_8gb": {
+    "model": "qwen3:4b",
+    "quantization": "Q4_K_M",
+    "mode": "rewrite",
+    "n": 12,
+    "fp": 0,
+    "fn": 9,
+    "errors": 0,
+    "facts": 102,
+    "retained": 22,
+    "holdout": {
+      "fp": 0,
+      "fn": 2,
+      "facts": 37,
+      "retained": 9
+    },
+    "time": [
+      32.42591302099936,
+      70.60823783399974
+    ],
+    "input": 20834,
+    "output": 4259,
+    "tok_s": 11.284209854262969,
+    "decode_tok_s": 14.801374001701657
+  }
+}
