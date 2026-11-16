@@ -1,10 +1,10 @@
 {
   "just-ai/openrouter-proxy/qwen/qwen3-235b-a22b-2507": {
-    "input_per_million": 8.52426, "output_per_million": 12.006, "currency": "RUB",
-    "note": "публичный прайс Caila за 1 млн токенов"
+    "input_per_million": 28.0786, "output_per_million": 39.5473, "currency": "RUB",
+    "note": "подобрано по фактическому списанию 37,58 ₽ за прогон v9 на 262 объявлениях (1 292 486 / 32 589 токенов)"
   },
   "just-ai/openrouter-proxy/z-ai/glm-5.3-flash": {
-    "input_per_million": 17.04852, "output_per_million": 24.012, "currency": "RUB",
-    "note": "оценка: вдвое дороже Qwen по фактическим списаниям, сверить с прайсом Caila"
+    "input_per_million": 17.2993, "output_per_million": 24.3653, "currency": "RUB",
+    "note": "подобрано по фактическому списанию 19,29 ₽ за прогон v9 с prep на 262 объявлениях (1 062 306 / 37 464 токенов)"
   }
 }
