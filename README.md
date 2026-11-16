@@ -40,7 +40,7 @@ python3 avito_pipeline.py --export-reviewed reviewed.jsonl --input input.csv --o
 
 ## Генерация черновиков на защите
 
-- [Командная презентация с блоком генерации](presentation.html) · откройте скачанный HTML в браузере, слайды 9–13.
+- [Командная презентация с блоком генерации](presentation.html) · откройте скачанный HTML в браузере, слайды 9–15.
 - [Отдельная версия блока в PowerPoint](docs/defense/avito_text_generation.pptx)
 - [Рассказ на 3:20, версия на 75 секунд и действия для демо](docs/defense/avito_text_generation_talk.md)
 - [Замеры генерации по облачным и локальным моделям](docs/defense/generation_benchmark.json)
