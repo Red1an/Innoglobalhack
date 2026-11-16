@@ -139,6 +139,7 @@ def run(input_name, source_name=None, workers=4, limit=None, answer=None):
         return {"testcase": r["testcase"], "mcId": r["mcId"], "labels": r["labels"],
                 "description": r["description"], **res}
 
+    started_at = time.strftime("%Y-%m-%dT%H:%M:%S")
     start = time.perf_counter()
     with ThreadPoolExecutor(max_workers=workers) as pool:
         items = list(pool.map(one, rows))
@@ -154,7 +155,8 @@ def run(input_name, source_name=None, workers=4, limit=None, answer=None):
             w.writerow([it["testcase"], json.dumps(it["labels"], separators=(",", ":")),
                         json.dumps(texts, ensure_ascii=False, separators=(",", ":"))])
     header = {"input": rel(src), "source": rel(source), "model": MODEL, "mode": "rewrite",
-              "guide_sha256": guide["sha256"],
+              "guide_sha256": guide["sha256"], "started_at": started_at, "seconds": round(seconds, 2),
+              "workers": workers,
               "generator_sha256": hashlib.sha256(Path(sys.modules["draft_generator.core"].__file__).read_bytes()).hexdigest()}
     with Path(f"{base}.jsonl").open("w", encoding="utf-8") as stream:
         stream.write(json.dumps(header, ensure_ascii=False) + "\n")

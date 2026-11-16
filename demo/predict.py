@@ -235,6 +235,7 @@ def main():
         bar.step(ans["error"] is not None)
         return {"testcase": r["testcase"], "labels": labels or [], **ans}
 
+    started_at = time.strftime("%Y-%m-%dT%H:%M:%S")
     start = time.perf_counter()
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         results = list(pool.map(classify, rows))
@@ -247,7 +248,9 @@ def main():
     log = out.with_suffix(".classification.jsonl")
     with log.open("w", encoding="utf-8") as stream:
         stream.write(json.dumps({"model": model, "prompt": PROMPT.name, "prep": args.prep,
-                                 "input": str(Path(args.input).resolve())}, ensure_ascii=False) + "\n")
+                                 "input": str(Path(args.input).resolve()), "started_at": started_at,
+                                 "seconds": round(seconds, 2), "workers": args.workers},
+                                ensure_ascii=False) + "\n")
         for res in results:
             stream.write(json.dumps({k: res[k] for k in ("testcase", "labels", "error", "seconds", "input_tokens",
                                                        "output_tokens", "raw")}, ensure_ascii=False) + "\n")
